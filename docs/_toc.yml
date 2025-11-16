@@ -14,6 +14,8 @@ chapters:
     title: Sensitivity Analysis & Validation
   - file: monte_carlo
     title: Monte Carlo Uncertainty Analysis
+  - file: assumptions
+    title: Assumptions & Parameter Sources
   - file: policy
     title: Policy Analysis
   - file: taxes

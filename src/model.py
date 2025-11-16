@@ -110,6 +110,9 @@ class StadiumEconomicModel:
         price_effect = np.exp(-ticket_sensitivity * ticket_deviation)
 
         # Cross-price effect (beer is complement)
+        # NOTE: 0.1 is ASSUMED (not from empirical estimates)
+        # Literature (Coates & Humphreys 2007, Krautmann & Berri 2007) documents
+        # complementarity but doesn't provide specific cross-price elasticity
         cross_elasticity = 0.1  # 10% beer price increase → 1% attendance decrease
         if beer_price > 0:
             beer_ratio = beer_price / self.base_beer_price
