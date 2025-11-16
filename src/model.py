@@ -40,6 +40,8 @@ class StadiumEconomicModel:
                  beer_elasticity: float = -0.965,    # midpoint of -0.79 to -1.14
                  ticket_cost: float = 20.0,
                  beer_cost: float = 5.0,  # All-in cost including labor, cups, waste
+                 beer_excise_tax: float = 0.074,  # Federal + state + local excise per beer
+                 beer_sales_tax_rate: float = 0.08875,  # NYC sales tax rate
                  consumer_income: float = 200.0,
                  alpha: float = 1.5,  # utility weight on beer
                  beta: float = 3.0,   # utility weight on stadium experience
@@ -59,6 +61,8 @@ class StadiumEconomicModel:
             beer_elasticity: Price elasticity of beer demand
             ticket_cost: Marginal cost per ticket ($)
             beer_cost: Marginal cost per beer ($)
+            beer_excise_tax: Excise tax per beer (federal + state + local)
+            beer_sales_tax_rate: Sales tax rate (applied to pre-tax price)
             consumer_income: Representative consumer income ($)
             alpha: Utility weight on beer consumption
             beta: Utility weight on stadium experience
@@ -73,6 +77,8 @@ class StadiumEconomicModel:
         self.beer_elasticity = beer_elasticity
         self.ticket_cost = ticket_cost
         self.beer_cost = beer_cost
+        self.beer_excise_tax = beer_excise_tax
+        self.beer_sales_tax_rate = beer_sales_tax_rate
         self.consumer_income = consumer_income
         self.alpha = alpha
         self.beta = beta
@@ -229,7 +235,10 @@ class StadiumEconomicModel:
 
     def stadium_revenue(self, ticket_price: float, beer_price: float) -> Dict[str, float]:
         """
-        Calculate stadium revenues and costs INCLUDING internalized externalities.
+        Calculate stadium revenues and costs INCLUDING internalized externalities and taxes.
+
+        NOTE: beer_price is the CONSUMER price (including all taxes).
+        Stadium receives: beer_price / (1 + sales_tax_rate) - excise_tax
 
         The stadium is a monopolist that internalizes negative externalities
         (crowd management, brand damage, experience degradation) because
@@ -243,10 +252,19 @@ class StadiumEconomicModel:
         beers_per_fan = self._beers_per_fan_demand(beer_price, self.consumer_income)
         total_beers = attendance * beers_per_fan
 
+        # BEER REVENUE (after taxes):
+        # Consumer pays: beer_price (includes sales tax)
+        # Pre-sales-tax price: beer_price / (1 + sales_tax_rate)
+        # Stadium receives: pre_tax - excise_tax
+        pre_tax_beer_price = beer_price / (1 + self.beer_sales_tax_rate)
+        stadium_beer_price = pre_tax_beer_price - self.beer_excise_tax
+
+        # REVENUES
         ticket_revenue = ticket_price * attendance
-        beer_revenue = beer_price * total_beers
+        beer_revenue = stadium_beer_price * total_beers  # What stadium actually receives
         total_revenue = ticket_revenue + beer_revenue
 
+        # COSTS
         ticket_costs = self.ticket_cost * attendance
         beer_costs = self.beer_cost * total_beers
 
@@ -255,12 +273,20 @@ class StadiumEconomicModel:
 
         total_costs = ticket_costs + beer_costs + internalized_costs
 
+        # PROFIT
         profit = total_revenue - total_costs
+
+        # TAX REVENUE (collected by government)
+        sales_tax_revenue = (beer_price - pre_tax_beer_price) * total_beers
+        excise_tax_revenue = self.beer_excise_tax * total_beers
+        total_tax_revenue = sales_tax_revenue + excise_tax_revenue
 
         return {
             'attendance': attendance,
             'beers_per_fan': beers_per_fan,
             'total_beers': total_beers,
+            'consumer_beer_price': beer_price,  # What consumer pays
+            'stadium_beer_price': stadium_beer_price,  # What stadium receives
             'ticket_revenue': ticket_revenue,
             'beer_revenue': beer_revenue,
             'total_revenue': total_revenue,
@@ -268,7 +294,10 @@ class StadiumEconomicModel:
             'beer_costs': beer_costs,
             'internalized_costs': internalized_costs,
             'total_costs': total_costs,
-            'profit': profit
+            'profit': profit,
+            'sales_tax_revenue': sales_tax_revenue,
+            'excise_tax_revenue': excise_tax_revenue,
+            'total_tax_revenue': total_tax_revenue
         }
 
     def optimal_pricing(self,

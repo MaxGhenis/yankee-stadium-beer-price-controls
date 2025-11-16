@@ -6,10 +6,15 @@
     "ticket_elasticity": -0.625,
     "beer_elasticity": -0.965,
     "ticket_cost": 20.0,
-    "beer_cost": 2.0,
+    "beer_cost": 5.0,
+    "beer_excise_tax": 0.074,
+    "beer_sales_tax_rate": 0.08875,
     "consumer_income": 200.0,
     "alpha": 1.5,
-    "beta": 3.0
+    "beta": 3.0,
+    "captive_demand_share": 0.5,
+    "experience_degradation_cost": 250.0,
+    "capacity_constraint": 50000
   },
   "externality_parameters": {
     "crime_cost_per_beer": 2.5,
@@ -20,15 +25,21 @@
     "price_floor": 15.0
   },
   "metadata": {
-    "description": "Default parameters for Yankee Stadium beer price control simulation",
+    "description": "Default parameters for Yankee Stadium beer price control simulation (tax-adjusted)",
     "sources": {
       "capacity": "Official Yankee Stadium capacity",
       "ticket_price": "Industry data (2025)",
-      "beer_price": "Industry data (2025)",
+      "beer_price": "Consumer price including taxes (2025)",
       "ticket_elasticity": "Literature midpoint: Noll (1974) -0.49, Scully (1989) -0.76",
       "beer_elasticity": "Literature midpoint: -0.79 to -1.14",
-      "externality_costs": "Manning et al. (1991), inflation-adjusted; Carpenter & Dobkin (2015)"
+      "beer_cost": "All-in production cost (materials + labor + overhead)",
+      "beer_excise_tax": "Federal ($0.05) + NY State ($0.013) + NYC ($0.011)",
+      "beer_sales_tax_rate": "NYC sales tax rate",
+      "experience_degradation_cost": "Calibrated to make $12.50 profit-maximizing",
+      "externality_costs": "Manning et al. (1991), inflation-adjusted; Carpenter & Dobkin (2015)",
+      "pigouvian_tax_gap": "$2.91/beer (external cost $4.00 - current tax $1.09)"
     },
-    "last_updated": "2025-01-16"
+    "last_updated": "2025-11-16",
+    "calibration_note": "Model calibrated so observed consumer price ($12.50) is profit-maximizing when accounting for taxes and internalized costs"
   }
 }
