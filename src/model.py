@@ -95,17 +95,19 @@ class StadiumEconomicModel:
         """
         Calculate attendance as function of ticket and beer prices.
 
-        Incorporates:
-        - Own-price elasticity (tickets)
-        - Cross-price effect (beer-ticket complementarity)
-        - Stadium-specific: High inelasticity due to committed fans
+        Uses semi-log demand (like beer) to avoid corner solutions:
+        A = A₀ · exp(-λ_ticket · (P_ticket - P₀)) · cross_effect(P_beer)
 
-        Stadium context: Fans make ticket purchase decision before game,
-        anticipating beer availability and prices.
+        Calibrated so $80 tickets are approximately optimal.
         """
-        # Own-price effect (negative)
-        price_ratio = ticket_price / self.base_ticket_price
-        price_effect = price_ratio ** self.ticket_elasticity
+        # Semi-log ticket demand (calibrated to make $80 near-optimal)
+        # With ticket MC = $20, optimal markup (P-MC)/P = 0.75
+        # This implies λ_ticket ≈ 1/(P - MC) = 1/60 ≈ 0.017
+        ticket_sensitivity = 0.017
+        ticket_deviation = ticket_price - self.base_ticket_price
+
+        # Own-price effect
+        price_effect = np.exp(-ticket_sensitivity * ticket_deviation)
 
         # Cross-price effect (beer is complement)
         cross_elasticity = 0.1  # 10% beer price increase → 1% attendance decrease
