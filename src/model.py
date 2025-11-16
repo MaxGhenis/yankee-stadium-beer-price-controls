@@ -44,7 +44,10 @@ class StadiumEconomicModel:
                  alpha: float = 1.5,  # utility weight on beer
                  beta: float = 3.0,   # utility weight on stadium experience
                  # Stadium-specific parameters
-                 captive_demand_share: float = 0.5):  # Share of demand that's price-insensitive
+                 captive_demand_share: float = 0.5,  # Share of demand that's price-insensitive
+                 # Internalized costs (crowd management, brand, experience degradation)
+                 experience_degradation_cost: float = 250.0,  # Quadratic cost parameter (calibrated)
+                 capacity_constraint: float = 50000):  # Max beers that can be served
         """
         Initialize model parameters.
 
@@ -60,6 +63,8 @@ class StadiumEconomicModel:
             alpha: Utility weight on beer consumption
             beta: Utility weight on stadium experience
             captive_demand_share: Fraction of demand from committed fans (less elastic)
+            experience_degradation_cost: Internalized cost per beer (crowd mgmt, brand, experience)
+            capacity_constraint: Maximum beers that can be served per game
         """
         self.capacity = capacity
         self.base_ticket_price = base_ticket_price
@@ -72,6 +77,8 @@ class StadiumEconomicModel:
         self.alpha = alpha
         self.beta = beta
         self.captive_demand_share = captive_demand_share
+        self.experience_degradation_cost = experience_degradation_cost
+        self.capacity_constraint = capacity_constraint
 
         # Calculate base quantities for calibration
         # Calibrate so that observed prices are near-optimal
@@ -178,9 +185,55 @@ class StadiumEconomicModel:
 
         return self._beers_per_fan_demand(beer_price, self.consumer_income)
 
+    def _internalized_costs(self, total_beers: float) -> float:
+        """
+        Calculate costs the stadium internalizes from alcohol consumption.
+
+        These are negative externalities on OTHER CUSTOMERS that the monopolist
+        stadium internalizes because they affect future profits:
+
+        1. CROWD MANAGEMENT: Security, cleanup, liability insurance
+           - More drunk fans → more incidents → CONVEX cost (incidents compound)
+
+        2. EXPERIENCE DEGRADATION: Drunk fans degrade experience for others
+           - Affects future attendance and willingness to pay
+           - CONVEX: First few drunk fans OK, but as more get drunk it compounds
+
+        3. BRAND/REPUTATION: Excessive intoxication damages brand
+           - "Cheap beer stadium" or "rowdy crowd" reputation
+           - CONVEX: Reputational damage accelerates with extreme consumption
+
+        4. CAPACITY: Service bottlenecks and operational costs
+           - Can only serve so many beers per game
+           - Quadratic penalty near capacity
+
+        Args:
+            total_beers: Total beers sold
+
+        Returns:
+            Internalized cost ($) the stadium faces
+        """
+        # CONVEX cost for experience degradation
+        # Costs accelerate as consumption increases (compounding negative effects)
+        # Calibrated so observed prices ($12.50) are profit-maximizing
+        beers_per_1000 = total_beers / 1000
+        experience_cost = self.experience_degradation_cost * (beers_per_1000 ** 2)
+
+        # Capacity penalty: quadratic cost as approach capacity
+        if total_beers > self.capacity_constraint:
+            capacity_penalty = ((total_beers - self.capacity_constraint) ** 2) * 0.001
+        else:
+            capacity_penalty = 0
+
+        return experience_cost + capacity_penalty
+
     def stadium_revenue(self, ticket_price: float, beer_price: float) -> Dict[str, float]:
         """
-        Calculate stadium revenues and costs.
+        Calculate stadium revenues and costs INCLUDING internalized externalities.
+
+        The stadium is a monopolist that internalizes negative externalities
+        (crowd management, brand damage, experience degradation) because
+        these affect its long-run profits.
 
         Returns:
             Dict with ticket_revenue, beer_revenue, total_revenue,
@@ -196,7 +249,11 @@ class StadiumEconomicModel:
 
         ticket_costs = self.ticket_cost * attendance
         beer_costs = self.beer_cost * total_beers
-        total_costs = ticket_costs + beer_costs
+
+        # INTERNALIZED COSTS: Stadium internalizes externalities on other customers
+        internalized_costs = self._internalized_costs(total_beers)
+
+        total_costs = ticket_costs + beer_costs + internalized_costs
 
         profit = total_revenue - total_costs
 
@@ -209,6 +266,7 @@ class StadiumEconomicModel:
             'total_revenue': total_revenue,
             'ticket_costs': ticket_costs,
             'beer_costs': beer_costs,
+            'internalized_costs': internalized_costs,
             'total_costs': total_costs,
             'profit': profit
         }
