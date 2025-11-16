@@ -10,6 +10,8 @@ chapters:
     title: Model Calibration
   - file: simulation
     title: Simulation Results
+  - file: sensitivity
+    title: Sensitivity Analysis & Validation
   - file: policy
     title: Policy Analysis
   - file: taxes
