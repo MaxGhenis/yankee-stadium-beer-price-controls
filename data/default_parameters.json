@@ -1,0 +1,34 @@
+{
+  "model_parameters": {
+    "capacity": 46537,
+    "base_ticket_price": 80.0,
+    "base_beer_price": 12.5,
+    "ticket_elasticity": -0.625,
+    "beer_elasticity": -0.965,
+    "ticket_cost": 20.0,
+    "beer_cost": 2.0,
+    "consumer_income": 200.0,
+    "alpha": 1.5,
+    "beta": 3.0
+  },
+  "externality_parameters": {
+    "crime_cost_per_beer": 2.5,
+    "health_cost_per_beer": 1.5
+  },
+  "policy_scenarios": {
+    "price_ceiling": 8.0,
+    "price_floor": 15.0
+  },
+  "metadata": {
+    "description": "Default parameters for Yankee Stadium beer price control simulation",
+    "sources": {
+      "capacity": "Official Yankee Stadium capacity",
+      "ticket_price": "Industry data (2025)",
+      "beer_price": "Industry data (2025)",
+      "ticket_elasticity": "Literature midpoint: Noll (1974) -0.49, Scully (1989) -0.76",
+      "beer_elasticity": "Literature midpoint: -0.79 to -1.14",
+      "externality_costs": "Manning et al. (1991), inflation-adjusted; Carpenter & Dobkin (2015)"
+    },
+    "last_updated": "2025-01-16"
+  }
+}
