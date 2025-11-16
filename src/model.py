@@ -84,8 +84,13 @@ class StadiumEconomicModel:
         price_effect = (ticket_price / self.base_ticket_price) ** self.ticket_elasticity
 
         # Cross-price effect (positive - beer is complement)
+        # Handle special case when beer_price is 0 (beer ban)
         cross_elasticity = 0.1  # 10% increase in beer price -> 1% decrease in attendance
-        cross_effect = (beer_price / self.base_beer_price) ** (-cross_elasticity)
+        if beer_price > 0:
+            cross_effect = (beer_price / self.base_beer_price) ** (-cross_elasticity)
+        else:
+            # Beer ban: attendance decreases slightly due to complementarity
+            cross_effect = 0.95  # 5% attendance reduction when beer unavailable
 
         attendance = base * price_effect * cross_effect
 
@@ -104,6 +109,10 @@ class StadiumEconomicModel:
             base_quantity = 1.0
         else:
             base_quantity = self.base_beers_per_fan
+
+        # Handle special case when beer_price is 0 (free beer or calculation error)
+        if beer_price <= 0:
+            return 0
 
         quantity = base_quantity * (beer_price / self.base_beer_price) ** self.beer_elasticity
 
@@ -205,7 +214,7 @@ class StadiumEconomicModel:
 
         # Set bounds
         ticket_bounds = (10, 200)
-        beer_bounds = (0, 30)
+        beer_bounds = (self.beer_cost + 0.1, 30)  # Must be above marginal cost
 
         if beer_price_control is not None:
             beer_bounds = (beer_price_control, beer_price_control)

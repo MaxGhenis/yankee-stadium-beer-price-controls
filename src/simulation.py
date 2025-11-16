@@ -53,20 +53,24 @@ class BeerPriceControlSimulator:
         if beer_banned:
             # No beer allowed
             ticket_price = self.model.base_ticket_price
-            beer_price = 0
-            beer_quantity = 0
+            # For welfare calculations, use a high price but not infinity
+            beer_price = self.model.base_beer_price  # Will be 0 quantity anyway
 
-            result = self.model.stadium_revenue(ticket_price, 0)
-            result['total_beers'] = 0
-            result['beers_per_fan'] = 0
+            # Calculate attendance with beer unavailable (cross-effect applies)
+            attendance = self.model._attendance_demand(ticket_price, 0)
 
-            # Recalculate with beer ban
-            attendance = self.model._attendance_demand(ticket_price, 100)  # high beer price proxy
-            result['attendance'] = attendance
-            result['ticket_revenue'] = ticket_price * attendance
-            result['beer_revenue'] = 0
-            result['total_revenue'] = result['ticket_revenue']
-            result['profit'] = result['total_revenue'] - self.model.ticket_cost * attendance
+            result = {
+                'attendance': attendance,
+                'beers_per_fan': 0,
+                'total_beers': 0,
+                'ticket_revenue': ticket_price * attendance,
+                'beer_revenue': 0,
+                'total_revenue': ticket_price * attendance,
+                'ticket_costs': self.model.ticket_cost * attendance,
+                'beer_costs': 0,
+                'total_costs': self.model.ticket_cost * attendance,
+                'profit': ticket_price * attendance - self.model.ticket_cost * attendance
+            }
 
         elif beer_price_min is not None and beer_price_max is not None:
             # Both constraints - use the one that binds
