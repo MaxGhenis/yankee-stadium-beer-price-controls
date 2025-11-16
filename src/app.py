@@ -10,8 +10,8 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
-from model import StadiumEconomicModel
-from simulation import BeerPriceControlSimulator
+from .model import StadiumEconomicModel
+from .simulation import BeerPriceControlSimulator
 
 
 # Page configuration

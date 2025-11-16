@@ -1,0 +1,113 @@
+[project]
+name = "yankee-stadium-beer-controls"
+version = "0.1.0"
+description = "Economic analysis of beer price controls at Yankee Stadium"
+authors = [
+    {name = "Max Ghenis", email = "max@policyengine.org"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+license = {text = "MIT"}
+keywords = ["economics", "sports", "policy", "price-controls", "externalities"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering",
+]
+
+dependencies = [
+    "numpy>=1.26.0",
+    "pandas>=2.1.0",
+    "scipy>=1.11.0",
+    "matplotlib>=3.8.0",
+    "plotly>=5.18.0",
+    "streamlit>=1.31.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.12.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.7.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/maxghenis/yankee-stadium-beer-price-controls"
+Repository = "https://github.com/maxghenis/yankee-stadium-beer-price-controls"
+Documentation = "https://github.com/maxghenis/yankee-stadium-beer-price-controls/blob/main/README.md"
+
+[project.scripts]
+yankee-beer-sim = "yankee_stadium_beer_controls.example:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = [
+    "--verbose",
+    "--cov=src",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+]
+
+[tool.black]
+line-length = 100
+target-version = ["py312"]
+include = '\.pyi?$'
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+]
+ignore = [
+    "E501",  # line too long (handled by black)
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]  # unused imports in __init__.py
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["*/tests/*", "*/test_*.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]

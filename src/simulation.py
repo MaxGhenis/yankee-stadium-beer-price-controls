@@ -12,7 +12,7 @@ Compares different policy interventions:
 import numpy as np
 import pandas as pd
 from typing import Dict, List
-from model import StadiumEconomicModel
+from .model import StadiumEconomicModel
 
 
 class BeerPriceControlSimulator:

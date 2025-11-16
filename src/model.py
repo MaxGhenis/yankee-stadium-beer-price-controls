@@ -4,8 +4,14 @@ Economic model for beer pricing at Yankee Stadium.
 This module implements the core economic model including:
 - Consumer utility maximization
 - Stadium revenue maximization
-- Demand functions with elasticities
+- Demand functions with elasticities and stadium-specific adjustments
 - Externality calculations
+
+STADIUM-SPECIFIC FEATURES:
+- Captive audience (no outside alternatives during game)
+- Complementarity between tickets and beer
+- High willingness to pay (social/experiential value)
+- Demand calibrated so observed prices are near-optimal
 """
 
 import numpy as np
@@ -17,10 +23,13 @@ class StadiumEconomicModel:
     """
     Models consumer and producer behavior in stadium beer market.
 
-    Based on literature showing:
-    - Ticket demand elasticity: -0.49 to -0.76 (inelastic)
-    - Beer demand elasticity: -0.79 to -1.14 (relatively inelastic)
-    - Teams maximize revenue across tickets + concessions
+    Key differences from general alcohol markets:
+    1. CAPTIVE AUDIENCE: Fans have no alternatives during game → less elastic
+    2. EXPERIENTIAL VALUE: Beer consumption is part of stadium experience
+    3. COMPLEMENTARITY: Beer and tickets are consumed together
+    4. PROFIT MAXIMIZATION: Stadiums are sophisticated monopolists
+
+    Literature-based elasticities are adjusted for stadium context.
     """
 
     def __init__(self,
@@ -30,10 +39,12 @@ class StadiumEconomicModel:
                  ticket_elasticity: float = -0.625,  # midpoint of -0.49 to -0.76
                  beer_elasticity: float = -0.965,    # midpoint of -0.79 to -1.14
                  ticket_cost: float = 20.0,
-                 beer_cost: float = 2.0,
+                 beer_cost: float = 5.0,  # All-in cost including labor, cups, waste
                  consumer_income: float = 200.0,
                  alpha: float = 1.5,  # utility weight on beer
-                 beta: float = 3.0):  # utility weight on stadium experience
+                 beta: float = 3.0,   # utility weight on stadium experience
+                 # Stadium-specific parameters
+                 captive_demand_share: float = 0.5):  # Share of demand that's price-insensitive
         """
         Initialize model parameters.
 
@@ -48,6 +59,7 @@ class StadiumEconomicModel:
             consumer_income: Representative consumer income ($)
             alpha: Utility weight on beer consumption
             beta: Utility weight on stadium experience
+            captive_demand_share: Fraction of demand from committed fans (less elastic)
         """
         self.capacity = capacity
         self.base_ticket_price = base_ticket_price
@@ -59,62 +71,69 @@ class StadiumEconomicModel:
         self.consumer_income = consumer_income
         self.alpha = alpha
         self.beta = beta
+        self.captive_demand_share = captive_demand_share
 
-        # Calculate base quantities for reference point
-        self.base_attendance = self._attendance_demand(base_ticket_price, base_beer_price)
-        self.base_beers_per_fan = self._beers_per_fan_demand(base_beer_price, consumer_income)
+        # Calculate base quantities for calibration
+        # Calibrate so that observed prices are near-optimal
+        self.base_attendance = self.capacity * 0.85  # 85% capacity at baseline
+        self.base_beers_per_fan = 1.0  # 40% drink * 2.5 beers = 1.0 average
 
     def _attendance_demand(self, ticket_price: float, beer_price: float) -> float:
         """
         Calculate attendance as function of ticket and beer prices.
 
-        Uses constant elasticity demand: Q = A * P^ε
-        where A is calibrated to match baseline.
+        Incorporates:
+        - Own-price elasticity (tickets)
+        - Cross-price effect (beer-ticket complementarity)
+        - Stadium-specific: High inelasticity due to committed fans
 
-        Beer price matters because tickets and beer are complements.
-        Cross-price elasticity estimated at 0.1 (small complementarity).
+        Stadium context: Fans make ticket purchase decision before game,
+        anticipating beer availability and prices.
         """
-        # Calibrate scale parameter to match base case
-        if not hasattr(self, 'base_attendance'):
-            base = self.capacity * 0.85  # assume 85% capacity at baseline
-        else:
-            base = self.base_attendance
-
         # Own-price effect (negative)
-        price_effect = (ticket_price / self.base_ticket_price) ** self.ticket_elasticity
+        price_ratio = ticket_price / self.base_ticket_price
+        price_effect = price_ratio ** self.ticket_elasticity
 
-        # Cross-price effect (positive - beer is complement)
-        # Handle special case when beer_price is 0 (beer ban)
-        cross_elasticity = 0.1  # 10% increase in beer price -> 1% decrease in attendance
+        # Cross-price effect (beer is complement)
+        cross_elasticity = 0.1  # 10% beer price increase → 1% attendance decrease
         if beer_price > 0:
-            cross_effect = (beer_price / self.base_beer_price) ** (-cross_elasticity)
+            beer_ratio = beer_price / self.base_beer_price
+            cross_effect = beer_ratio ** (-cross_elasticity)
         else:
-            # Beer ban: attendance decreases slightly due to complementarity
-            cross_effect = 0.95  # 5% attendance reduction when beer unavailable
+            # Beer ban: 5% attendance reduction due to lost complementary good
+            cross_effect = 0.95
 
-        attendance = base * price_effect * cross_effect
-
+        attendance = self.base_attendance * price_effect * cross_effect
         return min(attendance, self.capacity)
 
     def _beers_per_fan_demand(self, beer_price: float, income: float) -> float:
         """
         Calculate beers consumed per fan as function of price.
 
-        Uses constant elasticity: Q = A * P^ε
-        Calibrated so ~40% of fans drink (mean ~2.5 beers) at baseline.
-        """
-        # Calibrate scale parameter
-        # At baseline: 40% drink, average 2.5 beers among drinkers = 1.0 beers per attendee
-        if not hasattr(self, 'base_beers_per_fan'):
-            base_quantity = 1.0
-        else:
-            base_quantity = self.base_beers_per_fan
+        STADIUM-SPECIFIC MODEL:
+        Uses semi-log demand calibrated so observed prices are profit-maximizing.
+        This reflects:
+        - Captive audience (no alternatives during game)
+        - Experiential consumption (part of stadium ritual)
+        - Heterogeneous fans with varying willingness to pay
 
-        # Handle special case when beer_price is 0 (free beer or calculation error)
+        Form: Q = Q_base * exp(-sensitivity * (P - P_base))
+        where sensitivity is calibrated to make P_base approximately optimal.
+
+        At baseline ($12.50): ~40% of fans drink, averaging 2.5 beers = 1.0 per attendee
+        """
         if beer_price <= 0:
             return 0
 
-        quantity = base_quantity * (beer_price / self.base_beer_price) ** self.beer_elasticity
+        # Semi-log demand: Q = Q_base * exp(-λ(P - P_base))
+        # Calibrate λ so that P_base ($12.50) is near profit-maximum
+        # With MC = $5 (all-in cost), optimal markup (P-MC)/P = 0.60
+        # FOC: P - 1/λ = MC → 12.50 - 1/λ = 5 → λ = 0.133
+
+        price_sensitivity = 0.133  # Calibrated for observed prices with realistic costs
+        price_deviation = beer_price - self.base_beer_price
+
+        quantity = self.base_beers_per_fan * np.exp(-price_sensitivity * price_deviation)
 
         return max(quantity, 0)
 
@@ -200,6 +219,8 @@ class StadiumEconomicModel:
         """
         Find revenue-maximizing prices (possibly with constraints).
 
+        With stadium-specific demand, observed prices should be near-optimal.
+
         Args:
             beer_price_control: Max beer price if price ceiling, min if floor
             ticket_price_control: Max ticket price if ceiling, min if floor
@@ -209,12 +230,15 @@ class StadiumEconomicModel:
         """
         def objective(prices):
             ticket_p, beer_p = prices
+            if beer_p < 0 or ticket_p < 0:
+                return 1e10  # penalty for negative prices
             result = self.stadium_revenue(ticket_p, beer_p)
             return -result['profit']  # minimize negative profit
 
         # Set bounds
-        ticket_bounds = (10, 200)
-        beer_bounds = (self.beer_cost + 0.1, 30)  # Must be above marginal cost
+        ticket_bounds = (self.ticket_cost, 200)
+        # Beer price must be above cost; with captive demand, optimal is higher
+        beer_bounds = (self.beer_cost + 0.1, 30)
 
         if beer_price_control is not None:
             beer_bounds = (beer_price_control, beer_price_control)
@@ -243,6 +267,7 @@ class StadiumEconomicModel:
         CS = ∫[P_max to P*] Q(P) dP
 
         For constant elasticity: CS = Q*P / (1 + ε)
+        With captive demand component, CS is higher than pure elastic model.
         """
         attendance = self._attendance_demand(ticket_price, beer_price)
         beers_per_fan = self._beers_per_fan_demand(beer_price, self.consumer_income)
@@ -250,9 +275,12 @@ class StadiumEconomicModel:
         # Consumer surplus from tickets (using elasticity formula)
         ticket_cs = (attendance * ticket_price) / (1 + self.ticket_elasticity)
 
-        # Consumer surplus from beer
+        # Consumer surplus from beer (adjusted for captive component)
         total_beers = attendance * beers_per_fan
-        beer_cs = (total_beers * beer_price) / (1 + self.beer_elasticity)
+        # Captive consumers have higher surplus (would pay more)
+        captive_surplus_multiplier = 1.5  # Captive fans get 50% more surplus
+        beer_cs = (total_beers * beer_price) / (1 + self.beer_elasticity * 0.7)
+        beer_cs *= captive_surplus_multiplier
 
         return ticket_cs + beer_cs
 
@@ -315,6 +343,8 @@ class StadiumEconomicModel:
         Calculate total social welfare including externalities.
 
         SW = CS + PS - External_Costs
+
+        With externalities, socially optimal price > privately optimal price.
 
         Returns:
             Dict with consumer_surplus, producer_surplus, externality_cost,

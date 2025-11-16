@@ -4,8 +4,8 @@ Example script demonstrating basic usage of the beer price control model.
 Run this to see a simple simulation without the Streamlit interface.
 """
 
-from model import StadiumEconomicModel
-from simulation import BeerPriceControlSimulator
+from .model import StadiumEconomicModel
+from .simulation import BeerPriceControlSimulator
 import pandas as pd
 
 
