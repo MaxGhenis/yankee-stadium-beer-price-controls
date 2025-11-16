@@ -97,10 +97,11 @@ beer_elasticity = st.sidebar.slider(
 st.sidebar.subheader("Cost Parameters")
 ticket_cost = st.sidebar.slider(
     "Marginal Cost per Ticket ($)",
-    min_value=5.0,
-    max_value=50.0,
-    value=20.0,
-    step=5.0
+    min_value=1.0,
+    max_value=20.0,
+    value=3.5,
+    step=0.5,
+    help="Realistic: ~$3.50 (most costs are fixed)"
 )
 
 beer_cost = st.sidebar.slider(
@@ -139,7 +140,17 @@ beta = st.sidebar.slider(
     help="Higher = stronger preference for stadium experience"
 )
 
-st.sidebar.subheader("Externality Costs")
+st.sidebar.subheader("Internalized Costs (Stadium)")
+experience_degradation_cost = st.sidebar.slider(
+    "Experience Degradation Cost (α)",
+    min_value=50.0,
+    max_value=500.0,
+    value=250.0,
+    step=50.0,
+    help="Convex cost from drunk fans hurting other customers' experience"
+)
+
+st.sidebar.subheader("Externality Costs (Society)")
 crime_cost_per_beer = st.sidebar.slider(
     "Crime Cost per Beer ($)",
     min_value=0.0,
@@ -186,7 +197,8 @@ with col2:
 # Initialize model
 @st.cache_data
 def create_model(capacity, base_ticket_price, base_beer_price, ticket_elasticity,
-                beer_elasticity, ticket_cost, beer_cost, consumer_income, alpha, beta):
+                beer_elasticity, ticket_cost, beer_cost, consumer_income, alpha, beta,
+                experience_degradation_cost):
     return StadiumEconomicModel(
         capacity=capacity,
         base_ticket_price=base_ticket_price,
@@ -197,12 +209,14 @@ def create_model(capacity, base_ticket_price, base_beer_price, ticket_elasticity
         beer_cost=beer_cost,
         consumer_income=consumer_income,
         alpha=alpha,
-        beta=beta
+        beta=beta,
+        experience_degradation_cost=experience_degradation_cost
     )
 
 model = create_model(
     capacity, base_ticket_price, base_beer_price, ticket_elasticity,
-    beer_elasticity, ticket_cost, beer_cost, consumer_income, alpha, beta
+    beer_elasticity, ticket_cost, beer_cost, consumer_income, alpha, beta,
+    experience_degradation_cost
 )
 
 # Run simulations
