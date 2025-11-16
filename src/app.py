@@ -10,8 +10,12 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
-from .model import StadiumEconomicModel
-from .simulation import BeerPriceControlSimulator
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from src.model import StadiumEconomicModel
+from src.simulation import BeerPriceControlSimulator
 
 
 # Page configuration

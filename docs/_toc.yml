@@ -12,6 +12,8 @@ chapters:
     title: Simulation Results
   - file: sensitivity
     title: Sensitivity Analysis & Validation
+  - file: monte_carlo
+    title: Monte Carlo Uncertainty Analysis
   - file: policy
     title: Policy Analysis
   - file: taxes
