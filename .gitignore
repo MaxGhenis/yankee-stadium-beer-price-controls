@@ -42,3 +42,7 @@ Thumbs.db
 
 # Streamlit
 .streamlit/
+
+# JupyterBook
+docs/_build/
+.jupyter_cache/

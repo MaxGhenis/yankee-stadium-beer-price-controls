@@ -1,0 +1,48 @@
+# Legacy Jupyter Book 1 config (for compatibility)
+title: Beer Price Controls at Yankee Stadium
+author: Max Ghenis
+copyright: '2025'
+# logo: logo.png  # TODO: Add logo
+
+execute:
+  execute_notebooks: cache
+  timeout: 120
+
+repository:
+  url: https://github.com/maxghenis/yankee-stadium-beer-price-controls
+  branch: main
+
+html:
+  use_repository_button: true
+  use_issues_button: true
+  use_edit_button: true
+  favicon: ''
+  baseurl: https://maxghenis.github.io/yankee-stadium-beer-price-controls
+
+launch_buttons:
+  notebook_interface: jupyterlab
+  binderhub_url: https://mybinder.org
+
+sphinx:
+  extra_extensions:
+    - sphinx_togglebutton
+    - sphinx_copybutton
+    - sphinxcontrib.bibtex
+  config:
+    bibtex_bibfiles:
+      - references.bib
+    html_theme_options:
+      repository_url: https://github.com/maxghenis/yankee-stadium-beer-price-controls
+      use_repository_button: true
+
+parse:
+  myst_enable_extensions:
+    - colon_fence
+    - deflist
+    - dollarmath
+    - linkify
+    - substitution
+    - tasklist
+  myst_substitutions:
+    base_beer_price: "$12.50"
+    optimal_beer_price: "$12.85"

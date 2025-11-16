@@ -1,0 +1,61 @@
+version: 1
+project:
+  title: Beer Price Controls at Yankee Stadium
+  subtitle: An Economic Analysis of Consumer Welfare, Revenue, and Externalities
+  authors:
+    - name: Max Ghenis
+      email: max@policyengine.org
+  github: https://github.com/maxghenis/yankee-stadium-beer-price-controls
+  copyright: '2025'
+  keywords:
+    - economics
+    - sports
+    - price controls
+    - externalities
+    - alcohol policy
+    - pigouvian tax
+
+site:
+  template: book-theme
+  title: Beer Price Controls at Yankee Stadium
+  # logo: logo.png  # TODO: Add logo
+  options:
+    logo_only: false
+    favicon: ''
+  nav:
+    - title: GitHub
+      url: https://github.com/maxghenis/yankee-stadium-beer-price-controls
+
+  actions:
+    - title: Streamlit App
+      url: http://localhost:8501
+
+sphinx:
+  extra_extensions:
+    - sphinx_togglebutton
+    - sphinx_copybutton
+    - sphinxcontrib.bibtex
+  config:
+    bibtex_bibfiles:
+      - references.bib
+    html_theme_options:
+      repository_url: https://github.com/maxghenis/yankee-stadium-beer-price-controls
+      use_repository_button: true
+      use_issues_button: true
+      use_edit_button: true
+
+jupyter:
+  myst_enable_extensions:
+    - colon_fence
+    - deflist
+    - dollarmath
+    - linkify
+    - substitution
+    - tasklist
+
+myst:
+  substitutions:
+    base_beer_price: "$12.50"
+    optimal_beer_price: "$12.85"
+    pigouvian_gap: "$2.91"
+    external_cost: "$4.00"
