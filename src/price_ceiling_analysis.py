@@ -87,8 +87,13 @@ def create_charts(df: pd.DataFrame, output_dir: Path = None):
         output_dir = Path(output_dir)
         output_dir.mkdir(exist_ok=True)
 
-    # Find baseline (observed price ~$12.50)
-    baseline_idx = np.argmin(np.abs(df['beer_ceiling'] - 12.5))
+    # Find equilibrium (model-predicted optimal, not observed)
+    # This is where ceiling stops binding
+    from model import StadiumEconomicModel
+    temp_model = StadiumEconomicModel()
+    _, equilibrium_beer, _ = temp_model.optimal_pricing()
+
+    baseline_idx = np.argmin(np.abs(df['beer_ceiling'] - equilibrium_beer))
     baseline = df.iloc[baseline_idx]
 
     # Chart 1: Prices
@@ -96,7 +101,7 @@ def create_charts(df: pd.DataFrame, output_dir: Path = None):
 
     ax1.plot(df['beer_ceiling'], df['ticket_price'], 'o-', color='#003087', linewidth=2)
     ax1.axhline(baseline['ticket_price'], color='gray', linestyle='--', alpha=0.5, label='Baseline')
-    ax1.axvline(12.5, color='gray', linestyle='--', alpha=0.5)
+    ax1.axvline(equilibrium_beer, color='gray', linestyle='--', alpha=0.5, label=f'Equilibrium ($\${equilibrium_beer:.2f})')
     ax1.set_xlabel('Beer Price Ceiling ($)', fontsize=12, fontweight='bold')
     ax1.set_ylabel('Optimal Ticket Price ($)', fontsize=12, fontweight='bold')
     ax1.set_title('Stadium Response: Ticket Prices Rise as Beer Ceiling Tightens',
@@ -127,7 +132,7 @@ def create_charts(df: pd.DataFrame, output_dir: Path = None):
 
     ax1.plot(df['beer_ceiling'], df['attendance']/1000, 'o-', color='#003087', linewidth=2)
     ax1.axhline(baseline['attendance']/1000, color='gray', linestyle='--', alpha=0.5, label='Baseline')
-    ax1.axvline(12.5, color='gray', linestyle='--', alpha=0.5)
+    ax1.axvline(equilibrium_beer, color='gray', linestyle='--', alpha=0.5, label=f'Equilibrium ($\${equilibrium_beer:.2f})')
     ax1.set_xlabel('Beer Price Ceiling ($)', fontsize=12, fontweight='bold')
     ax1.set_ylabel('Attendance (thousands)', fontsize=12, fontweight='bold')
     ax1.set_title('Lower Beer Ceilings Reduce Attendance\n(Higher Tickets + Complementarity)',
@@ -153,20 +158,26 @@ def create_charts(df: pd.DataFrame, output_dir: Path = None):
         plt.show()
     plt.close()
 
-    # Chart 3: Revenue
+    # Chart 3: Revenue (Stacked Area)
     fig, ax = plt.subplots(figsize=(12, 6))
 
-    ax.plot(df['beer_ceiling'], df['ticket_revenue']/1e6, 'o-',
-            color='#003087', linewidth=2, label='Ticket Revenue')
-    ax.plot(df['beer_ceiling'], df['beer_revenue']/1e6, 's-',
-            color='#E4002B', linewidth=2, label='Beer Revenue')
-    ax.plot(df['beer_ceiling'], df['total_revenue']/1e6, '^-',
-            color='#2ca02c', linewidth=2, label='Total Revenue', markersize=8)
-    ax.axvline(12.5, color='gray', linestyle='--', alpha=0.5, label='Baseline Ceiling')
+    # Create stacked area chart
+    ax.fill_between(df['beer_ceiling'], 0, df['ticket_revenue']/1e6,
+                    color='#003087', alpha=0.7, label='Ticket Revenue')
+    ax.fill_between(df['beer_ceiling'], df['ticket_revenue']/1e6,
+                    (df['ticket_revenue'] + df['beer_revenue'])/1e6,
+                    color='#E4002B', alpha=0.7, label='Beer Revenue')
+
+    # Add total revenue line on top
+    ax.plot(df['beer_ceiling'], df['total_revenue']/1e6, 'k-',
+            linewidth=2.5, label='Total Revenue', alpha=0.8)
+
+    ax.axvline(equilibrium_beer, color='gray', linestyle='--', alpha=0.5,
+               label=f'Equilibrium (\${equilibrium_beer:.2f})')
 
     ax.set_xlabel('Beer Price Ceiling ($)', fontsize=12, fontweight='bold')
     ax.set_ylabel('Revenue per Game ($ millions)', fontsize=12, fontweight='bold')
-    ax.set_title('Revenue Falls with Binding Beer Ceilings\n(Ticket Revenue Can\'t Fully Compensate)',
+    ax.set_title('Revenue Decomposition: Ticket vs Beer Revenue\n(Stacked Area Shows Components)',
                  fontsize=13, fontweight='bold')
     ax.legend(loc='best', fontsize=11)
     ax.grid(True, alpha=0.3)
@@ -185,7 +196,7 @@ def create_charts(df: pd.DataFrame, output_dir: Path = None):
     # Producer surplus (profit)
     ax1.plot(df['beer_ceiling'], df['profit']/1e6, 'o-', color='#2ca02c', linewidth=2)
     ax1.axhline(baseline['profit']/1e6, color='gray', linestyle='--', alpha=0.5, label='Baseline')
-    ax1.axvline(12.5, color='gray', linestyle='--', alpha=0.5)
+    ax1.axvline(equilibrium_beer, color='gray', linestyle='--', alpha=0.5, label=f'Equilibrium ($\${equilibrium_beer:.2f})')
     ax1.set_xlabel('Beer Price Ceiling ($)', fontsize=11, fontweight='bold')
     ax1.set_ylabel('Producer Surplus ($ millions)', fontsize=11, fontweight='bold')
     ax1.set_title('Stadium Profit Falls with Ceilings', fontsize=12, fontweight='bold')
@@ -332,7 +343,10 @@ if __name__ == "__main__":
     model = StadiumEconomicModel()
 
     # Range of beer price ceilings to analyze
-    ceilings = np.linspace(5, 20, 31)  # $5 to $20 in $0.50 increments
+    # From $0 (ban) to equilibrium (~$13) where ceiling stops binding
+    model_temp = StadiumEconomicModel()
+    _, equilibrium_price, _ = model_temp.optimal_pricing()
+    ceilings = np.linspace(0.5, equilibrium_price, 26)  # $0.50 to equilibrium
 
     print("Simulating beer price ceilings from $5 to $20...")
     df = simulate_price_ceilings(ceilings, model)
