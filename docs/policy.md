@@ -1,5 +1,27 @@
 # Policy Analysis
 
+## Price Control Implementation Details
+
+**Important Clarification:** Throughout this analysis, price controls apply to the **menu/sticker price (pre-sales-tax)**, consistent with:
+- **Real-world precedent:** Scotland's Minimum Unit Pricing applies pre-VAT; US historical price controls were pre-tax
+- **Enforcement practicality:** Regulators monitor posted menu prices, not checkout totals
+- **Legal structure:** Sales tax is applied at point of sale, after base price is determined
+
+**Example: $7 Beer Price Ceiling**
+
+| Component | Amount |
+|-----------|--------|
+| Maximum menu price | **$7.00** ← *Price control applies here* |
+| + NYC sales tax (8.875%) | +$0.61 |
+| = **Consumer pays** | **$7.61** |
+| - Sales tax to government | -$0.61 |
+| - Excise taxes | -$0.074 |
+| = **Stadium receives** | **$6.85** |
+
+**Implication:** When we analyze a "$7 ceiling," the stadium receives only **$6.85** after taxes, creating an even tighter constraint than the headline $7 suggests.
+
+This convention matches international minimum alcohol pricing (Scotland, Wales) and US retail price regulation precedent.
+
 ## Price Controls
 
 ### Price Ceiling: $7

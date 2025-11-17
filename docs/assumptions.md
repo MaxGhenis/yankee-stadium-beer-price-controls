@@ -22,7 +22,7 @@
 
 **Source**: ASSUMPTION, not empirical estimate
 
-**Rationale**: 
+**Rationale**:
 - {cite}`coates2007ticket` and {cite}`krautmann2007concessions` document that tickets and concessions are complements
 - Both papers show teams price tickets in inelastic region to drive concession sales
 - BUT: Neither provides specific cross-price elasticity estimate
@@ -31,6 +31,22 @@
 - Tickets and beer are complements (qualitative)
 - Teams jointly optimize (strong evidence)
 - Complementarity is "significant" (exact magnitude unknown)
+
+**Key Modeling Choice: Two-Way Complementarity**
+
+Recent theoretical work by {cite}`leisten2024beer` explicitly analyzes this assumption:
+- **Leisten assumes**: Beer prices do NOT affect ticket demand (one-way complementarity: tickets → beer)
+- **We assume**: Beer prices DO affect ticket demand (two-way complementarity: tickets ↔ beer)
+
+Both models predict beer ceilings cause ticket prices to rise, but through different mechanisms:
+- **Leisten**: Complementarity discount term in FOC shrinks → tickets rise to restore markup
+- **Our model**: Beer margin collapses → stadium shifts to tickets → higher tickets reduce attendance (limiting beer sales at bad margin)
+
+**Why we model two-way complementarity:**
+1. More realistic: fans likely consider total game cost including beer
+2. Allows for substitution to pre-game drinking if stadium beer too expensive
+3. Consistent with observed fan behavior (attendance drops when concession prices rise significantly)
+4. Makes model symmetric and general
 
 **Calibration approach:**
 - Assume 10% beer price change → 1% attendance change
@@ -41,6 +57,7 @@
 - Low: 0.05 (beer minor part of experience)
 - Base: 0.10 (current model)
 - High: 0.30 (beer central to fan experience)
+- Leisten: 0.00 (one-way only)
 
 ### ⚙️  CALIBRATED (To Match Observed Prices)
 

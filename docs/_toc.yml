@@ -16,6 +16,8 @@ parts:
         title: Model Calibration
       - file: simulation
         title: Simulation Results
+      - file: price_ceiling_analysis
+        title: Price Ceiling Comparative Statics
       - file: sensitivity
         title: Sensitivity Analysis & Validation
       - file: monte_carlo

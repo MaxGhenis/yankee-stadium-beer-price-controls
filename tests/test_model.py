@@ -292,3 +292,56 @@ class TestStadiumSpecificFeatures:
 
         # Beer price should affect attendance
         assert attendance_expensive_beer < attendance_cheap_beer
+
+    def test_log_concavity_of_demand(self, model):
+        """
+        Verify that demand functions are log-concave.
+
+        Leisten (2024) proves that under log-concavity, beer price ceilings
+        cause ticket prices to rise. Our semi-log demand satisfies this:
+        ln(Q) is linear (thus concave) in price.
+
+        For log-concavity: q * q'' < (q')^2
+        For semi-log Q = Q0 * exp(-λ*P):
+        - q' = -λ * Q
+        - q'' = λ^2 * Q
+        - q * q'' = Q * λ^2 * Q = λ^2 * Q^2
+        - (q')^2 = (-λ * Q)^2 = λ^2 * Q^2
+        - So q * q'' = (q')^2 (boundary case of log-concavity)
+
+        Actually, for strict log-concavity we want q * q'' < (q')^2.
+        Semi-log has q * q'' = (q')^2 (equality), which is the boundary.
+        But ln(Q) is LINEAR in P, which is concave (second derivative = 0).
+        This satisfies Leisten's condition.
+        """
+        model = StadiumEconomicModel()
+
+        # Test beer demand log-concavity
+        # For semi-log: ln(Q(P)) = ln(Q0) - λ*(P - P0)
+        # This is linear in P, thus concave (d²ln(Q)/dP² = 0 ≤ 0)
+
+        P1, P2 = 10.0, 15.0
+        alpha = 0.5
+        P_mid = alpha * P1 + (1 - alpha) * P2
+
+        Q1 = model._beers_per_fan_demand(P1, 200)
+        Q2 = model._beers_per_fan_demand(P2, 200)
+        Q_mid = model._beers_per_fan_demand(P_mid, 200)
+
+        # Log-concavity: ln(Q(αP1 + (1-α)P2)) ≥ α*ln(Q(P1)) + (1-α)*ln(Q(P2))
+        # Or equivalently: Q_mid ≥ Q1^α * Q2^(1-α)
+        import numpy as np
+        expected_log = alpha * np.log(Q1) + (1 - alpha) * np.log(Q2)
+        actual_log = np.log(Q_mid)
+        assert actual_log == pytest.approx(expected_log, rel=1e-6) or actual_log >= expected_log, \
+            f"Beer demand should be log-concave: {actual_log} < {expected_log}"
+
+        # Test ticket demand log-concavity (similar structure)
+        A1 = model._attendance_demand(60, 12.5)
+        A2 = model._attendance_demand(100, 12.5)
+        A_mid = model._attendance_demand(alpha * 60 + (1-alpha) * 100, 12.5)
+
+        expected_log_a = alpha * np.log(A1) + (1 - alpha) * np.log(A2)
+        actual_log_a = np.log(A_mid)
+        assert actual_log_a == pytest.approx(expected_log_a, rel=1e-6) or actual_log_a >= expected_log_a, \
+            f"Ticket demand should be log-concave: {actual_log_a} < {expected_log_a}"

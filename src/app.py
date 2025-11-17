@@ -362,11 +362,12 @@ st.dataframe(display_df, use_container_width=True)
 # Visualizations
 st.header("📊 Visualizations")
 
-tab1, tab2, tab3, tab4 = st.tabs([
+tab1, tab2, tab3, tab4, tab5 = st.tabs([
     "Revenue & Welfare",
     "Attendance & Consumption",
     "Price Comparison",
-    "Externalities"
+    "Externalities",
+    "Price Ceiling Analysis"
 ])
 
 with tab1:
@@ -550,6 +551,194 @@ with tab4:
             f"${health_cost_per_beer:.2f}",
             help="External cost from health system burden per beer"
         )
+
+with tab5:
+    st.subheader("📈 Price Ceiling Comparative Statics")
+    st.markdown("""
+    This analysis shows how outcomes vary as we systematically vary the beer price ceiling,
+    holding all other parameters constant. This reveals the **stadium's optimal response**
+    and the resulting equilibrium effects.
+    """)
+
+    # Generate price ceiling sweep
+    ceiling_range = np.linspace(5, 20, 31)
+    ceiling_results = []
+
+    with st.spinner("Computing price ceiling analysis..."):
+        for ceiling in ceiling_range:
+            t_p, b_p, rev = model.optimal_pricing(beer_price_control=ceiling)
+            welf = model.social_welfare(t_p, b_p, crime_cost_per_beer, health_cost_per_beer)
+            ceiling_results.append({
+                'ceiling': ceiling,
+                'ticket_price': t_p,
+                'beer_price': b_p,
+                'attendance': rev['attendance'],
+                'beers_per_fan': rev['beers_per_fan'],
+                'total_beers': rev['total_beers'],
+                'total_revenue': rev['total_revenue'],
+                'profit': rev['profit'],
+                'consumer_surplus': welf['consumer_surplus'],
+                'externality_cost': welf['externality_cost'],
+                'social_welfare': welf['social_welfare']
+            })
+
+    ceiling_df = pd.DataFrame(ceiling_results)
+
+    # Chart 1: Pricing Response
+    st.subheader("1. Stadium Pricing Response")
+    col1, col2 = st.columns(2)
+
+    with col1:
+        fig_ticket_response = go.Figure()
+        fig_ticket_response.add_trace(go.Scatter(
+            x=ceiling_df['ceiling'],
+            y=ceiling_df['ticket_price'],
+            mode='lines+markers',
+            name='Optimal Ticket Price',
+            line=dict(color='#003087', width=3),
+            marker=dict(size=6)
+        ))
+        fig_ticket_response.add_hline(
+            y=base_ticket_price,
+            line_dash="dash",
+            line_color="gray",
+            annotation_text="Baseline",
+            annotation_position="right"
+        )
+        fig_ticket_response.add_vline(
+            x=base_beer_price,
+            line_dash="dash",
+            line_color="gray"
+        )
+        fig_ticket_response.update_layout(
+            title="Ticket Prices Rise as Beer Ceiling Tightens",
+            xaxis_title="Beer Price Ceiling ($)",
+            yaxis_title="Optimal Ticket Price ($)",
+            height=400
+        )
+        st.plotly_chart(fig_ticket_response, use_container_width=True)
+
+    with col2:
+        fig_beer_response = go.Figure()
+        fig_beer_response.add_trace(go.Scatter(
+            x=ceiling_df['ceiling'],
+            y=ceiling_df['beer_price'],
+            mode='lines+markers',
+            name='Actual Beer Price',
+            line=dict(color='#E4002B', width=3),
+            marker=dict(size=6)
+        ))
+        fig_beer_response.add_trace(go.Scatter(
+            x=ceiling_df['ceiling'],
+            y=ceiling_df['ceiling'],
+            mode='lines',
+            name='Ceiling',
+            line=dict(color='gray', width=2, dash='dash')
+        ))
+        fig_beer_response.add_vline(
+            x=base_beer_price,
+            line_dash="dash",
+            line_color="gray"
+        )
+        fig_beer_response.update_layout(
+            title="Beer Price Tracks Ceiling (When Binding)",
+            xaxis_title="Beer Price Ceiling ($)",
+            yaxis_title="Beer Price ($)",
+            height=400
+        )
+        st.plotly_chart(fig_beer_response, use_container_width=True)
+
+    # Chart 2: Quantities
+    st.subheader("2. Quantity Effects")
+    col1, col2 = st.columns(2)
+
+    with col1:
+        fig_attendance = go.Figure()
+        fig_attendance.add_trace(go.Scatter(
+            x=ceiling_df['ceiling'],
+            y=ceiling_df['attendance']/1000,
+            mode='lines+markers',
+            line=dict(color='#003087', width=3),
+            marker=dict(size=6)
+        ))
+        fig_attendance.add_vline(x=base_beer_price, line_dash="dash", line_color="gray")
+        fig_attendance.update_layout(
+            title="Attendance Falls with Lower Ceilings",
+            xaxis_title="Beer Price Ceiling ($)",
+            yaxis_title="Attendance (thousands)",
+            height=400
+        )
+        st.plotly_chart(fig_attendance, use_container_width=True)
+
+    with col2:
+        fig_total_beers = go.Figure()
+        fig_total_beers.add_trace(go.Scatter(
+            x=ceiling_df['ceiling'],
+            y=ceiling_df['total_beers']/1000,
+            mode='lines+markers',
+            line=dict(color='#E4002B', width=3),
+            marker=dict(size=6)
+        ))
+        fig_total_beers.add_vline(x=base_beer_price, line_dash="dash", line_color="gray")
+        fig_total_beers.update_layout(
+            title="Total Beer Consumption Rises",
+            xaxis_title="Beer Price Ceiling ($)",
+            yaxis_title="Total Beers (thousands)",
+            height=400
+        )
+        st.plotly_chart(fig_total_beers, use_container_width=True)
+
+    # Chart 3: Welfare
+    st.subheader("3. Welfare Analysis")
+    fig_welfare_all = go.Figure()
+    fig_welfare_all.add_trace(go.Scatter(
+        x=ceiling_df['ceiling'],
+        y=ceiling_df['consumer_surplus']/1e6,
+        mode='lines+markers',
+        name='Consumer Surplus',
+        line=dict(width=2.5),
+        marker=dict(size=6)
+    ))
+    fig_welfare_all.add_trace(go.Scatter(
+        x=ceiling_df['ceiling'],
+        y=ceiling_df['profit']/1e6,
+        mode='lines+markers',
+        name='Producer Surplus (Profit)',
+        line=dict(width=2.5),
+        marker=dict(size=6)
+    ))
+    fig_welfare_all.add_trace(go.Scatter(
+        x=ceiling_df['ceiling'],
+        y=-ceiling_df['externality_cost']/1e6,
+        mode='lines+markers',
+        name='Externality Cost (negative)',
+        line=dict(width=2.5),
+        marker=dict(size=6)
+    ))
+    fig_welfare_all.add_trace(go.Scatter(
+        x=ceiling_df['ceiling'],
+        y=ceiling_df['social_welfare']/1e6,
+        mode='lines+markers',
+        name='Social Welfare (sum)',
+        line=dict(width=3.5, color='purple'),
+        marker=dict(size=8)
+    ))
+    fig_welfare_all.add_vline(x=base_beer_price, line_dash="dash", line_color="gray",
+                              annotation_text="Baseline")
+    fig_welfare_all.update_layout(
+        title="Welfare Decomposition: Lower Ceilings Reduce Social Welfare",
+        xaxis_title="Beer Price Ceiling ($)",
+        yaxis_title="Welfare ($ millions per game)",
+        height=500,
+        legend=dict(x=0.02, y=0.98)
+    )
+    st.plotly_chart(fig_welfare_all, use_container_width=True)
+
+    st.info("""
+    **Key Insight:** Price ceilings create deadweight loss. The stadium loses more than
+    consumers gain, and externalities worsen. This motivates Pigouvian taxation as a
+    superior policy instrument.
+    """)
 
 # Comparative analysis
 st.header("🔍 Comparative Analysis")

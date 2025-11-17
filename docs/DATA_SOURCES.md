@@ -4,14 +4,36 @@
 
 ### ✅ ACTUAL DATA (Published)
 
-**1. Prices (2025)**
-- Beer: $10-15 at Yankee Stadium (industry reports, fan reports)
-- Average: $12.50
-- Source: Team Marketing Report, StubHub, TripAdvisor reviews
+**1. Beer Prices (2025)**
+- Range: $10-15 at Yankee Stadium (industry reports, fan reports)
+- **Model baseline: $12.50**
+- Source: Team Marketing Report (TMR), StubHub, TripAdvisor reviews, fan reports
+- **Interpretation:** Most likely this represents the **menu/sticker price (pre-sales-tax)**
+  - When fans report "I paid $12 for beer," they typically mean the posted menu price
+  - With 8.875% NYC sales tax: **Consumer actually pays $13.59**
+  - Stadium receives: **$12.37** after taxes ($1.02 sales tax + $0.07 excise)
+  - **For our model:** We treat $12.50 as the consumer-facing decision price
+  - Demand responds to $12.50 (the price consumers see and compare)
+  - Revenue calculations properly account for tax wedge
+
+**Tax Structure per Beer:**
+| Item | Amount |
+|------|--------|
+| Menu price (what consumer sees) | $12.50 |
+| NYC sales tax (8.875%) | +$1.11 |
+| **Total consumer pays** | **$13.61** |
+| Less: Sales tax to government | -$1.11 |
+| Less: Federal excise tax ($18/barrel) | -$0.058 |
+| Less: NY State excise ($0.14/gal) | -$0.012 |
+| Less: NYC excise ($0.12/gal) | -$0.004 |
+| **Stadium receives** | **$12.43** |
+
+- **Limitation:** Industry price reports rarely clarify whether prices are pre-tax or post-tax, leading to ambiguity across sources
 
 **2. Ticket Prices**
-- Average: ~$80
+- Average: ~$80 (likely secondary market all-in price)
 - Source: Secondary market data (StubHub, SeatGeek)
+- **Note:** Secondary market prices typically include all fees and taxes
 
 **3. Stadium Capacity**
 - 46,537 seats

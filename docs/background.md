@@ -77,7 +77,62 @@ Combining crime and health externalities:
 
 These are costs borne by **society**, not the stadium.
 
-## Why Stadiums Charge $12.50
+## Theoretical Foundation: Price Controls and Complementary Goods
+
+### Leisten (2024): Rigorous Analysis of Beer Price Ceilings
+
+{cite}`leisten2024beer` provides the theoretical foundation for analyzing beer price controls at stadiums through a rigorous monopoly model with complementary goods.
+
+**His Model Setup:**
+- Ticket demand: $q_x(p_x)$
+- Beer demand: $q_y = q_x(p_x) \cdot q_y(p_y)$ (multiplicative form)
+- **Key assumption**: Beer prices do NOT directly affect ticket demand (one-way complementarity: tickets → beer)
+- Zero marginal costs (simplification)
+- Log-concave demand functions
+
+**First-Order Conditions (Unconstrained):**
+
+For beer (standard monopoly markup):
+$$p_y = -\frac{q_y(p_y)}{q_y'(p_y)}$$
+
+For tickets (markup with complementarity discount):
+$$p_x = -\frac{q_x(p_x)}{q_x'(p_x)} - p_y q_y(p_y)$$
+
+The second term represents a "complementarity discount" - stadium lowers ticket prices because each attendee brings complementary beer revenue.
+
+**With Beer Price Ceiling $Z$:**
+
+When ceiling binds, the FOC for tickets becomes:
+$$p_x = -\frac{q_x(p_x)}{q_x'(p_x)} - Z q_y(Z)$$
+
+The complementarity discount shrinks as $Z$ falls, so $p_x$ must rise to restore the FOC.
+
+**Key Result:**
+
+Taking total derivatives with respect to ceiling $Z$:
+$$\frac{dp_x}{dZ} = \frac{Zq_y'(Z) - q_y(Z)}{\frac{q_x(p_x)q_x''(p_x)}{q_x'(p_x)} - 2}$$
+
+The sign depends on whether $2q_x'(p_x)^2 > q_x(p_x)q_x''(p_x)$.
+
+**Under log-concavity** (his key assumption), this inequality holds, proving:
+
+$$\frac{dp_x}{dZ} < 0$$
+
+**Meaning: Lower beer ceilings cause ticket prices to rise.**
+
+**Our Extension:**
+
+We extend Leisten's framework by:
+1. **Two-way complementarity**: Beer prices affect ticket demand in our model ($A(P_T, P_B)$)
+2. **Realistic costs**: Marginal costs, taxes, internalized externalities
+3. **Quantitative calibration**: Predicts magnitude (not just sign) of effects
+4. **Welfare analysis**: Decompose impacts across consumers, producers, society
+
+Both approaches reach the same qualitative conclusion but through different mechanisms:
+- **Leisten**: Complementarity discount shrinks → tickets rise to restore markup
+- **Our model**: Beer margin collapses → stadium shifts to tickets → attendance falls (limiting beer sales at bad margin)
+
+## Why Stadiums Charge \$12.50
 
 ### Internalized Costs (Already in Stadium's Optimization)
 

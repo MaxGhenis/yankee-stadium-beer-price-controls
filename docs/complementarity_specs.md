@@ -1,6 +1,32 @@
 # Alternative Complementarity Specifications
 
-## Current Specification (Multiplicative)
+## Theoretical Foundation: Leisten (2024)
+
+{cite}`leisten2024beer` provides rigorous theoretical analysis of beer price controls at stadiums:
+
+**Key result**: Under log-concavity of demand, beer price ceilings cause ticket prices to rise.
+
+**His model:**
+- Ticket demand: $q_x(p_x)$
+- Concession demand: $q_y = q_x(p_x) \cdot q_y(p_y)$ (multiplicative)
+- **Assumption**: Beer prices do NOT directly affect ticket demand (one-way complementarity)
+
+**First-order conditions:**
+$$p_y = -\frac{q_y(p_y)}{q_y'(p_y)}$$
+$$p_x = -\frac{q_x(p_x)}{q_x'(p_x)} - p_y q_y(p_y)$$
+
+When beer price ceiling $Z$ binds:
+$$\frac{dp_x}{dZ} = \frac{Zq_y'(Z) - q_y(Z)}{\frac{q_x(p_x)q_x''(p_x)}{q_x'(p_x)} - 2}$$
+
+Sign depends on: $2q_x'(p_x)^2$ vs $q_x(p_x)q_x''(p_x)$
+
+**Under log-concavity:** $q_x q_x'' < q_x'^2$, so Leisten proves $\frac{dp_x}{dZ} < 0$ (tickets rise when ceiling tightens).
+
+**Our extension:** We allow two-way complementarity ($A(P_T, P_B)$), which is more general but requires assuming the cross-elasticity magnitude.
+
+---
+
+## Current Specification (Two-Way Multiplicative)
 
 **Functional form:**
 $$A(P_T, P_B) = A_0 \cdot e^{-\lambda_T(P_T - P_0^T)} \cdot \left(\frac{P_B}{P_0^B}\right)^{-\epsilon_{cross}}$$
@@ -11,8 +37,9 @@ Where $\epsilon_{cross} = 0.1$
 - Cross-price elasticity: $\frac{\partial \ln A}{\partial \ln P_B} = -0.1$
 - 10% beer price increase → 1% attendance decrease
 - Symmetric: effect scales with price level
+- **Log-concave**: Semi-log form satisfies Leisten's condition
 
-**Citation needed**: Standard in single-equation demand {cite}`varian1992microeconomic`
+**Citation**: Standard in single-equation demand {cite}`varian1992microeconomic`; two-way extension beyond {cite}`leisten2024beer`
 
 ---
 

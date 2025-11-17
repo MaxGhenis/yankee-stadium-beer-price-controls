@@ -1,7 +1,7 @@
 {
   "input": {
     "files": [
-      "/Users/maxghenis/yankee-stadium-beer-price-controls/docs"
+      "."
     ],
     "opts": {
       "execute": false,
@@ -15,7 +15,7 @@
       "cff": false,
       "site": false,
       "html": false,
-      "all": true,
+      "all": false,
       "doiBib": false,
       "watch": false,
       "force": false,
@@ -23,9 +23,7 @@
       "strict": false,
       "ci": false,
       "maxSizeWebp": 1572864
-    },
-    "performSiteBuild": true
+    }
   },
-  "exports": [],
-  "buildSite": true
+  "exports": []
 }
