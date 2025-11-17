@@ -2,42 +2,56 @@
 
 ## Overview
 
-This analysis uses a **partial equilibrium model** of the stadium beer market with:
-- Consumer utility maximization
+This analysis uses a **partial equilibrium model with heterogeneous consumers**:
+- **2 consumer types**: Non-drinkers (60%) and Drinkers (40%)
+- Consumer utility maximization (type-specific preferences)
 - Stadium profit maximization (monopolist)
-- Demand elasticities from literature
-- Internalized and external costs
+- Empirically calibrated to match observed consumption patterns
+- Captures selection effects from price controls
 
 ## Consumer Side
 
-### Utility Function
+### Heterogeneous Preferences
 
-Consumers derive utility from beer consumption and stadium experience:
+Following {cite}`lenk2010alcohol`, who document that approximately 40% of stadium attendees consume alcohol, we model two distinct consumer types. Non-drinkers comprise 60% of attendees and have low beer preference ($\alpha_{beer} = 1.0$) but high value for the stadium experience ($\alpha_{experience} = 3.0$). These fans attend for the game itself and consume zero beers at typical prices. Drinkers comprise the remaining 40% with substantially higher beer preference ($\alpha_{beer} = 43.75$) calibrated to match observed consumption of 2.5 beers at \$12.50. Their stadium experience value is moderate ($\alpha_{experience} = 2.5$) as beer consumption forms an integral part of their game-day experience.
 
-$$U(B, T) = \alpha \cdot \ln(B + 1) + \beta \cdot \ln(T + 1) + Y$$
+This heterogeneous specification improves model calibration by 76% compared to a representative consumer approach, reducing prediction error for optimal beer prices from \$2.09 to \$0.50. More importantly, it captures selection effects absent from homogeneous models: price policies change not only how many fans attend, but which types of fans attend.
+
+### Utility Function (Type-Specific)
+
+Consumer type $i$ maximizes:
+
+$$U_i(B, T) = \alpha_{beer}^i \cdot \ln(B + 1) + \alpha_{experience}^i \cdot \ln(T + 1) + Y$$
 
 Where:
 - $B$ = beers consumed
 - $T$ = time enjoying stadium (9 innings)
 - $Y$ = consumption of other goods
-- $\alpha = 1.5$ (beer preference weight)
-- $\beta = 3.0$ (stadium experience weight)
+- $\alpha_{beer}^i$ = type $i$'s beer preference
+- $\alpha_{experience}^i$ = type $i$'s stadium experience preference
 
-### Demand
+### Aggregate Demand
 
-**Semi-log demand function:**
-
-$$Q = Q_0 \cdot e^{-\lambda(P - P_0)}$$
+**Total beer consumption:**
+$$Q_{total} = \sum_{i \in \{Non, Drinker\}} share_i \cdot A_i(P_T, P_B) \cdot B_i(P_B)$$
 
 Where:
-- $Q_0 = 1.0$ beers per fan (baseline)
-- $P_0 = \$12.50$ (baseline consumer price)
-- $\lambda = 0.133$ (price sensitivity)
+- $share_i$ = population share of type $i$
+- $A_i$ = type-specific attendance decision
+- $B_i$ = type-specific beer consumption
 
-**Properties:**
-- At baseline price: 40% drink × 2.5 beers = 1.0 average
-- Elasticity varies with price level
-- More inelastic than general alcohol market (captive audience)
+**Total attendance:**
+$$A_{total} = \sum_i share_i \cdot A_i(P_T, P_B)$$
+
+**Calibration:**
+- Non-drinkers: $B_{Non}(\$12.50) = 0$ beers
+- Drinkers: $B_{Drinker}(\$12.50) = 2.5$ beers
+- Aggregate: $0.6 \times 0 + 0.4 \times 2.5 = 1.0$ average ✓
+
+**Why heterogeneity matters:**
+1. **Better calibration**: Predicts optimal = \$13.00 (vs \$12.50 observed, error: \$0.50)
+2. **Selection effects**: Price changes affect WHO attends, not just how many
+3. **Distributional analysis**: Shows which consumers win/lose from policies
 
 ## Stadium Side
 
