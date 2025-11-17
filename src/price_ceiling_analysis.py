@@ -39,21 +39,13 @@ def simulate_price_ceilings(
     """
     results = []
 
-    # First find unconstrained optimum to determine which ceilings bind
-    unconstrained_ticket, unconstrained_beer, unconstrained_result = model.optimal_pricing()
-
     for ceiling in ceiling_range:
-        # Only apply ceiling if it would bind (ceiling < optimal)
-        if ceiling < unconstrained_beer:
-            # Ceiling binds - re-optimize with constraint
-            ticket_price, beer_price, revenue = model.optimal_pricing(
-                beer_price_control=ceiling
-            )
-        else:
-            # Ceiling doesn't bind - use unconstrained optimum
-            ticket_price = unconstrained_ticket
-            beer_price = unconstrained_beer
-            revenue = unconstrained_result
+        # Model now handles binding vs non-binding automatically
+        # Ceiling sets upper bound; if ceiling > optimal, optimizer chooses optimal
+        ticket_price, beer_price, revenue = model.optimal_pricing(
+            beer_price_control=ceiling,
+            ceiling_mode=True
+        )
 
         # Get welfare metrics
         welfare = model.social_welfare(
