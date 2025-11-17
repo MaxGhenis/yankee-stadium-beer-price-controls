@@ -48,7 +48,7 @@ class StadiumEconomicModel:
         beer_cost: float = 2.0,
         beer_excise_tax: float = 0.074,
         beer_sales_tax_rate: float = 0.08875,
-        experience_degradation_cost: float = 67.1,  # Calibrated for α_beer=43.75 + free beer constraint
+        experience_degradation_cost: float = None,  # Auto-load from config.yaml if None
         cross_price_elasticity: float = 0.1,
         beer_demand_sensitivity: float = 0.30,
         # Compatibility parameters (ignored in heterogeneous model)
@@ -83,7 +83,12 @@ class StadiumEconomicModel:
         self.beer_cost = beer_cost
         self.beer_excise_tax = beer_excise_tax
         self.beer_sales_tax_rate = beer_sales_tax_rate
+
+        # Load experience_degradation_cost from config if not specified
+        if experience_degradation_cost is None:
+            experience_degradation_cost = self._load_calibrated_internalized_cost()
         self.experience_degradation_cost = experience_degradation_cost
+
         self.cross_price_elasticity = cross_price_elasticity
         self.beer_demand_sensitivity = beer_demand_sensitivity
 
@@ -412,6 +417,21 @@ class StadiumEconomicModel:
         attendance = self.total_attendance(self.base_ticket_price, beer_price)
         return total_beers / attendance if attendance > 0 else 0
 
+    def _load_calibrated_internalized_cost(self) -> float:
+        """Load experience_degradation_cost from config.yaml."""
+        try:
+            import yaml
+            from pathlib import Path
+            config_path = Path(__file__).parent.parent / 'config.yaml'
+            if config_path.exists():
+                with open(config_path) as f:
+                    config = yaml.safe_load(f)
+                    if config and 'calibration' in config:
+                        return config['calibration'].get('experience_degradation_cost', 62.28)
+        except:
+            pass
+        return 62.28  # Calibrated default
+
 
 # Quick test
 if __name__ == "__main__":
@@ -468,3 +488,18 @@ if __name__ == "__main__":
         print(f"✓ Heterogeneous model is ${improvement:.2f} closer to observed price!")
     else:
         print(f"✗ Heterogeneous model didn't improve calibration")
+
+    def _load_calibrated_internalized_cost(self) -> float:
+        """Load internalized cost from config.yaml."""
+        try:
+            import yaml
+            from pathlib import Path
+            config_path = Path(__file__).parent.parent / 'config.yaml'
+            if config_path.exists():
+                with open(config_path) as f:
+                    config = yaml.safe_load(f)
+                    if config and 'calibration' in config:
+                        return config['calibration'].get('experience_degradation_cost', 62.28)
+        except:
+            pass
+        return 62.28  # Calibrated default
