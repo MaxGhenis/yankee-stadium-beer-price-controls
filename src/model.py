@@ -145,15 +145,22 @@ class StadiumEconomicModel:
 
         But capped at reasonable maximum (no one drinks 50+ beers).
         """
-        if beer_price <= 0:
-            return 0
+        # Special case: Free beer (P ≈ 0)
+        if beer_price < 0.01:
+            # At P=0, utility-based formula gives infinity
+            # Use physiological maximum instead
+            MAX_BEERS_PHYSIOLOGICAL = 10.0
+            # Only drinkers (high alpha) consume at free price
+            if consumer_type.alpha_beer > 10:
+                return MAX_BEERS_PHYSIOLOGICAL
+            else:
+                return 0
 
-        # Utility-based demand for this type
-        # B = α/P - 1, but enforce non-negative and reasonable max
+        # Normal case: Utility-based demand
+        # FOC: α/(B+1) = P → B = α/P - 1
         optimal_beers = consumer_type.alpha_beer / beer_price - 1
 
-        # Cap at reasonable maximum (even at $0.50, no one drinks 80+ beers)
-        # Physiological constraint: ~10 beers maximum in 3 hours
+        # Cap at physiological maximum
         MAX_BEERS_PHYSIOLOGICAL = 10.0
 
         # Return max of 0 and min of optimal/physiological limit
