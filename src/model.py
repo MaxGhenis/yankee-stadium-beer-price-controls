@@ -117,39 +117,21 @@ class StadiumEconomicModel:
         From Lenk et al. (2010):
         - 60% don't drink (or drink very little)
         - 40% drink, averaging 2.5 beers
-
-        Parameters loaded from config.yaml if available, otherwise uses defaults.
         """
-        # Try to load from config
-        try:
-            import yaml
-            from pathlib import Path
-            config_path = Path(__file__).parent.parent / 'config.yaml'
-            if config_path.exists():
-                with open(config_path) as f:
-                    config = yaml.safe_load(f)
-                    if config and 'calibration' in config:
-                        alpha_drinker = config['calibration'].get('alpha_beer_drinker', 43.75)
-                        alpha_non = config['calibration'].get('alpha_beer_nondrinker', 1.0)
-                    else:
-                        alpha_drinker, alpha_non = 43.75, 1.0
-            else:
-                alpha_drinker, alpha_non = 43.75, 1.0
-        except:
-            alpha_drinker, alpha_non = 43.75, 1.0
+        from .config_loader import get_parameter
 
         types = [
             ConsumerType(
                 name="Non-Drinker",
                 share=0.60,
-                alpha_beer=alpha_non,
+                alpha_beer=get_parameter('alpha_beer_nondrinker'),
                 alpha_experience=3.0,
                 income=200.0
             ),
             ConsumerType(
                 name="Drinker",
                 share=0.40,
-                alpha_beer=alpha_drinker,
+                alpha_beer=get_parameter('alpha_beer_drinker'),
                 alpha_experience=2.5,
                 income=200.0
             )
@@ -419,18 +401,8 @@ class StadiumEconomicModel:
 
     def _load_calibrated_internalized_cost(self) -> float:
         """Load experience_degradation_cost from config.yaml."""
-        try:
-            import yaml
-            from pathlib import Path
-            config_path = Path(__file__).parent.parent / 'config.yaml'
-            if config_path.exists():
-                with open(config_path) as f:
-                    config = yaml.safe_load(f)
-                    if config and 'calibration' in config:
-                        return config['calibration'].get('experience_degradation_cost', 62.28)
-        except:
-            pass
-        return 62.28  # Calibrated default
+        from .config_loader import get_parameter
+        return get_parameter('experience_degradation_cost')
 
 
 # Quick test
