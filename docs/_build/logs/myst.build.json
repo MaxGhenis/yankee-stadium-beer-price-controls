@@ -1,6 +1,8 @@
 {
   "input": {
-    "files": [],
+    "files": [
+      "."
+    ],
     "opts": {
       "execute": false,
       "pdf": false,
@@ -16,7 +18,7 @@
       "all": false,
       "doiBib": false,
       "watch": false,
-      "force": true,
+      "force": false,
       "checkLinks": false,
       "strict": false,
       "ci": false,
