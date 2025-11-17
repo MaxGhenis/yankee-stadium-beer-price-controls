@@ -565,8 +565,17 @@ with tab5:
     ceiling_results = []
 
     with st.spinner("Computing price ceiling analysis..."):
+        # First find unconstrained optimum
+        unc_t, unc_b, unc_rev = model.optimal_pricing()
+
         for ceiling in ceiling_range:
-            t_p, b_p, rev = model.optimal_pricing(beer_price_control=ceiling)
+            # Only apply ceiling if it binds
+            if ceiling < unc_b:
+                t_p, b_p, rev = model.optimal_pricing(beer_price_control=ceiling)
+            else:
+                # Ceiling doesn't bind - use unconstrained optimum
+                t_p, b_p, rev = unc_t, unc_b, unc_rev
+
             welf = model.social_welfare(t_p, b_p, crime_cost_per_beer, health_cost_per_beer)
             ceiling_results.append({
                 'ceiling': ceiling,
