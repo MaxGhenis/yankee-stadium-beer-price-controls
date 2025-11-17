@@ -13,9 +13,9 @@ This analysis uses a **partial equilibrium model with heterogeneous consumers**:
 
 ### Heterogeneous Preferences
 
-Following {cite}`lenk2010alcohol`, who document that approximately 40% of stadium attendees consume alcohol, we model two distinct consumer types. Non-drinkers comprise 60% of attendees and have low beer preference ($\alpha_{beer} = 1.0$) but high value for the stadium experience ($\alpha_{experience} = 3.0$). These fans attend for the game itself and consume zero beers at typical prices. Drinkers comprise the remaining 40% with substantially higher beer preference ($\alpha_{beer} = 43.75$) calibrated to match observed consumption of 2.5 beers at \$12.50. Their stadium experience value is moderate ($\alpha_{experience} = 2.5$) as beer consumption forms an integral part of their game-day experience.
+Following {cite}`lenk2010alcohol`, who document that approximately 40% of stadium attendees consume alcohol, we model two distinct consumer types. Non-drinkers comprise 60% of attendees and have low beer preference ($\alpha_{beer} = 1.0$) but high value for the stadium experience ($\alpha_{experience} = 3.0$). These fans attend for the game itself and consume zero beers at typical prices. Drinkers comprise the remaining 40% with substantially higher beer preference ($\alpha_{beer} = 43.75$) calibrated to match observed consumption of 2.5 beers at \\$12.50. Their stadium experience value is moderate ($\alpha_{experience} = 2.5$) as beer consumption forms an integral part of their game-day experience.
 
-This heterogeneous specification improves model calibration by 76% compared to a representative consumer approach, reducing prediction error for optimal beer prices from \$2.09 to \$0.50. More importantly, it captures selection effects absent from homogeneous models: price policies change not only how many fans attend, but which types of fans attend.
+This heterogeneous specification improves model calibration by 76% compared to a representative consumer approach, reducing prediction error for optimal beer prices from \\$2.09 to \\$0.50. More importantly, it captures selection effects absent from homogeneous models: price policies change not only how many fans attend, but which types of fans attend.
 
 ### Utility Function (Type-Specific)
 
@@ -44,12 +44,12 @@ Where:
 $$A_{total} = \sum_i share_i \cdot A_i(P_T, P_B)$$
 
 **Calibration:**
-- Non-drinkers: $B_{Non}(\$12.50) = 0$ beers
-- Drinkers: $B_{Drinker}(\$12.50) = 2.5$ beers
-- Aggregate: $0.6 \times 0 + 0.4 \times 2.5 = 1.0$ average ✓
+- Non-drinkers: $B_{Non}(\\$12.50) = 0$ beers
+- Drinkers: $B_{Drinker}(\\$12.50) = 2.5$ beers
+- Aggregate: \$0.6 \times 0 + 0.4 \times 2.5 = 1.0$ average ✓
 
 **Why heterogeneity matters:**
-1. **Better calibration**: Predicts optimal = \$13.00 (vs \$12.50 observed, error: \$0.50)
+1. **Better calibration**: Predicts optimal = \\$13.00 (vs \\$12.50 observed, error: \\$0.50)
 2. **Selection effects**: Price changes affect WHO attends, not just how many
 3. **Distributional analysis**: Shows which consumers win/lose from policies
 
@@ -63,16 +63,16 @@ $$P_{stadium} = \frac{P_{consumer}}{1 + t_{sales}} - t_{excise}$$
 
 Where:
 - $t_{sales} = 0.08875$ (NYC sales tax rate)
-- $t_{excise} = \$0.074$ (federal + state + local)
+- $t_{excise} = \\$0.074$ (federal + state + local)
 
-At $P_{consumer} = \$12.50$:
-- $P_{stadium} = \$11.41$
+At $P_{consumer} = \\$12.50$:
+- $P_{stadium} = \\$11.41$
 
 ### Costs
 
 **Production costs:**
-- Ticket: $\$20$ per attendee
-- Beer: $\$5$ per beer (all-in: materials + labor + overhead)
+- Ticket: $\\$20$ per attendee
+- Beer: $\\$5$ per beer (all-in: materials + labor + overhead)
 
 **Internalized costs (convex):**
 
@@ -103,7 +103,7 @@ Where:
 
 External costs:
 
-$$E_{external} = (\$2.50 + \$1.50) \cdot Q = \$4.00 \cdot Q$$
+$$E_{external} = (\\$2.50 + \\$1.50) \cdot Q = \\$4.00 \cdot Q$$
 
 ### Key Insight
 
@@ -111,6 +111,6 @@ Stadium maximizes $PS$ (profit) which already accounts for internalized costs.
 
 Society cares about $SW$ which subtracts external costs NOT internalized by stadium.
 
-**Gap:** $E_{external} - t_{current} = \$4.00 - \$1.09 = \$2.91/beer$
+**Gap:** $E_{external} - t_{current} = \\$4.00 - \\$1.09 = \\$2.91/beer$
 
 This is the Pigouvian tax gap.
