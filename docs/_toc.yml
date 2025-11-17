@@ -1,7 +1,13 @@
 # Table of Contents
 format: jb-book
 root: intro
-chapters:
+parts:
+  - caption: Overview
+    chapters:
+      - file: executive_summary
+        title: Executive Summary
+  - caption: Analysis
+    chapters:
   - file: background
     title: Background & Literature
   - file: model
@@ -22,7 +28,9 @@ chapters:
     title: Policy Analysis
   - file: taxes
     title: Tax Analysis & Pigouvian Gap
-  - file: conclusion
-    title: Conclusions
-  - file: references_page
-    title: References
+      - file: conclusion
+        title: Conclusions
+  - caption: References
+    chapters:
+      - file: references_page
+        title: Bibliography

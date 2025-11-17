@@ -49,7 +49,9 @@ class StadiumEconomicModel:
                  captive_demand_share: float = 0.5,  # Share of demand that's price-insensitive
                  # Internalized costs (crowd management, brand, experience degradation)
                  experience_degradation_cost: float = 250.0,  # Quadratic cost parameter (calibrated)
-                 capacity_constraint: float = 50000):  # Max beers that can be served
+                 capacity_constraint: float = 50000,  # Max beers that can be served
+                 # Complementarity between tickets and beer
+                 cross_price_elasticity: float = 0.1):  # Beer price effect on attendance
         """
         Initialize model parameters.
 
@@ -69,6 +71,7 @@ class StadiumEconomicModel:
             captive_demand_share: Fraction of demand from committed fans (less elastic)
             experience_degradation_cost: Internalized cost per beer (crowd mgmt, brand, experience)
             capacity_constraint: Maximum beers that can be served per game
+            cross_price_elasticity: Cross-elasticity between beer price and attendance (negative for complements)
         """
         self.capacity = capacity
         self.base_ticket_price = base_ticket_price
@@ -85,6 +88,7 @@ class StadiumEconomicModel:
         self.captive_demand_share = captive_demand_share
         self.experience_degradation_cost = experience_degradation_cost
         self.capacity_constraint = capacity_constraint
+        self.cross_price_elasticity = cross_price_elasticity
 
         # Calculate base quantities for calibration
         # Calibrate so that observed prices are near-optimal
@@ -110,13 +114,13 @@ class StadiumEconomicModel:
         price_effect = np.exp(-ticket_sensitivity * ticket_deviation)
 
         # Cross-price effect (beer is complement)
-        # NOTE: 0.1 is ASSUMED (not from empirical estimates)
-        # Literature (Coates & Humphreys 2007, Krautmann & Berri 2007) documents
-        # complementarity but doesn't provide specific cross-price elasticity
-        cross_elasticity = 0.1  # 10% beer price increase → 1% attendance decrease
+        # NOTE: Parameter is ASSUMED (not from empirical estimates)
+        # Literature documents complementarity but not specific cross-elasticity
+        # Benchmarks: cars/gas=-1.6 (strong), food=-0.1 to -0.5 (weak-moderate)
+        # Our default 0.1 is conservative (weak complementarity)
         if beer_price > 0:
             beer_ratio = beer_price / self.base_beer_price
-            cross_effect = beer_ratio ** (-cross_elasticity)
+            cross_effect = beer_ratio ** (-self.cross_price_elasticity)
         else:
             # Beer ban: 5% attendance reduction due to lost complementary good
             cross_effect = 0.95

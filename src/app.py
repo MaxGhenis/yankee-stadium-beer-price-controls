@@ -144,6 +144,16 @@ beta = st.sidebar.slider(
     help="Higher = stronger preference for stadium experience"
 )
 
+st.sidebar.subheader("Complementarity")
+cross_price_elasticity = st.sidebar.slider(
+    "Cross-Price Elasticity (Tickets-Beer)",
+    min_value=0.0,
+    max_value=0.5,
+    value=0.1,
+    step=0.05,
+    help="How beer prices affect attendance. Benchmarks: 0.1 (weak), 0.3 (moderate), 1.6 (cars/gas)"
+)
+
 st.sidebar.subheader("Internalized Costs (Stadium)")
 experience_degradation_cost = st.sidebar.slider(
     "Experience Degradation Cost (α)",
@@ -202,7 +212,7 @@ with col2:
 @st.cache_data
 def create_model(capacity, base_ticket_price, base_beer_price, ticket_elasticity,
                 beer_elasticity, ticket_cost, beer_cost, consumer_income, alpha, beta,
-                experience_degradation_cost):
+                experience_degradation_cost, cross_price_elasticity):
     return StadiumEconomicModel(
         capacity=capacity,
         base_ticket_price=base_ticket_price,
@@ -214,13 +224,14 @@ def create_model(capacity, base_ticket_price, base_beer_price, ticket_elasticity
         consumer_income=consumer_income,
         alpha=alpha,
         beta=beta,
-        experience_degradation_cost=experience_degradation_cost
+        experience_degradation_cost=experience_degradation_cost,
+        cross_price_elasticity=cross_price_elasticity
     )
 
 model = create_model(
     capacity, base_ticket_price, base_beer_price, ticket_elasticity,
     beer_elasticity, ticket_cost, beer_cost, consumer_income, alpha, beta,
-    experience_degradation_cost
+    experience_degradation_cost, cross_price_elasticity
 )
 
 # Run simulations
@@ -236,6 +247,61 @@ with st.spinner("Running simulations..."):
 
 # Display results
 st.header("📈 Results Summary")
+
+# Add ticket price response analysis
+st.subheader("🎯 Key Finding: Ticket Price Response to Beer Ceiling")
+
+baseline_scenario = results_df[results_df['scenario'] == 'Baseline (Profit Max)'].iloc[0]
+current_scenario = results_df[results_df['scenario'] == 'Current Observed Prices'].iloc[0]
+ceiling_7_scenarios = results_df[results_df['scenario'].str.contains('Price Ceiling.*7')]
+
+if len(ceiling_7_scenarios) > 0 or price_ceiling <= 7.5:
+    # Show ticket response
+    col1, col2, col3 = st.columns(3)
+
+    # Calculate optimal with beer at $7
+    t_ceiling, b_ceiling, r_ceiling = model.optimal_pricing(beer_price_control=price_ceiling)
+    t_current, b_current, r_current = model.optimal_pricing(beer_price_control=base_beer_price)
+
+    ticket_change = t_ceiling - t_current
+    ticket_pct = (ticket_change / t_current) * 100
+    multiplier = abs(ticket_change / (price_ceiling - base_beer_price)) if price_ceiling != base_beer_price else 0
+
+    with col1:
+        st.metric(
+            "Current Optimal Tickets",
+            f"${t_current:.2f}",
+            help="Optimal ticket price with $12.50 beer"
+        )
+
+    with col2:
+        st.metric(
+            f"With ${price_ceiling} Beer Ceiling",
+            f"${t_ceiling:.2f}",
+            f"{ticket_change:+.2f} ({ticket_pct:+.1f}%)",
+            help="Optimal ticket price under beer price control"
+        )
+
+    with col3:
+        st.metric(
+            "Price Adjustment Multiplier",
+            f"{multiplier:.1f}x",
+            help="Ticket increase per $1 beer decrease"
+        )
+
+    st.info(f"""
+    **Economic mechanism**: When beer revenue is constrained, stadium shifts toward ticket revenue.
+
+    With cross-elasticity {cross_price_elasticity:.2f}:
+    - Attendance falls {((r_ceiling['attendance']/r_current['attendance'] - 1) * 100):.1f}% (higher tickets + beer complementarity)
+    - Stadium raises tickets {ticket_pct:.1f}% to partially compensate
+    - But total revenue still falls {((r_ceiling['total_revenue']/r_current['total_revenue'] - 1) * 100):.1f}%
+    """)
+
+    st.divider()
+
+# Original key metrics section
+st.subheader("📊 Baseline Metrics")
 
 # Key metrics
 col1, col2, col3, col4 = st.columns(4)
