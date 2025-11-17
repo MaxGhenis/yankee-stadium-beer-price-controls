@@ -148,11 +148,13 @@ class StadiumEconomicModel:
         # Special case: Free beer (P ≈ 0)
         if beer_price < 0.01:
             # At P=0, utility-based formula gives infinity
-            # Use physiological maximum instead
-            MAX_BEERS_PHYSIOLOGICAL = 10.0
+            # Use empirical open-bar consumption instead
+            # Data: Open bars average 5-6 drinks (wedding/tailgate data)
+            # For heavy drinkers at baseball game: 6-7 beers reasonable
+            FREE_BEER_CONSUMPTION = 6.5  # Based on open bar empirical data
             # Only drinkers (high alpha) consume at free price
             if consumer_type.alpha_beer > 10:
-                return MAX_BEERS_PHYSIOLOGICAL
+                return FREE_BEER_CONSUMPTION
             else:
                 return 0
 
