@@ -8,26 +8,26 @@ parts:
         title: Executive Summary
   - caption: Analysis
     chapters:
-  - file: background
-    title: Background & Literature
-  - file: model
-    title: Economic Model
-  - file: calibration
-    title: Model Calibration
-  - file: simulation
-    title: Simulation Results
-  - file: sensitivity
-    title: Sensitivity Analysis & Validation
-  - file: monte_carlo
-    title: Monte Carlo Uncertainty Analysis
-  - file: assumptions
-    title: Assumptions & Parameter Sources
-  - file: complementarity_specs
-    title: Alternative Complementarity Specifications
-  - file: policy
-    title: Policy Analysis
-  - file: taxes
-    title: Tax Analysis & Pigouvian Gap
+      - file: background
+        title: Background & Literature
+      - file: model
+        title: Economic Model
+      - file: calibration
+        title: Model Calibration
+      - file: simulation
+        title: Simulation Results
+      - file: sensitivity
+        title: Sensitivity Analysis & Validation
+      - file: monte_carlo
+        title: Monte Carlo Uncertainty Analysis
+      - file: assumptions
+        title: Assumptions & Parameter Sources
+      - file: complementarity_specs
+        title: Alternative Complementarity Specifications
+      - file: policy
+        title: Policy Analysis
+      - file: taxes
+        title: Tax Analysis & Pigouvian Gap
       - file: conclusion
         title: Conclusions
   - caption: References
