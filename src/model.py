@@ -140,29 +140,24 @@ class StadiumEconomicModel:
         """
         Calculate beer consumption for a specific consumer type.
 
-        Uses utility maximization: max α_beer·ln(B+1) subject to budget
-        FOC: α_beer/(B+1) = P_beer
-        Solution: B = α_beer/P_beer - 1
+        Uses utility-based demand with satiation:
+        FOC: α_beer/(B+1) = P_beer → B = α_beer/P_beer - 1
 
-        But we also need to respect the semi-log aggregate demand structure.
-        We'll use a hybrid: type-specific utility-based demand, but scaled to
-        match aggregate semi-log behavior.
+        But capped at reasonable maximum (no one drinks 50+ beers).
         """
         if beer_price <= 0:
             return 0
 
         # Utility-based demand for this type
-        # B = α/(P) - 1, but enforce non-negative
-        optimal_beers = max(0, consumer_type.alpha_beer / beer_price - 1)
+        # B = α/P - 1, but enforce non-negative and reasonable max
+        optimal_beers = consumer_type.alpha_beer / beer_price - 1
 
-        # Also apply price sensitivity (semi-log component)
-        price_ratio = beer_price / self.base_beer_price
-        sensitivity_factor = np.exp(-self.beer_demand_sensitivity * (beer_price - self.base_beer_price))
+        # Cap at reasonable maximum (even at $0.50, no one drinks 80+ beers)
+        # Physiological constraint: ~10 beers maximum in 3 hours
+        MAX_BEERS_PHYSIOLOGICAL = 10.0
 
-        # Combine: type-specific preference × price sensitivity
-        total_beers = optimal_beers * sensitivity_factor
-
-        return max(0, total_beers)
+        # Return max of 0 and min of optimal/physiological limit
+        return max(0, min(optimal_beers, MAX_BEERS_PHYSIOLOGICAL))
 
     def _attendance_by_type(
         self,
@@ -183,17 +178,17 @@ class StadiumEconomicModel:
         ticket_sensitivity = 0.017  # Standard sensitivity
         ticket_effect = np.exp(-ticket_sensitivity * (ticket_price - self.base_ticket_price))
 
-        # Beer price cross-effect (types with high α_beer more affected)
-        # Scale cross-elasticity by type's beer preference
-        type_cross_elasticity = self.cross_price_elasticity * (consumer_type.alpha_beer / 2.0)
+        # Beer price cross-effect (drinkers more affected than non-drinkers)
+        # Use SAME cross-elasticity for all, but drinkers feel it more through utility
+        # Don't scale by alpha (causes explosion at low prices!)
         if beer_price > 0:
             beer_ratio = beer_price / self.base_beer_price
-            cross_effect = beer_ratio ** (-type_cross_elasticity)
+            cross_effect = beer_ratio ** (-self.cross_price_elasticity)
         else:
             cross_effect = 0.95  # Small reduction for beer ban
 
         attendance = type_base_attendance * ticket_effect * cross_effect
-        return attendance
+        return min(attendance, self.capacity * consumer_type.share)  # Cap at type's share of capacity
 
     def total_attendance(self, ticket_price: float, beer_price: float) -> float:
         """Sum attendance across all consumer types."""
