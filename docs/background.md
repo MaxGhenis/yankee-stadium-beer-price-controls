@@ -79,9 +79,9 @@ These are costs borne by **society**, not the stadium.
 
 ## Theoretical Foundation: Price Controls and Complementary Goods
 
-### Leisten (2024): Rigorous Analysis of Beer Price Ceilings
+### Leisten (2025): Rigorous Analysis of Beer Price Ceilings
 
-{cite}`leisten2024beer` provides the theoretical foundation for analyzing beer price controls at stadiums through a rigorous monopoly model with complementary goods.
+{cite}`leisten2025beer` provides the theoretical foundation for analyzing beer price controls at stadiums through a rigorous monopoly model with complementary goods.
 
 **His Model Setup:**
 - Ticket demand: $q_x(p_x)$

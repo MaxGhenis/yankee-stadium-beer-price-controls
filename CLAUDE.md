@@ -280,7 +280,7 @@ See `docs/references.bib` for full academic references (30+ papers). Key sources
 - Crime impacts: Rees & Schnepel 2009
 - Theoretical analysis: Leisten 2024 Twitter thread (https://x.com/LeistenEcon/status/1990150035615494239)
 
-## Comparison to Leisten (2024) Theoretical Analysis
+## Comparison to Leisten (2025) Theoretical Analysis
 
 Matthew Leisten's rigorous Twitter thread proves that under log-concavity, beer price ceilings cause ticket prices to rise. Key differences from our model:
 

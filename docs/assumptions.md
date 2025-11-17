@@ -34,7 +34,7 @@
 
 **Key Modeling Choice: Two-Way Complementarity**
 
-Recent theoretical work by {cite}`leisten2024beer` explicitly analyzes this assumption:
+Recent theoretical work by {cite}`leisten2025beer` explicitly analyzes this assumption:
 - **Leisten assumes**: Beer prices do NOT affect ticket demand (one-way complementarity: tickets → beer)
 - **We assume**: Beer prices DO affect ticket demand (two-way complementarity: tickets ↔ beer)
 

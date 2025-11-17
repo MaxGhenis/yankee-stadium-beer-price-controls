@@ -297,7 +297,7 @@ class TestStadiumSpecificFeatures:
         """
         Verify that demand functions are log-concave.
 
-        Leisten (2024) proves that under log-concavity, beer price ceilings
+        Leisten (2025) proves that under log-concavity, beer price ceilings
         cause ticket prices to rise. Our semi-log demand satisfies this:
         ln(Q) is linear (thus concave) in price.
 

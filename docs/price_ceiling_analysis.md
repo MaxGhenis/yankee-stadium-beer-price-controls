@@ -20,7 +20,7 @@ We simulate stadium optimization across beer price ceilings ranging from \$5 to 
 name: price-response
 alt: Price response to beer ceilings
 ---
-**Left**: Ticket prices rise dramatically as beer ceilings tighten, consistent with {cite}`leisten2024beer` theoretical prediction. **Right**: Beer price tracks the ceiling once binding (below ~\$13).
+**Left**: Ticket prices rise by up to \$44 (+57%) as beer ceilings tighten from \$13 to \$5. Above \$13, the ceiling is non-binding and prices plateau at baseline. **Right**: Beer price tracks the ceiling when binding (below ~\$13).
 ```
 
 **Economic mechanism:** When beer revenue margin collapses, the stadium shifts toward ticket revenue. This "revenue substitution" effect is amplified by two-way complementarity: higher tickets reduce attendance, limiting beer sales at the constrained (bad) margin.
@@ -32,7 +32,7 @@ alt: Price response to beer ceilings
 name: quantity-effects
 alt: Attendance and beer consumption effects
 ---
-**Left**: Attendance falls sharply with tighter ceilings due to higher ticket prices and complementarity. **Right**: Total beer consumption rises despite lower attendance—per-fan consumption more than doubles at \$7 ceiling.
+**Left**: Attendance falls 38% at \$7 ceiling due to higher ticket prices and complementarity. **Right**: Total beer consumption rises 28% despite lower attendance—per-fan consumption increases 108% at \$7 ceiling.
 ```
 
 **Key insight:** Price ceilings increase *aggregate* consumption even as they reduce attendance. The intensive margin (beers per fan) dominates the extensive margin (number of fans).
@@ -47,7 +47,7 @@ alt: Revenue decomposition
 Ticket revenue partially compensates for lost beer revenue, but total revenue falls. At \$7 ceiling, revenue drops \$600,000 per game (\$49M annually for 81 home games).
 ```
 
-**Implication for policy:** Price ceilings are *not* a free lunch. Revenue losses suggest stadiums would strongly oppose such regulations or seek compensatory policies (e.g., subsidized tickets, reduced taxes).
+**Implication for policy:** Price ceilings reduce stadium revenue by 18% at \$7 ceiling (\$600,000 per game). This creates incentive for stadiums to oppose such regulations or seek compensatory policies (e.g., subsidized tickets, reduced taxes).
 
 ### Welfare Analysis
 
@@ -69,7 +69,7 @@ alt: Welfare components
 name: welfare-combined
 alt: Welfare decomposition on single chart
 ---
-Lower beer ceilings hurt stadium profit substantially (green line falls) while providing limited consumer benefits (blue line barely rises or falls). Externalities worsen (red line declines). Net social welfare (purple line) falls.
+Lower beer ceilings reduce stadium profit by 25% at \$7 ceiling (green line falls) while consumer surplus falls 19% (blue line). Externalities increase 28% (red line declines). Net social welfare falls 20% (purple line).
 ```
 
 **Policy implication:** Price ceilings create deadweight loss. The stadium loses more than consumers gain, and externalities worsen. This motivates alternative instruments like Pigouvian taxation.
@@ -103,9 +103,9 @@ Per-capita consumption explodes with lower price ceilings. At \$7, average fan c
 | Externality cost | \$0.14M | \$0.17M | +28% |
 | Social welfare | \$12.13M | \$9.66M | -20% |
 
-## Comparison with Leisten (2024)
+## Comparison with Leisten (2025)
 
-Our quantitative results confirm {cite}`leisten2024beer` theoretical prediction: **beer price ceilings cause ticket prices to rise**. We extend his analysis by:
+Our quantitative results confirm {cite}`leisten2025beer` theoretical prediction: **beer price ceilings cause ticket prices to rise**. We extend his analysis by:
 
 1. **Magnitude**: \$7 ceiling → \$32 ticket increase (4.4x multiplier on price change)
 2. **Two-way complementarity**: Beer prices affect attendance in our model

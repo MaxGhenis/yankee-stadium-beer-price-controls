@@ -1,8 +1,8 @@
 # Alternative Complementarity Specifications
 
-## Theoretical Foundation: Leisten (2024)
+## Theoretical Foundation: Leisten (2025)
 
-{cite}`leisten2024beer` provides rigorous theoretical analysis of beer price controls at stadiums:
+{cite}`leisten2025beer` provides rigorous theoretical analysis of beer price controls at stadiums:
 
 **Key result**: Under log-concavity of demand, beer price ceilings cause ticket prices to rise.
 
@@ -39,7 +39,7 @@ Where $\epsilon_{cross} = 0.1$
 - Symmetric: effect scales with price level
 - **Log-concave**: Semi-log form satisfies Leisten's condition
 
-**Citation**: Standard in single-equation demand {cite}`varian1992microeconomic`; two-way extension beyond {cite}`leisten2024beer`
+**Citation**: Standard in single-equation demand {cite}`varian1992microeconomic`; two-way extension beyond {cite}`leisten2025beer`
 
 ---
 

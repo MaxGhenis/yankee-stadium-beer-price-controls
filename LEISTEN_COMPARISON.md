@@ -1,4 +1,4 @@
-# Comparison with Leisten (2024) Theoretical Analysis
+# Comparison with Leisten (2025) Theoretical Analysis
 
 ## Summary
 
@@ -7,7 +7,7 @@ Matthew Leisten's rigorous Twitter thread ([link](https://x.com/LeistenEcon/stat
 ## Key Revisions Made
 
 ### 1. Added Citation
-- Added Leisten (2024) to `docs/references.bib`
+- Added Leisten (2025) to `docs/references.bib`
 - Cited throughout documentation where relevant
 
 ### 2. Clarified Complementarity Assumption
@@ -29,7 +29,7 @@ Matthew Leisten's rigorous Twitter thread ([link](https://x.com/LeistenEcon/stat
 
 ### 4. Updated Documentation
 **Files updated:**
-- `CLAUDE.md`: Added "Comparison to Leisten (2024)" section
+- `CLAUDE.md`: Added "Comparison to Leisten (2025)" section
 - Explains how our quantitative calibration extends his theoretical result
 
 ## What We Agree On

@@ -2,9 +2,9 @@
 
 ## Overview
 
-This document summarizes the comprehensive updates made to the Yankee Stadium beer price controls analysis, including integration of Leisten (2024) theoretical work, new comparative statics analysis, and enhanced documentation.
+This document summarizes the comprehensive updates made to the Yankee Stadium beer price controls analysis, including integration of Leisten (2025) theoretical work, new comparative statics analysis, and enhanced documentation.
 
-## 1. Leisten (2024) Integration
+## 1. Leisten (2025) Integration
 
 ### Citation Added
 - Added full citation to `docs/references.bib`
@@ -72,7 +72,7 @@ Location: `charts/` directory
 - Comprehensive analysis with embedded charts
 - Explains economic mechanisms
 - Quantitative results table
-- Comparison with Leisten (2024)
+- Comparison with Leisten (2025)
 - Policy implications
 
 **Added to TOC:** `docs/_toc.yml` (between Simulation Results and Sensitivity Analysis)

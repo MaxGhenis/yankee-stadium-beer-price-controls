@@ -105,7 +105,7 @@ class StadiumEconomicModel:
         Calibrated so $80 tickets are approximately optimal.
 
         NOTE: Semi-log demand is LOG-CONCAVE, which is critical for theoretical
-        results. Leisten (2024) proves that under log-concavity, beer price
+        results. Leisten (2025) proves that under log-concavity, beer price
         ceilings cause ticket prices to rise. Our functional form satisfies this
         condition: ln(A) is concave because it's linear in price plus a
         negative power term.
@@ -151,7 +151,7 @@ class StadiumEconomicModel:
         At baseline ($12.50): ~40% of fans drink, averaging 2.5 beers = 1.0 per attendee
 
         NOTE: This functional form is LOG-CONCAVE (ln(Q) is linear in P, thus concave),
-        satisfying the condition in Leisten (2024) for proving that beer price ceilings
+        satisfying the condition in Leisten (2025) for proving that beer price ceilings
         cause ticket prices to rise.
         """
         if beer_price <= 0:
