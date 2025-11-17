@@ -4,14 +4,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is an academic economics research project analyzing beer price controls at Yankee Stadium. It models consumer welfare, stadium revenue, attendance effects, and negative externalities (crime, health costs) from alcohol consumption. The project includes:
+This is an academic economics research project analyzing beer price controls at Yankee Stadium using a **heterogeneous consumer model**. The project includes:
 
-- A Python economic model with demand functions, revenue optimization, and welfare calculations
-- A Streamlit web application for interactive policy exploration
+- A Python economic model with 2 consumer types (60% non-drinkers, 40% drinkers)
+- Demand functions, revenue optimization, and welfare calculations
+- Selection effects: Price policies change crowd composition
+- Streamlit web application for interactive policy exploration
 - JupyterBook documentation with academic paper format
-- Comprehensive test suite with 98% coverage
+- Comprehensive test suite (104 tests, 98% coverage)
 
-**Key insight**: The model distinguishes between *internalized* costs (crowd management, brand damage, experience degradation that the stadium already accounts for) and *external* costs (crime, public health) that justify policy intervention.
+**Key insights**:
+1. The model distinguishes *internalized* vs *external* costs
+2. Heterogeneous preferences improve calibration by 76% (error: \$2.09 → \$0.50)
+3. Price ceilings create selection effects: \$7 ceiling → 70% drinkers (up from 40%)
 
 ## Development Commands
 
@@ -81,13 +86,18 @@ open _build/html/index.html  # macOS
 
 ### Core Model (`src/model.py`)
 
-The `StadiumEconomicModel` class is the heart of the economic analysis:
+The `StadiumEconomicModel` class features **heterogeneous consumers**:
 
-**Demand Functions**:
-- Uses **semi-log demand** (not constant elasticity) calibrated so observed prices are near profit-maximizing
-- `_attendance_demand()`: Ticket demand with cross-price effects from beer (complementarity)
-- `_beers_per_fan_demand()`: Beer consumption per attendee
-- Key calibration: baseline is 1.0 beers/fan (~40% of fans drink, averaging 2.5 beers)
+**Consumer Types**:
+- **Non-Drinkers (60%)**: α_beer=1.0 → 0 beers at typical prices
+- **Drinkers (40%)**: α_beer=43.75 → 2.5 beers at \$12.50
+- Matches empirical data: 40% drink, 1.0 beers/fan average
+
+**Key Methods**:
+- `total_attendance()`: Sums attendance across types (accounts for complementarity)
+- `total_beer_consumption()`: Returns total beers + breakdown by type
+- `stadium_revenue()`: Includes breakdown_by_type in output
+- Selection effects: Different types respond differently to price changes
 
 **Revenue Calculations** (`stadium_revenue()`):
 - Handles NYC tax structure: 8.875% sales tax + $0.074/beer excise tax
