@@ -1,10 +1,76 @@
-# Beer Price Controls at Yankee Stadium: An Economic Analysis
+# Beer Price Controls at Yankee Stadium
 
-A comprehensive economic simulation analyzing the impacts of beer price controls at Yankee Stadium on consumer welfare, stadium revenue, attendance, and alcohol-related externalities.
+## A Rigorous Economic Analysis of Consumer Welfare, Revenue, and Externalities
 
-## Overview
+[![CI](https://github.com/maxghenis/yankee-stadium-beer-price-controls/workflows/CI/badge.svg)](https://github.com/maxghenis/yankee-stadium-beer-price-controls/actions)
+[![Coverage](https://img.shields.io/badge/coverage-98%25-brightgreen)](https://github.com/maxghenis/yankee-stadium-beer-price-controls)
+[![Python 3.13](https://img.shields.io/badge/python-3.13-blue.svg)](https://www.python.org/downloads/)
+[![JupyterBook](https://img.shields.io/badge/docs-JupyterBook-orange.svg)](https://maxghenis.github.io/yankee-stadium-beer-price-controls)
 
-This project models the economic tradeoffs when price controls are imposed on beer sales at Yankee Stadium. The analysis considers:
+**[📖 Read the Report](https://maxghenis.github.io/yankee-stadium-beer-price-controls)** | **[🎮 Try the Streamlit App](http://localhost:8501)** | **[📊 View Analysis](docs/)**
+
+---
+
+## 🎯 Key Findings
+
+### $7 Beer Ceiling Causes Massive Unintended Consequences
+
+**Direct effects:**
+- Beer price: $12.50 → $7.00 (-44%)
+- Beer consumption per fan: 1.0 → 2.1 beers (+108%)
+
+**UNINTENDED: Tickets rise dramatically:**
+- **Ticket price: $89 → $121 (+$32, +36%)**
+- Attendance falls 38% (higher tickets + complementarity)
+- Stadium profit: -$47M/season
+
+**Why tickets rise:**
+- Beer margin collapses (stadium receives $11.41 → $6.35)
+- Optimal response: Shift to ticket revenue
+- Reduces attendance to limit beer sales at terrible margin
+
+### Pigouvian Tax Gap: $2.91/beer
+
+**External costs**: $4.00/beer (crime $2.50 + health $1.50)
+**Current taxes**: $1.09/beer (excise $0.07 + sales $1.02)
+**Optimal additional tax**: **$2.91/beer**
+
+**Revenue potential**: **$6.7M/season** for NYC
+
+---
+
+## 💡 Methodological Innovation
+
+### Internalized vs External Costs
+
+**Key insight**: Stadiums already internalize some externalities!
+
+**Internalized** (in $12.50 price):
+- Crowd management, security costs
+- Brand/reputation damage
+- Experience degradation for other fans
+- Capacity constraints
+
+**External** (borne by society):
+- Crime in surrounding neighborhood
+- Public health system costs
+- Drunk driving
+
+This distinction is crucial - only **external costs** ($4/beer) justify policy beyond what stadium already does.
+
+### Model Features
+
+- ✅ **Tax-aware**: Stadium receives $11.41 after $1.09 taxes
+- ✅ **Complementarity**: Adjustable cross-price elasticity (0.1 default)
+- ✅ **Convex internalized costs**: $C = 250(Q/1000)^2$
+- ✅ **Literature-based**: 30+ academic papers
+- ✅ **Uncertainty quantified**: Monte Carlo over parameters
+
+---
+
+## 📊 Analysis
+
+This project models economic tradeoffs from beer price controls considering:
 
 - **Consumer utility** from beer consumption and non-beer stadium experience
 - **Revenue maximization** by the stadium across ticket and concession sales
@@ -64,20 +130,56 @@ Where:
 External_Costs = (Total_Beers)·(Crime_Cost·Crime_Multiplier + Health_Cost)
 ```
 
-## Installation
+---
+
+## 🚀 Quick Start
+
+### Option 1: Interactive Streamlit App
 
 ```bash
+# Clone repository
+git clone https://github.com/maxghenis/yankee-stadium-beer-price-controls.git
+cd yankee-stadium-beer-price-controls
+
+# Install dependencies
 pip install -r requirements.txt
-```
 
-## Usage
-
-Run the Streamlit app:
-```bash
+# Run app
 streamlit run src/app.py
 ```
 
-The app allows you to adjust:
+**Features:**
+- Adjust all model parameters in real-time
+- See ticket price response to beer ceilings
+- Compare policy scenarios
+- Explore welfare decomposition
+
+### Option 2: Python Package
+
+```bash
+# With uv (recommended)
+uv venv --python 3.13
+source .venv/bin/activate
+uv pip install -e ".[dev]"
+
+# Run example
+python src/example.py
+
+# Run tests
+pytest tests/ -v --cov=src
+```
+
+### Option 3: Read the Report
+
+**JupyterBook**: https://maxghenis.github.io/yankee-stadium-beer-price-controls
+
+13 chapters with interactive notebooks, full citations, and Monte Carlo analysis.
+
+---
+
+## 🎛️ Adjustable Parameters
+
+The model allows you to adjust:
 - Beer price controls (floor/ceiling)
 - Demand elasticities
 - Externality cost parameters
