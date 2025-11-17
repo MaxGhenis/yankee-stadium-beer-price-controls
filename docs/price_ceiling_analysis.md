@@ -72,7 +72,7 @@ alt: Welfare decomposition on single chart
 Lower beer ceilings reduce stadium profit by 25% at \$7 ceiling (green line falls) while consumer surplus falls 19% (blue line). Externalities increase 28% (red line declines). Net social welfare falls 20% (purple line).
 ```
 
-**Policy implication:** Price ceilings create deadweight loss. The stadium loses more than consumers gain, and externalities worsen. This motivates alternative instruments like Pigouvian taxation.
+**Policy implication:** Price ceilings reduce welfare for both consumers (-19%) and producers (-25%), while externalities increase (+28%). Total social welfare falls 20%. This motivates alternative instruments like Pigouvian taxation.
 
 ### Per-Fan Consumption
 

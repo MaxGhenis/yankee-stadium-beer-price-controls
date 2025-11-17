@@ -32,6 +32,11 @@ class StadiumEconomicModel:
     Literature-based elasticities are adjusted for stadium context.
     """
 
+    # Optimization bounds (used when no constraints specified)
+    TICKET_PRICE_MAX = 200.0  # Maximum reasonable ticket price for optimization
+    BEER_PRICE_MAX = 30.0     # Maximum reasonable beer price for optimization
+    BEER_PRICE_MIN_MARGIN = 0.1  # Minimum margin above cost
+
     def __init__(self,
                  capacity: int = 46537,
                  base_ticket_price: float = 80.0,
@@ -321,15 +326,17 @@ class StadiumEconomicModel:
 
     def optimal_pricing(self,
                        beer_price_control: float = None,
-                       ticket_price_control: float = None) -> Tuple[float, float, Dict]:
+                       ticket_price_control: float = None,
+                       ceiling_mode: bool = True) -> Tuple[float, float, Dict]:
         """
         Find revenue-maximizing prices (possibly with constraints).
 
         With stadium-specific demand, observed prices should be near-optimal.
 
         Args:
-            beer_price_control: Max beer price if price ceiling, min if floor
-            ticket_price_control: Max ticket price if ceiling, min if floor
+            beer_price_control: Price control level (ceiling or floor)
+            ticket_price_control: Ticket price control (ceiling or floor)
+            ceiling_mode: If True, control is a ceiling (max); if False, floor (min)
 
         Returns:
             (optimal_ticket_price, optimal_beer_price, results_dict)
@@ -341,15 +348,30 @@ class StadiumEconomicModel:
             result = self.stadium_revenue(ticket_p, beer_p)
             return -result['profit']  # minimize negative profit
 
-        # Set bounds
-        ticket_bounds = (self.ticket_cost, 200)
-        # Beer price must be above cost; with captive demand, optimal is higher
-        beer_bounds = (self.beer_cost + 0.1, 30)
+        # Set default bounds
+        ticket_bounds = (self.ticket_cost, self.TICKET_PRICE_MAX)
+        beer_min = self.beer_cost + self.BEER_PRICE_MIN_MARGIN
+        beer_bounds = (beer_min, self.BEER_PRICE_MAX)
 
+        # Apply controls only as bounds, let optimizer choose within bounds
         if beer_price_control is not None:
-            beer_bounds = (beer_price_control, beer_price_control)
+            if ceiling_mode:
+                # Price ceiling: maximum price
+                # Handle edge case: ceiling below minimum feasible price
+                if beer_price_control < beer_min:
+                    # Ceiling below cost - force to ceiling (unrealistic but test edge cases)
+                    beer_bounds = (beer_price_control, beer_price_control)
+                else:
+                    beer_bounds = (beer_min, beer_price_control)
+            else:
+                # Price floor: minimum price
+                beer_bounds = (beer_price_control, self.BEER_PRICE_MAX)
+
         if ticket_price_control is not None:
-            ticket_bounds = (ticket_price_control, ticket_price_control)
+            if ceiling_mode:
+                ticket_bounds = (self.ticket_cost, ticket_price_control)
+            else:
+                ticket_bounds = (ticket_price_control, self.TICKET_PRICE_MAX)
 
         # Optimize
         result = minimize(

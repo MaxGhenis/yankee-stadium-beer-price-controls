@@ -195,10 +195,17 @@ class TestEdgeCases:
     def test_optimal_pricing_with_ticket_control(self):
         """Test optimal pricing with ticket price control."""
         model = StadiumEconomicModel()
-        ticket, beer, result = model.optimal_pricing(ticket_price_control=90.0)
+        # Get unconstrained optimal first
+        unc_ticket, unc_beer, unc_result = model.optimal_pricing()
 
-        # Ticket should be at control price
-        assert ticket == 90.0
+        # If control is above optimal (non-binding ceiling), should match unconstrained
+        ticket, beer, result = model.optimal_pricing(ticket_price_control=90.0, ceiling_mode=True)
+        if 90.0 > unc_ticket:
+            # Non-binding ceiling
+            assert ticket == pytest.approx(unc_ticket, rel=1e-3)
+        else:
+            # Binding ceiling
+            assert ticket <= 90.0
         assert beer > 0
 
     def test_sensitivity_health_cost(self):
