@@ -16,6 +16,16 @@ class TestRealisticConsumption:
     def model(self):
         return StadiumEconomicModel()
 
+    def test_free_beer_realistic(self, model):
+        """Free beer should match open bar empirical data (~5-6 drinks)."""
+        result = model.stadium_revenue(80, 0.01)  # Essentially free
+
+        # Open bar data: 5-6 drinks average (wedding/tailgate studies)
+        # At baseball game: Drinkers (40%) might consume 6-7 beers
+        # Average across all: 0.4 × 6.5 + 0.6 × 0 = 2.6 beers/fan
+        assert 2.0 <= result['beers_per_fan'] <= 4.0, \
+            f"Free beer: {result['beers_per_fan']:.1f} beers/fan (expected ~2.6 based on open bar data)"
+
     def test_no_one_drinks_100_beers(self, model):
         """Even at $0.10, no one should consume 100+ beers (physiological impossibility)."""
         result = model.stadium_revenue(80, 0.10)

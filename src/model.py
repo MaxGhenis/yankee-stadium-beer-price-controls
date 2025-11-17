@@ -146,7 +146,7 @@ class StadiumEconomicModel:
         But capped at reasonable maximum (no one drinks 50+ beers).
         """
         # Special case: Free beer (P ≈ 0)
-        if beer_price < 0.01:
+        if beer_price <= 0.01:
             # At P=0, utility-based formula gives infinity
             # Use empirical open-bar consumption instead
             # Data: Open bars average 5-6 drinks (wedding/tailgate data)
