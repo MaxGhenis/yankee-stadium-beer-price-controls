@@ -1,37 +1,28 @@
-# Beer Price Controls at Yankee Stadium
+# Introduction
 
-## An Economic Analysis of Consumer Welfare, Revenue, and Externalities
+## Motivation
 
-This report analyzes the economic impacts of beer price controls at Yankee Stadium, examining:
+Professional sports stadiums face a fundamental economic trade-off in alcohol pricing. Higher beer prices reduce consumption and associated negative externalities, including violence, public health costs, and drunk driving. However, beer sales represent a significant revenue stream for stadiums, with high profit margins that complement ticket revenue. This trade-off has motivated policy discussions about imposing price controls on stadium alcohol sales to address public health and safety concerns.
 
-- **Consumer welfare** from beer consumption and stadium experience
-- **Stadium revenue** from tickets and concessions
-- **Attendance effects** from price changes
-- **Negative externalities** from alcohol consumption
-- **Tax policy** and the Pigouvian gap
+This paper analyzes the economic impacts of beer price controls at Yankee Stadium, one of the nation's most prominent sports venues. We examine:
 
-## Executive Summary
+effects on consumer welfare, stadium profit maximization across both ticket and beer revenue, attendance responses to price changes, and social externalities from alcohol consumption. We also evaluate current alcohol taxation relative to optimal Pigouvian benchmarks.
 
-### Key Findings
+## Contribution
 
-1. **Current Pricing is Profit-Maximizing**
-   - Observed consumer beer price: **$12.50**
-   - Model-predicted optimal: **$12.85**
-   - Stadiums internalize crowd management, brand, and experience costs
+Our primary contribution is distinguishing between externalities that stadiums internalize through their profit maximization and those borne by society more broadly. We show that stadiums, as monopolists facing repeated interactions with customers, internalize negative effects that drunk fans impose on other attendees. These include increased security costs, reputational damage, and degradation of the stadium experience for other customers. We model these internalized costs as a convex function of total alcohol consumption, calibrated such that observed prices emerge as approximately profit-maximizing.
 
-2. **Significant Tax Gap**
-   - External costs: **$4.00/beer**
-   - Current taxes: **$1.09/beer**
-   - **Pigouvian tax gap: $2.91/beer** (73% undertaxed)
+This distinction is economically important because only true social externalities that remain uninternalized by the stadium justify policy intervention beyond market outcomes. We estimate these remaining external costs at $4.00 per beer (comprising $2.50 for crime and violence and $1.50 for public health impacts), while current taxes total only $1.09 per beer, suggesting substantial under-taxation relative to the Pigouvian optimum.
 
-3. **Price Control Impacts**
-   - **$7 price ceiling**: Would reduce stadium profit by $1.8M/season but increase consumer surplus
-   - **$15 price floor**: Minimal impact (above optimal)
-   - **Beer ban**: Reduces revenue by $2.0M/season, eliminates externalities
+## Main Findings
 
-4. **Revenue Opportunity**
-   - Optimal Pigouvian tax: +$2.91/beer
-   - Potential revenue: **+$9.4M/season** (81 games × 40k beers × $2.91)
+Our calibrated model yields several key results. First, we find that current pricing (average $80 tickets, $12.50 beer) is approximately profit-maximizing when accounting for taxes and internalized costs. The model predicts an optimal consumer beer price of $12.85, validating our calibration approach against observed market behavior.
+
+Second, we identify a substantial Pigouvian tax gap. While external costs from alcohol consumption total approximately $4.00 per beer, current combined taxes amount to only $1.09 per beer, implying under-taxation of 73% relative to the social optimum. An additional tax of $2.91 per beer would fully internalize external costs while generating approximately $6.7 million in annual revenue for New York City.
+
+Third, we analyze the general equilibrium effects of a binding beer price ceiling. A $7 ceiling (representing a 44% reduction from current prices) induces substantial adjustments in ticket pricing due to complementarity between the two goods. Specifically, the stadium's profit-maximizing response is to raise ticket prices by approximately $32 (36% increase). This occurs because the beer price ceiling compresses beer profit margins from $6.41 to $1.35 per unit (after accounting for taxes and marginal costs). The stadium optimally shifts toward ticket revenue, despite this causing a 38% decline in attendance. Importantly, per-capita beer consumption increases by 108%, leading to a 97% increase in external costs contrary to the presumed policy objective.
+
+Fourth, we find that alternative policies dominate price ceilings on efficiency grounds. A Pigouvian tax of $2.91 per beer would internalize external costs, reduce consumption by 29%, and generate $6.7 million annually in tax revenue without creating deadweight loss from binding quantity constraints. This represents the first-best policy response to the externality problem.
 
 ### Model Innovation
 

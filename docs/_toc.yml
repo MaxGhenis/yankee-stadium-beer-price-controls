@@ -1,11 +1,11 @@
 # Table of Contents
 format: jb-book
-root: intro
+root: abstract
 parts:
   - caption: Overview
     chapters:
-      - file: executive_summary
-        title: Executive Summary
+      - file: intro
+        title: Introduction
   - caption: Analysis
     chapters:
       - file: background
