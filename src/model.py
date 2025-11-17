@@ -48,7 +48,7 @@ class StadiumEconomicModel:
         beer_cost: float = 2.0,
         beer_excise_tax: float = 0.074,
         beer_sales_tax_rate: float = 0.08875,
-        experience_degradation_cost: float = 250.0,
+        experience_degradation_cost: float = 67.1,  # Calibrated for α_beer=43.75 + free beer constraint
         cross_price_elasticity: float = 0.1,
         beer_demand_sensitivity: float = 0.30,
         # Compatibility parameters (ignored in heterogeneous model)
@@ -107,26 +107,45 @@ class StadiumEconomicModel:
 
     def _create_default_types(self) -> List[ConsumerType]:
         """
-        Create default 2-type model matching empirical data.
+        Create default 2-type model with calibrated parameters from config.yaml.
 
         From Lenk et al. (2010):
         - 60% don't drink (or drink very little)
         - 40% drink, averaging 2.5 beers
+
+        Parameters loaded from config.yaml if available, otherwise uses defaults.
         """
+        # Try to load from config
+        try:
+            import yaml
+            from pathlib import Path
+            config_path = Path(__file__).parent.parent / 'config.yaml'
+            if config_path.exists():
+                with open(config_path) as f:
+                    config = yaml.safe_load(f)
+                    if config and 'calibration' in config:
+                        alpha_drinker = config['calibration'].get('alpha_beer_drinker', 43.75)
+                        alpha_non = config['calibration'].get('alpha_beer_nondrinker', 1.0)
+                    else:
+                        alpha_drinker, alpha_non = 43.75, 1.0
+            else:
+                alpha_drinker, alpha_non = 43.75, 1.0
+        except:
+            alpha_drinker, alpha_non = 43.75, 1.0
+
         types = [
             ConsumerType(
                 name="Non-Drinker",
                 share=0.60,
-                alpha_beer=1.0,  # Low enough that B = α/P - 1 < 0 at typical prices
-                alpha_experience=3.0,  # High stadium experience value
+                alpha_beer=alpha_non,
+                alpha_experience=3.0,
                 income=200.0
             ),
             ConsumerType(
                 name="Drinker",
                 share=0.40,
-                alpha_beer=43.75,  # Calibrated so B = 2.5 at P=$12.50
-                                    # FOC: α/(B+1) = P → 43.75/3.5 = 12.50 ✓
-                alpha_experience=2.5,  # Moderate stadium experience value
+                alpha_beer=alpha_drinker,
+                alpha_experience=2.5,
                 income=200.0
             )
         ]

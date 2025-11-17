@@ -219,18 +219,97 @@ def save_calibration(params: dict, config_path: str = 'config.yaml'):
     return config_file
 
 
+def calibrate_heterogeneous_model(
+    target_optimal_beer: float = 12.50,
+    alpha_beer_drinker: float = 43.75,
+    target_consumption_at_baseline: float = 2.5
+):
+    """
+    Calibrate heterogeneous model to match all empirical targets.
+
+    Finds experience_degradation_cost that makes α_beer=43.75 give:
+    - Optimal beer price ≈ $12.50
+    - Drinkers consume 2.5 beers at $12.50
+    - Aggregate 1.0 beers/fan
+
+    Returns calibrated parameters for config.yaml
+    """
+    from scipy.optimize import minimize_scalar
+    sys.path.insert(0, str(Path(__file__).parent))
+    from model import StadiumEconomicModel, ConsumerType
+
+    print(f"Calibrating heterogeneous model:")
+    print(f"  Target optimal beer: ${target_optimal_beer:.2f}")
+    print(f"  Drinker α_beer: {alpha_beer_drinker:.2f}")
+    print(f"  Target drinker consumption at $12.50: {target_consumption_at_baseline:.1f} beers")
+    print()
+
+    def objective(intern_cost):
+        if intern_cost <= 0:
+            return 1e10
+        try:
+            types = [
+                ConsumerType("Non-Drinker", 0.6, 1.0, 3.0, 200.0),
+                ConsumerType("Drinker", 0.4, alpha_beer_drinker, 2.5, 200.0)
+            ]
+            model = StadiumEconomicModel(
+                consumer_types=types,
+                experience_degradation_cost=intern_cost
+            )
+            _, opt_beer, _ = model.optimal_pricing()
+            return (opt_beer - target_optimal_beer) ** 2
+        except:
+            return 1e10
+
+    print("Optimizing internalized cost parameter...")
+    result = minimize_scalar(objective, bounds=(10, 1000), method='bounded')
+    best_intern = result.x
+
+    # Verify
+    types = [
+        ConsumerType("Non-Drinker", 0.6, 1.0, 3.0, 200.0),
+        ConsumerType("Drinker", 0.4, alpha_beer_drinker, 2.5, 200.0)
+    ]
+    model = StadiumEconomicModel(
+        consumer_types=types,
+        experience_degradation_cost=best_intern
+    )
+    _, opt_beer, _ = model.optimal_pricing()
+    r = model.stadium_revenue(80, 12.50)
+
+    print(f"\n✓ Calibration complete!")
+    print(f"  experience_degradation_cost: {best_intern:.2f}")
+    print(f"  alpha_beer_drinker: {alpha_beer_drinker:.2f}")
+    print(f"\n  Achieved optimal beer: ${opt_beer:.2f} (target: ${target_optimal_beer:.2f})")
+    print(f"  Drinkers consume: {r['breakdown_by_type']['Drinker']['beers_per_fan']:.2f} beers at $12.50")
+    print(f"  Aggregate: {r['beers_per_fan']:.2f} beers/fan")
+
+    return {
+        'experience_degradation_cost': float(best_intern),
+        'alpha_beer_drinker': float(alpha_beer_drinker),
+        'alpha_beer_nondrinker': 1.0,
+        'target_optimal_beer': float(target_optimal_beer),
+        'achieved_optimal_beer': float(opt_beer),
+        'optimal_error': float(abs(opt_beer - target_optimal_beer)),
+        'drinker_consumption_at_baseline': float(r['breakdown_by_type']['Drinker']['beers_per_fan']),
+        'aggregate_consumption_at_baseline': float(r['beers_per_fan']),
+        'notes': 'Heterogeneous model calibration (α_beer + experience_degradation_cost)',
+        'method': 'Numerical optimization to match optimal price and consumption data'
+    }
+
+
 if __name__ == "__main__":
     import pandas as pd
 
     print("="*70)
-    print("BEER PRICE CONTROLS MODEL - MULTI-PARAMETER CALIBRATION")
+    print("HETEROGENEOUS MODEL CALIBRATION")
     print("="*70)
     print()
 
-    # Calibrate multiple parameters
-    params = calibrate_multi_parameter(
-        target_beer_price=12.50,
-        target_ticket_price=80.0
+    # Calibrate heterogeneous model
+    params = calibrate_heterogeneous_model(
+        target_optimal_beer=12.50,
+        alpha_beer_drinker=43.75
     )
 
     # Save to config
@@ -238,7 +317,6 @@ if __name__ == "__main__":
 
     print()
     print("="*70)
-    print(f"Calibration saved! Model will auto-load from config.yaml")
-    print(f"  Beer sensitivity: {params['beer_demand_sensitivity']:.6f}")
-    print(f"  Internalized cost: ${params['experience_degradation_cost']:.2f}")
+    print("✓ Calibration complete and saved to config.yaml")
+    print("  Run any script - it will auto-load calibrated parameters!")
     print("="*70)
