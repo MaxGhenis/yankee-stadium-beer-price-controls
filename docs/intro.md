@@ -24,44 +24,24 @@ Third, we analyze the general equilibrium effects of a binding beer price ceilin
 
 Fourth, we find that alternative policies dominate price ceilings on efficiency grounds. A Pigouvian tax of $2.91 per beer would internalize external costs, reduce consumption by 29%, and generate $6.7 million annually in tax revenue without creating deadweight loss from binding quantity constraints. This represents the first-best policy response to the externality problem.
 
-### Model Innovation
+## Theoretical Framework
 
-This analysis treats **crowd management, brand damage, and experience degradation as internalized costs** that stadiums face from excessive alcohol consumption. These are externalities that drunk fans impose on OTHER customers, which the monopolist stadium internalizes because they affect future profits.
+Our model builds on the sports economics literature examining joint ticket-concession pricing {cite}`krautmann2007concessions,coates2007ticket` while introducing an explicit treatment of internalized costs. Standard models of stadium pricing typically assume production costs are the only constraint on profit maximization. However, this fails to explain why stadiums charge $12.50 for beer when simple profit maximization with standard demand curves suggests much lower optimal prices.
 
-**Internalized (by stadium):**
-- Crowd management & security
-- Brand/reputation damage
-- Experience degradation for other fans
-- Capacity constraints
+We resolve this puzzle by recognizing that stadiums, as monopolists in a repeated game with their customer base, internalize negative externalities that intoxicated fans impose on other attendees. These internalized costs include direct expenses (enhanced security, cleanup, liability insurance) and indirect costs (reputational damage reducing future attendance, experience degradation lowering customer willingness to pay). We model these as a convex function of total alcohol consumption, with the convexity reflecting the compounding nature of alcohol-related incidents.
 
-**External (borne by society):**
-- Crime & violence in surrounding area
-- Public health costs
-- Drunk driving
-- Non-attendee impacts
+In contrast, true social externalities including crime in surrounding neighborhoods, burdens on public health systems, and drunk driving remain uninternalized by the stadium's optimization problem. These provide the economic rationale for policy intervention through Pigouvian taxation or regulation.
 
-This distinction is crucial for policy analysis.
+## Data and Calibration
 
-### Data & Methods
+In the absence of proprietary transaction data from Yankee Stadium, we calibrate our model using publicly available information and parameters from the academic literature. Ticket demand elasticities of -0.625 (the midpoint of estimates ranging from -0.49 to -0.76 in {cite}`noll1974attendance,scully1989business`) and beer demand elasticities of -0.965 provide our baseline parameters, adjusted for the stadium context where captive audiences face no alternatives during games.
 
-- **Literature-based elasticities**: Ticket demand -0.625, beer demand -0.965 (Noll 1974, Scully 1989, Krautmann & Berri 2007)
-- **Current prices**: Industry data (2025)
-- **Externality estimates**: Academic literature (Manning et al. 1991, Carpenter & Dobkin 2015)
-- **Tax data**: Federal, NY State, NYC tax authorities
-- **Stadium-specific demand**: Semi-log form with captive audience effects
+Current prices are drawn from industry sources and secondary ticket markets, with average beer prices of $12.50 and ticket prices of $80. Tax data come from federal (Alcohol and Tobacco Tax and Trade Bureau), New York State, and New York City sources. External cost estimates draw on {cite}`manning1991costs` for health costs and {cite}`carpenter2015mlda` for crime externalities, both adjusted for inflation.
 
-### Structure of Report
+Our semi-log demand specification for both tickets and beer provides flexibility while avoiding corner solutions inherent in constant-elasticity forms. We calibrate the price sensitivity parameters such that observed prices emerge as approximately profit-maximizing, which serves as an external validation of our approach.
 
-1. **Background**: Literature review and empirical context
-2. **Model**: Economic framework and assumptions
-3. **Calibration**: Parameter estimation and validation
-4. **Simulation**: Policy scenarios including $7 price ceiling
-5. **Policy Analysis**: Welfare implications and recommendations
-6. **Tax Analysis**: Current taxes vs optimal Pigouvian tax
-7. **Conclusion**: Summary and policy recommendations
+## Structure
 
----
+The remainder of this paper proceeds as follows. Section 2 reviews the relevant literature on stadium pricing, alcohol demand elasticities, and externalities from alcohol consumption. Section 3 presents our economic model, including the theoretical framework for demand, the stadium's profit maximization problem incorporating internalized costs, and the social welfare function. Section 4 describes our calibration strategy and validates the model against observed behavior. Section 5 presents simulation results for various policy scenarios, with particular attention to the $7 beer price ceiling. Section 6 analyzes alternative policies including Pigouvian taxation, price floors, and hybrid approaches. Section 7 discusses the Pigouvian tax gap and revenue allocation. Section 8 concludes with policy recommendations and directions for future research.
 
-**Interactive exploration:** [Streamlit Web App](http://localhost:8501)
-
-**Code repository:** [GitHub](https://github.com/maxghenis/yankee-stadium-beer-price-controls)
+Interactive versions of our analysis, including a Streamlit application allowing real-time parameter adjustment and Monte Carlo simulations quantifying parameter uncertainty, are available in the online appendix.
