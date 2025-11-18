@@ -118,7 +118,10 @@ class StadiumEconomicModel:
         - 60% don't drink (or drink very little)
         - 40% drink, averaging 2.5 beers
         """
-        from .config_loader import get_parameter
+        try:
+            from .config_loader import get_parameter
+        except ImportError:
+            from config_loader import get_parameter
 
         types = [
             ConsumerType(
@@ -401,7 +404,10 @@ class StadiumEconomicModel:
 
     def _load_calibrated_internalized_cost(self) -> float:
         """Load experience_degradation_cost from config.yaml."""
-        from .config_loader import get_parameter
+        try:
+            from .config_loader import get_parameter
+        except ImportError:
+            from config_loader import get_parameter
         return get_parameter('experience_degradation_cost')
 
 
