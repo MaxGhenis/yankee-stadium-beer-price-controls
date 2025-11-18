@@ -50,7 +50,7 @@ As monopolist, stadium internalizes these because they affect future profits.
 | Parameter | Value | Source |
 |-----------|-------|--------|
 | Capacity | 46,537 | Official Yankee Stadium capacity |
-| Base ticket price | \$80 | Industry data (2025) |
+| Base ticket price | \$70 (model) | Model-predicted optimal; observed avg \$80 varies by seat location |
 | Base beer price | \$12.50 | Industry data (2025) |
 | Ticket elasticity | -0.625 | Noll (1974), Scully (1989) |
 | Beer elasticity | -0.965 | Stadium-adjusted from literature |
