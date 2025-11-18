@@ -3,8 +3,8 @@
 ## Current Pricing at Yankee Stadium (2025)
 
 ### Observed Prices
-- **Beer**: $10-15, average **$12.50**
-- **Tickets**: Average **$80**
+- **Beer**: \$10-15, average **\$12.50**
+- **Tickets**: Average **\$80**
 - **Stadium capacity**: 46,537
 
 ### Consumer Behavior
@@ -58,22 +58,22 @@ Stadium alcohol cutoff policies (e.g., stopping sales after 7th inning) reduce p
 
 ### Public Health Costs
 
-{cite}`manning1991costs` estimated external costs of alcohol at **$0.48-$1.19 per drink** (1986 dollars), including:
+{cite}`manning1991costs` estimated external costs of alcohol at **\$0.48-\$1.19 per drink** (1986 dollars), including:
 - Traffic accidents
 - Emergency room visits
 - Long-term health impacts
 - Fetal alcohol syndrome
 
-Inflation-adjusted to 2025: **~$1.50-$3.00 per drink**.
+Inflation-adjusted to 2025: **~\$1.50-\$3.00 per drink**.
 
 {cite}`rehm2009global` provide global estimates of alcohol-related disease burden and economic costs.
 
 ### Total External Costs
 
 Combining crime and health externalities:
-- Crime: **$2.50 per beer**
-- Health: **$1.50 per beer**
-- **Total: $4.00 per beer**
+- Crime: **\$2.50 per beer**
+- Health: **\$1.50 per beer**
+- **Total: \$4.00 per beer**
 
 These are costs borne by **society**, not the stadium.
 
@@ -148,10 +148,10 @@ These are **negative externalities on other customers** that the monopolist stad
 Our model shows these internalized costs are **convex** (accelerating):
 $$C_{internalized} = 250 \cdot \left(\frac{Q}{1000}\right)^2$$
 
-At $5 beer: Would sell 117k beers → internalized cost = **$13.8M**
-At $12.50: Sells 40k beers → internalized cost = **$1.6k**
+At \$5 beer: Would sell 117k beers → internalized cost = **\$13.8M**
+At \$12.50: Sells 40k beers → internalized cost = **\$1.6k**
 
-Stadium chooses $12.50 to maximize profit accounting for these costs.
+Stadium chooses \$12.50 to maximize profit accounting for these costs.
 
 ### Distinction: Internalized vs External
 
@@ -182,7 +182,7 @@ Stadium chooses $12.50 to maximize profit accounting for these costs.
   - ❌ No
 ```
 
-Only the **external costs** ($4.00/beer) justify policy intervention beyond what the stadium already does.
+Only the **external costs** (\$4.00/beer) justify policy intervention beyond what the stadium already does.
 
 ## Policy Context
 

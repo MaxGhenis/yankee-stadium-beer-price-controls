@@ -20,8 +20,8 @@ This analysis examines effects on:
 
 ### 1. Current Prices Are Profit-Maximizing (With Internalized Costs)
 
-**Observed**: $80 tickets, $12.50 beer
-**Model optimal**: $89 tickets, $12.85 beer
+**Observed**: \$80 tickets, \$12.50 beer
+**Model optimal**: \$89 tickets, \$12.85 beer
 
 Stadiums internalize negative externalities drunk fans impose on OTHER customers:
 - Crowd management costs
@@ -29,50 +29,50 @@ Stadiums internalize negative externalities drunk fans impose on OTHER customers
 - Experience degradation
 - Capacity constraints
 
-**Internalized cost function** (convex): $C = 250 \\cdot (Q/1000)^2$
+**Internalized cost function** (convex): $C = 250 \\cdot (Q/1000)^2\$
 
-At $5 beer: $13.8M internalized costs (!)
-At $12.50 beer: $1,563 internalized costs
+At \$5 beer: \$13.8M internalized costs (!)
+At \$12.50 beer: \$1,563 internalized costs
 
 This explains why stadiums don't sell cheap beer despite apparent profit potential.
 
 ### 2. Significant Pigouvian Tax Gap
 
-**External costs** (crime + health): **$4.00/beer**
-**Current taxes**: **$1.09/beer**
-**Gap**: **$2.91/beer** (73% undertaxed)
+**External costs** (crime + health): **\$4.00/beer**
+**Current taxes**: **\$1.09/beer**
+**Gap**: **\$2.91/beer** (73% undertaxed)
 
-**Revenue opportunity**: **+$9.4M/season** from optimal Pigouvian tax
+**Revenue opportunity**: **+\$9.4M/season** from optimal Pigouvian tax
 
-### 3. $7 Beer Ceiling: Mixed Effects
+### 3. \$7 Beer Ceiling: Mixed Effects
 
 | Impact | Change |
 |--------|--------|
-| **Ticket prices** | **+$32 (+36%)** |
+| **Ticket prices** | **+\$32 (+36%)** |
 | **Attendance** | -38% |
 | **Beer consumption** | +108% (per fan) |
-| **Stadium profit/game** | -$575k (-25%) |
-| **Stadium profit/season** | **-$46.6M** |
+| **Stadium profit/game** | -\$575k (-25%) |
+| **Stadium profit/season** | **-\$46.6M** |
 | **Consumer surplus** | Complex (cheaper beer, expensive tickets) |
 | **External costs** | +97% (more alcohol) |
 
 **Ticket price rise** is optimal response:
-- Beer margin collapses (stadium receives $11.41 → $6.35)
+- Beer margin collapses (stadium receives \$11.41 → \$6.35)
 - Shift toward ticket revenue (unconstrained)
 - Reduces attendance and limits beer sales at bad margin
 
 ### 4. Welfare Redistribution
 
-**Current equilibrium** ($12.50 beer):
-- Consumer surplus: ~$22M/game
-- Producer surplus: ~$2.3M/game
-- External costs: ~$160k/game
-- **Social welfare**: ~$24M/game
+**Current equilibrium** (\$12.50 beer):
+- Consumer surplus: ~\$22M/game
+- Producer surplus: ~\$2.3M/game
+- External costs: ~\$160k/game
+- **Social welfare**: ~\$24M/game
 
-**With $7 ceiling**:
+**With \$7 ceiling**:
 - Consumer surplus: Rises (cheaper beer) but offset by higher tickets
-- Producer surplus: **Falls** $575k/game
-- External costs: **Rise** +$153k (more consumption)
+- Producer surplus: **Falls** \$575k/game
+- External costs: **Rise** +\$153k (more consumption)
 - Net social welfare: Depends on weights
 
 **Distributional concern**: Benefits may not accrue to those bearing external costs
@@ -81,31 +81,31 @@ This explains why stadiums don't sell cheap beer despite apparent profit potenti
 
 **Ranked by economic efficiency:**
 
-1. **Pigouvian Tax** (+$2.91/beer) - MOST EFFICIENT ✓
+1. **Pigouvian Tax** (+\$2.91/beer) - MOST EFFICIENT ✓
    - Internalizes external costs
-   - Raises $6.7M/season for affected communities
+   - Raises \$11.0M/season for affected communities
    - Reduces consumption optimally
    - No deadweight loss
 
-2. **Price Floor** ($15-16) - SECOND BEST
+2. **Price Floor** (\$15-16) - SECOND BEST
    - Reduces consumption and externalities
    - No government revenue
    - Stadium keeps higher margin
 
 3. **Hybrid Policy** - POLITICALLY FEASIBLE
-   - Moderate tax (+$1.50/beer)
+   - Moderate tax (+\$1.50/beer)
    - Earlier cutoff (6th inning)
    - 2-beer purchase limit
 
-4. **Price Ceiling** ($7) - NOT RECOMMENDED ❌
-   - Large stadium revenue loss (-$47M/season)
+4. **Price Ceiling** (\$7) - NOT RECOMMENDED ❌
+   - Large stadium revenue loss (-\$47M/season)
    - Increases externalities (+97%)
    - Tickets rise 36% (unintended consequence)
    - Constitutional concerns
 
 5. **Beer Ban** - EXTREME
    - Eliminates externalities
-   - Revenue loss: -$2M/game
+   - Revenue loss: -\$2M/game
    - May shift to pre-game drinking (not modeled)
 
 ---
@@ -116,7 +116,7 @@ This explains why stadiums don't sell cheap beer despite apparent profit potenti
 
 **Key insight**: Monopolist stadiums internalize negative effects on their own customers.
 
-**Internalized** (already in $12.50 price):
+**Internalized** (already in \$12.50 price):
 - Experience degradation
 - Crowd management
 - Brand damage
@@ -130,13 +130,13 @@ Only **external costs** justify policy intervention.
 
 ### 2. Tax-Aware Model
 
-Consumer pays: $12.50
-Less taxes: -$1.09
-Stadium receives: **$11.41**
+Consumer pays: \$12.50
+Less taxes: -\$1.09
+Stadium receives: **\$11.41**
 
 Model accounts for:
 - Sales tax (8.875%)
-- Excise tax ($0.074)
+- Excise tax (\$0.074)
 - Stadium optimization over after-tax revenue
 
 ### 3. Complementarity Framework
@@ -175,18 +175,18 @@ Tickets and beer consumed together:
 ### For Policymakers
 
 **If goal is reduce alcohol consumption:**
-→ Pigouvian tax (+$2.91/beer) is most efficient
+→ Pigouvian tax (+\$2.91/beer) is most efficient
 
 **If goal is protect consumers:**
 → Beware unintended consequences (tickets rise 36%)
 
 **If goal is raise revenue:**
-→ Tax generates $6.7M/season for NYC
+→ Tax generates \$11.0M/season for NYC
 
 ### For Stadium
 
 **Price ceiling** causes:
-- Massive profit loss (-$47M/season)
+- Massive profit loss (-\$47M/season)
 - Optimal response: Raise tickets 36%
 - Both revenue sources still fall
 
@@ -217,7 +217,7 @@ Tickets and beer consumed together:
 - Complementarity (cross-elasticity 0.1)
 
 **Validation**:
-- Observed prices ≈ optimal ($80/$12.50 vs $89/$12.85)
+- Observed prices ≈ optimal (\$80/\$12.50 vs \$89/\$12.85)
 - Yankees attendance: 40,803/game (model: 39,556)
 - Consumption: 1.0 beers/attendee (matches literature)
 

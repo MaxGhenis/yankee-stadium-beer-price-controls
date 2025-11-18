@@ -67,7 +67,7 @@ gh-pages -d docs/_build/html
 
 **Pigouvian Tax ($2.91/beer):**
 - Consumer price: $15.41
-- Revenue: $6.7M/season
+- Revenue: $11.0M/season
 - Consumption: -29%
 - Most efficient policy
 

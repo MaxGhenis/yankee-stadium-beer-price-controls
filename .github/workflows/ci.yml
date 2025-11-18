@@ -85,3 +85,47 @@ jobs:
       with:
         name: dist
         path: dist/
+
+  docs:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.13"
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+
+    - name: Install dependencies
+      run: |
+        uv pip install --system -e ".[dev,docs]"
+        npm install -g mystmd
+
+    - name: Update documentation values
+      run: |
+        python scripts/update_docs_values.py
+
+    - name: Check for uncommitted changes
+      run: |
+        if ! git diff --quiet docs/; then
+          echo "⚠️  Documentation values were updated but not committed!"
+          echo "Run: python scripts/update_docs_values.py"
+          git diff --stat docs/
+          exit 1
+        fi
+
+    - name: Build documentation
+      run: |
+        cd docs
+        myst build --html
+
+    - name: Upload docs artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: docs
+        path: docs/_build/

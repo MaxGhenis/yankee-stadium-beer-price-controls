@@ -5,16 +5,16 @@
 ### Beer Taxes in NYC (per 12 oz)
 
 **Excise Taxes:**
-- Federal: $0.05
-- NY State: $0.013
-- NYC: $0.011
-- **Total excise: $0.074**
+- Federal: \$0.05
+- NY State: \$0.013
+- NYC: \$0.011
+- **Total excise: \$0.074**
 
 **Sales Tax:**
 - NYC rate: 8.875%
-- On $12.50 beer: $1.02
+- On \$12.50 beer: \$1.02
 
-**Total tax: $1.09/beer (8.7% of consumer price)**
+**Total tax: \$1.09/beer (8.7% of consumer price)**
 
 ## Revenue Flow
 
@@ -31,16 +31,16 @@ Consumer pays:              $12.50
 ### Annual Tax Revenue (Current)
 
 Per game (40,000 beers):
-- Sales tax: $40,800
-- Excise: $2,960
-- **Total: $43,760/game**
+- Sales tax: \$40,800
+- Excise: \$2,960
+- **Total: \$43,760/game**
 
 Per season (81 games):
-- **$3.5M/season** to government
+- **\$3.5M/season** to government
 
 ## External Costs Not Covered by Current Taxes
 
-### Crime Externalities: $2.50/beer
+### Crime Externalities: \$2.50/beer
 
 Based on {cite}`carpenter2015mlda`:
 - 10% alcohol ↑ → 1% assault ↑, 2.9% rape ↑
@@ -48,7 +48,7 @@ Based on {cite}`carpenter2015mlda`:
 - Property damage, emergency services
 - Concentrated around stadium on game days
 
-### Health Externalities: $1.50/beer
+### Health Externalities: \$1.50/beer
 
 Based on {cite}`manning1991costs` (inflation-adjusted):
 - Emergency room visits
@@ -57,7 +57,7 @@ Based on {cite}`manning1991costs` (inflation-adjusted):
 - Drunk driving crashes
 - Lost productivity
 
-### Total External Cost: $4.00/beer
+### Total External Cost: \$4.00/beer
 
 ## Pigouvian Tax Gap
 
@@ -75,16 +75,16 @@ Undertaxed amount:           72.7%
 
 | Good | External Cost | Current Tax | Coverage |
 |------|---------------|-------------|----------|
-| **Stadium beer** | $4.00 | $1.09 | **27%** |
-| Cigarettes | $10/pack | $5-8/pack | 50-80% |
-| Gasoline | $2/gallon | $0.50/gal | 25% |
-| Carbon | $100/ton | $0-30/ton | 0-30% |
+| **Stadium beer** | \$4.00 | \$1.09 | **27%** |
+| Cigarettes | \$10/pack | \$5-8/pack | 50-80% |
+| Gasoline | \$2/gallon | \$0.50/gal | 25% |
+| Carbon | \$100/ton | \$0-30/ton | 0-30% |
 
 Stadium beer is **significantly undertaxed** relative to externalities.
 
 ## Optimal Pigouvian Tax
 
-### Recommendation: +$2.91/beer
+### Recommendation: +\$2.91/beer
 
 This would:
 1. **Internalize external costs** (consumers face full social cost)
@@ -97,13 +97,13 @@ This would:
 **Per game:**
 - Current consumption: 40,000 beers
 - After tax: ~28,500 beers (29% reduction)
-- Revenue: 28,500 × $2.91 = **$82,935/game**
+- Revenue: 28,500 × \$2.91 = **\$82,935/game**
 
 **Per season:**
 - 81 home games
-- **Revenue: $6.7M/season**
+- **Revenue: \$11.0M/season**
 
-(Lower than naïve $9.4M due to demand reduction)
+(Lower than naïve \$9.4M due to demand reduction)
 
 ### Where Should Revenue Go?
 
@@ -123,7 +123,7 @@ This would:
 
 Who actually bears the tax burden?
 
-With beer demand elasticity ε = -0.29 (semi-log at $12.50):
+With beer demand elasticity ε = -0.29 (semi-log at \$12.50):
 
 **Pass-through rate:**
 
@@ -145,7 +145,7 @@ This is standard tax incidence: more inelastic side bears more burden.
 ## Alternative Revenue Uses
 
 ### Option 1: Reduce Other Taxes
-Use $6.7M to reduce property taxes in the Bronx
+Use $11.0M to reduce property taxes in the Bronx
 
 ### Option 2: Public Safety
 Increase police presence, security on game days

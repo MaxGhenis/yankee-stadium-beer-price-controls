@@ -77,16 +77,16 @@ $$\epsilon_{ij} = \frac{\gamma_{ij}}{w_i} - \delta_{ij}$$
 **Reference**: {cite}`arrow1961capital`
 
 **Form**:
-$$U = \\left[\\alpha B^\\rho + (1-\\alpha) T^\\rho\\right]^{1/\\rho}$$
+$$U = \left[\alpha B^\rho + (1-\alpha) T^\rho\right]^{1/\rho}$$
 
 Where:
-- $\\rho$ relates to elasticity of substitution: $\\sigma = 1/(1-\\rho)$
-- $\\sigma < 1$: Complements
-- $\\sigma > 1$: Substitutes
-- $\\sigma = 1$: Cobb-Douglas (independent)
+- $\rho$ relates to elasticity of substitution: $\sigma = 1/(1-\rho)$
+- $\sigma < 1$: Complements
+- $\sigma > 1$: Substitutes
+- $\sigma = 1$: Cobb-Douglas (independent)
 
 **Implied cross-elasticity:**
-$$\\epsilon_{TB} = (\\sigma - 1) \\cdot \\frac{P_B B}{E}$$
+$$\epsilon_{TB} = (\sigma - 1) \cdot \frac{P_B B}{E}$$
 
 **Advantages:**
 - ✅ Micro-founded (utility maximization)
@@ -97,7 +97,7 @@ $$\\epsilon_{TB} = (\\sigma - 1) \\cdot \\frac{P_B B}{E}$$
 - ❌ Restrictive (constant $\\sigma$ across price levels)
 - ❌ Requires calibration or estimation
 
-**Typical range**: $\\sigma = 0.2$ to $0.8$ for complements
+**Typical range**: $\\sigma = 0.2\$ to \$0.8\$ for complements
 
 ### 3. Translog Demand
 
@@ -122,7 +122,7 @@ Where $\\beta_{ij}$ are cross-price terms.
 **Form**:
 $$A = A_0 - \\alpha P_T - \\beta P_B - \\gamma P_T \\cdot P_B$$
 
-Where $\\gamma > 0$ for complements.
+Where $\\gamma > 0\$ for complements.
 
 **Cross-price elasticity:**
 $$\\epsilon_{TB} = -\\frac{\\beta + \\gamma P_T}{A} \\cdot P_B$$
@@ -200,7 +200,7 @@ Where $V_{attend}$ depends on both ticket and beer prices.
 ### 4. Plausibility of Estimates
 
 **Bounds checking:**
-- For complements: $\\epsilon_{cross} < 0$
+- For complements: $\\epsilon_{cross} < 0\$
 - Typical range: -0.1 to -2.0
 - Strong complements (cars/gas): -1.6
 - Weak complements: -0.1 to -0.3

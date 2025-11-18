@@ -4,7 +4,7 @@ This section presents a systematic analysis of how key outcomes vary with beer p
 
 ## Methodology
 
-We simulate stadium optimization across beer price ceilings ranging from \\$5 to \\$20, computing optimal ticket prices and all downstream effects. This comparative statics exercise reveals:
+We simulate stadium optimization across beer price ceilings ranging from \$5 to \$20, computing optimal ticket prices and all downstream effects. This comparative statics exercise reveals:
 
 1. **Stadium response**: How ticket prices adjust to compensate for constrained beer revenue
 2. **Quantity effects**: Changes in attendance and consumption
@@ -47,7 +47,7 @@ alt: Revenue decomposition
 Ticket revenue partially compensates for lost beer revenue, but total revenue falls. At \\$7 ceiling, revenue drops \\$600,000 per game (\\$49M annually for 81 home games).
 ```
 
-**Implication for policy:** Price ceilings reduce stadium revenue by 18% at \\$7 ceiling (\\$600,000 per game). This creates incentive for stadiums to oppose such regulations or seek compensatory policies (e.g., subsidized tickets, reduced taxes).
+**Implication for policy:** Price ceilings reduce stadium revenue by 18% at \$7 ceiling (\$600,000 per game). This creates incentive for stadiums to oppose such regulations or seek compensatory policies (e.g., subsidized tickets, reduced taxes).
 
 ### Welfare Analysis
 
@@ -84,30 +84,30 @@ alt: Beers per fan
 Per-capita consumption explodes with lower price ceilings. At \\$7, average fan consumes 2.1 beers vs 1.0 at baseline—a 108% increase. This drives the externality cost increases.
 ```
 
-## Quantitative Summary: \\$7 Ceiling vs Baseline
+## Quantitative Summary: \$7 Ceiling vs Baseline
 
-| Metric | Baseline (\\$12.50) | \\$7 Ceiling | Change |
+| Metric | Baseline (\$12.50) | \$7 Ceiling | Change |
 |--------|-------------------|-------------|---------|
 | **Prices** |
-| Beer price | \\$12.50 | \\$7.00 | -44% |
-| Ticket price | \\$89 | \\$121 | +36% |
+| Beer price | \$12.50 | \$7.00 | -44% |
+| Ticket price | \$89 | \$121 | +36% |
 | **Quantities** |
 | Attendance | 33,771 | 20,860 | -38% |
 | Beers/fan | 1.0 | 2.1 | +108% |
 | Total beers | 33,771 | 43,351 | +28% |
 | **Revenue** |
-| Total | \\$3.40M | \\$2.80M | -18% |
-| Profit | \\$2.27M | \\$1.70M | -25% |
+| Total | \$3.40M | \$2.80M | -18% |
+| Profit | \$2.27M | \$1.70M | -25% |
 | **Welfare** |
-| Consumer surplus | \\$9.99M | \\$8.14M | -19% |
-| Externality cost | \\$0.14M | \\$0.17M | +28% |
-| Social welfare | \\$12.13M | \\$9.66M | -20% |
+| Consumer surplus | \$9.99M | \$8.14M | -19% |
+| Externality cost | \$0.14M | \$0.17M | +28% |
+| Social welfare | \$12.13M | \$9.66M | -20% |
 
 ## Comparison with Leisten (2025)
 
 Our quantitative results confirm {cite}`leisten2025beer` theoretical prediction: **beer price ceilings cause ticket prices to rise**. We extend his analysis by:
 
-1. **Magnitude**: \\$7 ceiling → \\$32 ticket increase (4.4x multiplier on price change)
+1. **Magnitude**: \$7 ceiling → \$32 ticket increase (4.4x multiplier on price change)
 2. **Two-way complementarity**: Beer prices affect attendance in our model
 3. **Welfare decomposition**: Show who wins/loses and by how much
 4. **Externalities**: Demonstrate that ceilings worsen public health outcomes

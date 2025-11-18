@@ -1,0 +1,22 @@
+repos:
+  - repo: local
+    hooks:
+      - id: update-doc-values
+        name: Update documentation values from model
+        entry: python scripts/update_docs_values.py
+        language: system
+        files: '^(src/model\.py|src/simulation\.py|docs/.*\.md)$'
+        pass_filenames: false
+        always_run: false  # Only run if relevant files changed
+
+      - id: ruff-check
+        name: Lint with ruff
+        entry: ruff check
+        language: system
+        types: [python]
+
+      - id: black-check
+        name: Format with black
+        entry: black
+        language: system
+        types: [python]
