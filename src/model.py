@@ -295,35 +295,65 @@ class StadiumEconomicModel:
 
     def optimal_pricing(self, beer_price_control: float = None, ceiling_mode: bool = True) -> Tuple[float, float, Dict]:
         """Find profit-maximizing prices with heterogeneous consumers."""
-        def objective(prices):
-            ticket_p, beer_p = prices
-            if beer_p < 0 or ticket_p < 0:
+        beer_min = self.beer_cost + self.BEER_PRICE_MIN_MARGIN
+        ticket_bounds = (self.ticket_cost, self.TICKET_PRICE_MAX)
+
+        # Step 1: Determine beer price (before optimization)
+        if beer_price_control is not None and ceiling_mode:
+            # Get unconstrained beer optimum (cache to avoid recomputing)
+            if not hasattr(self, '_unconstrained_beer_optimum'):
+                def objective_both(prices):
+                    ticket_p, beer_p = prices
+                    if beer_p < 0 or ticket_p < 0:
+                        return 1e10
+                    result = self.stadium_revenue(ticket_p, beer_p)
+                    return -result['profit']
+
+                unconstrained = minimize(
+                    objective_both,
+                    x0=[self.base_ticket_price, self.base_beer_price],
+                    bounds=[ticket_bounds, (beer_min, self.BEER_PRICE_MAX)],
+                    method='L-BFGS-B'
+                )
+                self._unconstrained_beer_optimum = unconstrained.x[1]
+
+            # Beer price = min(ceiling, unconstrained_optimum)
+            optimal_beer = min(beer_price_control, self._unconstrained_beer_optimum)
+        else:
+            # No ceiling - optimize both prices together
+            def objective_both(prices):
+                ticket_p, beer_p = prices
+                if beer_p < 0 or ticket_p < 0:
+                    return 1e10
+                result = self.stadium_revenue(ticket_p, beer_p)
+                return -result['profit']
+
+            result = minimize(
+                objective_both,
+                x0=[self.base_ticket_price, self.base_beer_price],
+                bounds=[ticket_bounds, (beer_min, self.BEER_PRICE_MAX)],
+                method='L-BFGS-B'
+            )
+            optimal_ticket = result.x[0]
+            optimal_beer = result.x[1]
+            metrics = self.stadium_revenue(optimal_ticket, optimal_beer)
+            return optimal_ticket, optimal_beer, metrics
+
+        # Step 2: Optimize ticket price given fixed beer price
+        def objective_ticket(ticket_p):
+            if ticket_p < 0:
                 return 1e10
-            result = self.stadium_revenue(ticket_p, beer_p)
+            result = self.stadium_revenue(ticket_p, optimal_beer)
             return -result['profit']
 
-        # Set bounds
-        ticket_bounds = (self.ticket_cost, self.TICKET_PRICE_MAX)
-        beer_min = self.beer_cost + self.BEER_PRICE_MIN_MARGIN
-        beer_bounds = (beer_min, self.BEER_PRICE_MAX)
-
-        # Apply ceiling if specified
-        if beer_price_control is not None and ceiling_mode:
-            if beer_price_control < beer_min:
-                beer_bounds = (beer_price_control, beer_price_control)
-            else:
-                beer_bounds = (beer_min, beer_price_control)
-
-        # Optimize
         result = minimize(
-            objective,
-            x0=[self.base_ticket_price, self.base_beer_price],
-            bounds=[ticket_bounds, beer_bounds],
+            objective_ticket,
+            x0=self.base_ticket_price,
+            bounds=[ticket_bounds],
             method='L-BFGS-B'
         )
 
         optimal_ticket = result.x[0]
-        optimal_beer = result.x[1]
         metrics = self.stadium_revenue(optimal_ticket, optimal_beer)
 
         return optimal_ticket, optimal_beer, metrics
