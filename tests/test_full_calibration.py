@@ -4,7 +4,6 @@ Comprehensive TDD calibration tests.
 ALL of these must pass for proper calibration:
 """
 
-import pytest
 from src.model import StadiumEconomicModel
 
 
@@ -19,18 +18,17 @@ def test_triple_calibration_success():
 
     # Target 1: Optimal price
     _, opt_beer, _ = model.optimal_pricing()
-    assert 11.5 <= opt_beer <= 13.5, \
-        f"Optimal ${opt_beer:.2f} not near $12.50"
+    assert 11.5 <= opt_beer <= 13.5, f"Optimal ${opt_beer:.2f} not near $12.50"
 
     # Target 2: Drinker consumption
     r = model.stadium_revenue(80, 12.50)
-    drinker_beers = r['breakdown_by_type']['Drinker']['beers_per_fan']
-    assert 2.2 <= drinker_beers <= 2.8, \
-        f"Drinkers consume {drinker_beers:.2f} (should be ~2.5)"
+    drinker_beers = r["breakdown_by_type"]["Drinker"]["beers_per_fan"]
+    assert 2.2 <= drinker_beers <= 2.8, f"Drinkers consume {drinker_beers:.2f} (should be ~2.5)"
 
     # Target 3: Aggregate consumption
-    assert 0.85 <= r['beers_per_fan'] <= 1.15, \
-        f"Aggregate {r['beers_per_fan']:.2f} beers/fan (should be ~1.0)"
+    assert (
+        0.85 <= r["beers_per_fan"] <= 1.15
+    ), f"Aggregate {r['beers_per_fan']:.2f} beers/fan (should be ~1.0)"
 
     print("✓ Triple calibration SUCCESS!")
     print(f"  Optimal: ${opt_beer:.2f}")
@@ -44,8 +42,7 @@ def test_free_beer_reasonable():
     r = model.stadium_revenue(80, 0.01)
 
     # Open bar: 5-6 drinks → drinkers 6.5 beers → aggregate 2.6
-    assert 2.0 <= r['beers_per_fan'] <= 3.5, \
-        f"Free beer: {r['beers_per_fan']:.1f} (should be ~2.6)"
+    assert 2.0 <= r["beers_per_fan"] <= 3.5, f"Free beer: {r['beers_per_fan']:.1f} (should be ~2.6)"
 
 
 if __name__ == "__main__":

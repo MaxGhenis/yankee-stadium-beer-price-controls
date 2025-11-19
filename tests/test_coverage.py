@@ -3,6 +3,7 @@ Tests specifically for code coverage of edge cases and rarely-used functions.
 """
 
 import pytest
+
 from src.model import StadiumEconomicModel
 from src.simulation import BeerPriceControlSimulator
 
@@ -26,16 +27,14 @@ class TestModelCoverage:
         result = model.stadium_revenue(80, 12.5)
 
         # Should have internalized_costs field
-        assert 'internalized_costs' in result
-        assert result['internalized_costs'] >= 0
+        assert "internalized_costs" in result
+        assert result["internalized_costs"] >= 0
 
         # Total costs should include internalized costs
         expected_total = (
-            result['ticket_costs'] +
-            result['beer_costs'] +
-            result['internalized_costs']
+            result["ticket_costs"] + result["beer_costs"] + result["internalized_costs"]
         )
-        assert abs(result['total_costs'] - expected_total) < 0.01
+        assert abs(result["total_costs"] - expected_total) < 0.01
 
 
 class TestSimulationCoverage:
@@ -49,31 +48,24 @@ class TestSimulationCoverage:
     def test_sensitivity_analysis_invalid_parameter(self, simulator):
         """Test sensitivity analysis with invalid parameter name."""
         with pytest.raises(ValueError):
-            simulator.sensitivity_analysis(
-                parameter_name='invalid_param',
-                values=[1.0, 2.0]
-            )
+            simulator.sensitivity_analysis(parameter_name="invalid_param", values=[1.0, 2.0])
 
     def test_sensitivity_analysis_ticket_elasticity(self, simulator):
         """Test sensitivity over ticket elasticity."""
         results = simulator.sensitivity_analysis(
-            parameter_name='ticket_elasticity',
-            values=[-0.5, -0.7]
+            parameter_name="ticket_elasticity", values=[-0.5, -0.7]
         )
         assert len(results) == 2
-        assert 'ticket_elasticity' in results.columns
+        assert "ticket_elasticity" in results.columns
 
     def test_find_social_optimum(self, simulator):
         """Test social optimum calculation directly."""
-        result = simulator._find_social_optimum(
-            crime_cost_per_beer=2.5,
-            health_cost_per_beer=1.5
-        )
+        result = simulator._find_social_optimum(crime_cost_per_beer=2.5, health_cost_per_beer=1.5)
 
         # Should return a valid scenario dict
-        assert 'scenario' in result
-        assert result['scenario'] == 'Social Optimum'
-        assert result['profit'] > 0 or result['profit'] < 0  # Just check it's a number
+        assert "scenario" in result
+        assert result["scenario"] == "Social Optimum"
+        assert result["profit"] > 0 or result["profit"] < 0  # Just check it's a number
 
     def test_summary_statistics_all_fields(self, simulator):
         """Test that summary statistics covers all branches."""
@@ -82,17 +74,17 @@ class TestSimulationCoverage:
 
         # All summary fields should be present
         required_keys = [
-            'mean_attendance',
-            'std_attendance',
-            'mean_total_beers',
-            'std_total_beers',
-            'mean_profit',
-            'std_profit',
-            'mean_social_welfare',
-            'std_social_welfare',
-            'profit_maximizing_scenario',
-            'welfare_maximizing_scenario',
-            'lowest_externality_scenario'
+            "mean_attendance",
+            "std_attendance",
+            "mean_total_beers",
+            "std_total_beers",
+            "mean_profit",
+            "std_profit",
+            "mean_social_welfare",
+            "std_social_welfare",
+            "profit_maximizing_scenario",
+            "welfare_maximizing_scenario",
+            "lowest_externality_scenario",
         ]
 
         for key in required_keys:
@@ -101,29 +93,24 @@ class TestSimulationCoverage:
     def test_scenario_with_both_constraints(self, simulator):
         """Test scenario with both price floor and ceiling."""
         result = simulator.run_scenario(
-            "Both Constraints",
-            beer_price_min=10.0,
-            beer_price_max=15.0
+            "Both Constraints", beer_price_min=10.0, beer_price_max=15.0
         )
 
         # Should find a price between the constraints
-        assert 10.0 <= result['beer_price'] <= 15.0
+        assert 10.0 <= result["beer_price"] <= 15.0
 
     def test_comparative_statics_baseline(self, simulator):
         """Test comparative statics uses correct baseline."""
         results = simulator.run_all_scenarios()
 
         # Test with different baseline
-        changes = simulator.calculate_comparative_statics(
-            results,
-            baseline_scenario='Beer Ban'
-        )
+        changes = simulator.calculate_comparative_statics(results, baseline_scenario="Beer Ban")
 
         # Beer ban row should have zero change
-        ban_row = changes[changes['scenario'] == 'Beer Ban']
+        ban_row = changes[changes["scenario"] == "Beer Ban"]
         if len(ban_row) > 0:
             # Changes should be zero for baseline scenario
-            assert abs(ban_row['profit_change'].values[0]) < 0.01
+            assert abs(ban_row["profit_change"].values[0]) < 0.01
 
 
 class TestEdgeCases:
@@ -133,13 +120,13 @@ class TestEdgeCases:
         """Test model with no captive demand."""
         model = StadiumEconomicModel(captive_demand_share=0.0)
         result = model.stadium_revenue(80, 12.5)
-        assert result['profit'] > 0
+        assert result["profit"] > 0
 
     def test_model_with_full_captive_demand(self):
         """Test model with 100% captive demand."""
         model = StadiumEconomicModel(captive_demand_share=1.0)
         result = model.stadium_revenue(80, 12.5)
-        assert result['profit'] > 0
+        assert result["profit"] > 0
 
     def test_very_high_internalized_cost(self):
         """Test with very high internalized costs."""
@@ -156,7 +143,7 @@ class TestEdgeCases:
         result = model.stadium_revenue(80, 12.5)
 
         # Should still compute (though not realistic)
-        assert 'profit' in result
+        assert "profit" in result
 
     def test_sensitivity_health_cost(self):
         """Test sensitivity analysis over health cost parameter."""
@@ -164,16 +151,14 @@ class TestEdgeCases:
         simulator = BeerPriceControlSimulator(model)
 
         results = simulator.sensitivity_analysis(
-            parameter_name='health_cost',
-            values=[1.0, 2.0, 3.0]
+            parameter_name="health_cost", values=[1.0, 2.0, 3.0]
         )
 
         assert len(results) == 3
-        assert 'health_cost' in results.columns
+        assert "health_cost" in results.columns
 
     def test_negative_price_penalty_in_optimization(self):
         """Test that optimization handles negative prices correctly."""
-        from scipy.optimize import minimize
 
         model = StadiumEconomicModel()
 
@@ -184,7 +169,7 @@ class TestEdgeCases:
             if beer_p < 0 or ticket_p < 0:
                 return 1e10
             result = model.stadium_revenue(ticket_p, beer_p)
-            return -result['profit']
+            return -result["profit"]
 
         # Test with negative price
         penalty = objective([-10, -5])

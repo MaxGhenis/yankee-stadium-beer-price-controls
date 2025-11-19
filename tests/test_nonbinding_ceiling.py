@@ -5,8 +5,9 @@ This is critical for comparative statics analysis: when ceiling > optimal price,
 the ceiling should not affect outcomes.
 """
 
-import pytest
 import numpy as np
+import pytest
+
 from src.model import StadiumEconomicModel
 
 
@@ -38,9 +39,7 @@ class TestNonBindingCeilings:
         high_ceiling = unc_beer + 5.0
 
         # Should get same result
-        ceil_ticket, ceil_beer, ceil_result = model.optimal_pricing(
-            beer_price_control=high_ceiling
-        )
+        ceil_ticket, ceil_beer, ceil_result = model.optimal_pricing(beer_price_control=high_ceiling)
 
         # Prices should be identical (or ceiling, whichever is lower)
         assert ceil_beer <= high_ceiling, "Beer price should not exceed ceiling"
@@ -49,14 +48,17 @@ class TestNonBindingCeilings:
         if high_ceiling > unc_beer:
             # This test will FAIL with current implementation!
             # Current code forces beer price to equal ceiling even when non-binding
-            assert ceil_beer == pytest.approx(unc_beer, rel=1e-3), \
-                f"Non-binding ceiling should not affect beer price: {ceil_beer} != {unc_beer}"
+            assert ceil_beer == pytest.approx(
+                unc_beer, rel=1e-3
+            ), f"Non-binding ceiling should not affect beer price: {ceil_beer} != {unc_beer}"
 
-            assert ceil_ticket == pytest.approx(unc_ticket, rel=1e-3), \
-                f"Non-binding ceiling should not affect ticket price: {ceil_ticket} != {unc_ticket}"
+            assert ceil_ticket == pytest.approx(
+                unc_ticket, rel=1e-3
+            ), f"Non-binding ceiling should not affect ticket price: {ceil_ticket} != {unc_ticket}"
 
-            assert ceil_result['profit'] == pytest.approx(unc_result['profit'], rel=1e-3), \
-                f"Non-binding ceiling should not affect profit: {ceil_result['profit']} != {unc_result['profit']}"
+            assert ceil_result["profit"] == pytest.approx(
+                unc_result["profit"], rel=1e-3
+            ), f"Non-binding ceiling should not affect profit: {ceil_result['profit']} != {unc_result['profit']}"
 
     def test_binding_vs_nonbinding_ceiling(self, model):
         """Compare binding vs non-binding ceilings."""
@@ -80,24 +82,24 @@ class TestNonBindingCeilings:
 
         # Non-binding ceiling should have no effect
         # THIS WILL FAIL with current implementation
-        assert nonbind_beer == pytest.approx(unc_beer, rel=1e-3), \
-            "Non-binding ceiling should not affect beer price"
-        assert nonbind_ticket == pytest.approx(unc_ticket, rel=1e-3), \
-            "Non-binding ceiling should not affect ticket price"
+        assert nonbind_beer == pytest.approx(
+            unc_beer, rel=1e-3
+        ), "Non-binding ceiling should not affect beer price"
+        assert nonbind_ticket == pytest.approx(
+            unc_ticket, rel=1e-3
+        ), "Non-binding ceiling should not affect ticket price"
 
     def test_ceiling_at_exactly_optimal(self, model):
         """Ceiling exactly at optimal should have minimal/no effect."""
         unc_ticket, unc_beer, unc_result = model.optimal_pricing()
 
         # Set ceiling at exactly the optimal price
-        exact_ticket, exact_beer, exact_result = model.optimal_pricing(
-            beer_price_control=unc_beer
-        )
+        exact_ticket, exact_beer, exact_result = model.optimal_pricing(beer_price_control=unc_beer)
 
         # Should get essentially the same result
         assert exact_beer == pytest.approx(unc_beer, rel=1e-6)
         assert exact_ticket == pytest.approx(unc_ticket, rel=1e-3)
-        assert exact_result['profit'] == pytest.approx(unc_result['profit'], rel=1e-3)
+        assert exact_result["profit"] == pytest.approx(unc_result["profit"], rel=1e-3)
 
     def test_comparative_statics_plateaus(self, model):
         """
@@ -120,7 +122,7 @@ class TestNonBindingCeilings:
 
             # With current bug: these will all be different
             # After fix: these should all be the same (plateau)
-            profits.append(r['profit'])
+            profits.append(r["profit"])
             tickets.append(t)
             beers.append(b)
 
@@ -129,7 +131,9 @@ class TestNonBindingCeilings:
         profit_std = np.std(profits)
         ticket_std = np.std(tickets)
 
-        assert profit_std < 0.01 * np.mean(profits), \
-            f"Profits should be constant with non-binding ceilings, but std={profit_std}"
-        assert ticket_std < 0.01, \
-            f"Ticket prices should be constant with non-binding ceilings, but std={ticket_std}"
+        assert profit_std < 0.01 * np.mean(
+            profits
+        ), f"Profits should be constant with non-binding ceilings, but std={profit_std}"
+        assert (
+            ticket_std < 0.01
+        ), f"Ticket prices should be constant with non-binding ceilings, but std={ticket_std}"

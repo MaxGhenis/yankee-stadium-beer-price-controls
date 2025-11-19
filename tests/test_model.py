@@ -8,8 +8,9 @@ Tests cover:
 - Edge cases
 """
 
-import pytest
 import numpy as np
+import pytest
+
 from src.model import StadiumEconomicModel
 
 
@@ -25,11 +26,7 @@ class TestModelInitialization:
 
     def test_custom_parameters(self):
         """Model accepts custom parameters."""
-        model = StadiumEconomicModel(
-            capacity=50000,
-            base_ticket_price=100.0,
-            base_beer_price=15.0
-        )
+        model = StadiumEconomicModel(capacity=50000, base_ticket_price=100.0, base_beer_price=15.0)
         assert model.capacity == 50000
         assert model.base_ticket_price == 100.0
         assert model.base_beer_price == 15.0
@@ -46,15 +43,12 @@ class TestDemandFunctions:
             base_ticket_price=80.0,
             base_beer_price=12.5,
             ticket_elasticity=-0.625,
-            beer_elasticity=-0.965
+            beer_elasticity=-0.965,
         )
 
     def test_attendance_at_baseline(self, model):
         """Attendance at baseline prices should be reasonable."""
-        attendance = model._attendance_demand(
-            model.base_ticket_price,
-            model.base_beer_price
-        )
+        attendance = model._attendance_demand(model.base_ticket_price, model.base_beer_price)
         # Should be between 70-95% of capacity at baseline
         assert 0.7 * model.capacity <= attendance <= 0.95 * model.capacity
 
@@ -72,10 +66,7 @@ class TestDemandFunctions:
 
     def test_beer_demand_at_baseline(self, model):
         """Beer consumption at baseline should match literature (~40% drink)."""
-        beers_per_fan = model._beers_per_fan_demand(
-            model.base_beer_price,
-            model.consumer_income
-        )
+        beers_per_fan = model._beers_per_fan_demand(model.base_beer_price, model.consumer_income)
         # Literature: 40% drink, average 2.5 beers = 1.0 beers/attendee
         assert 0.8 <= beers_per_fan <= 1.5
 
@@ -87,7 +78,7 @@ class TestDemandFunctions:
 
     def test_zero_beer_price_returns_zero(self, model):
         """Beer price of zero should return high quantity (free beer).
-        
+
         In heterogeneous model:
         - Drinkers (40%) consume 6.5 beers
         - Non-drinkers (60%) consume 0 beers
@@ -117,9 +108,16 @@ class TestRevenueCalculations:
         result = model.stadium_revenue(80, 12.5)
 
         required_keys = [
-            'attendance', 'beers_per_fan', 'total_beers',
-            'ticket_revenue', 'beer_revenue', 'total_revenue',
-            'ticket_costs', 'beer_costs', 'total_costs', 'profit'
+            "attendance",
+            "beers_per_fan",
+            "total_beers",
+            "ticket_revenue",
+            "beer_revenue",
+            "total_revenue",
+            "ticket_costs",
+            "beer_costs",
+            "total_costs",
+            "profit",
         ]
         for key in required_keys:
             assert key in result
@@ -127,15 +125,15 @@ class TestRevenueCalculations:
     def test_revenue_positive(self, model):
         """Revenue should be positive at reasonable prices."""
         result = model.stadium_revenue(80, 12.5)
-        assert result['total_revenue'] > 0
-        assert result['ticket_revenue'] > 0
-        assert result['beer_revenue'] >= 0
+        assert result["total_revenue"] > 0
+        assert result["ticket_revenue"] > 0
+        assert result["beer_revenue"] >= 0
 
     def test_profit_calculation(self, model):
         """Profit should equal revenue minus costs."""
         result = model.stadium_revenue(80, 12.5)
-        expected_profit = result['total_revenue'] - result['total_costs']
-        assert abs(result['profit'] - expected_profit) < 0.01
+        expected_profit = result["total_revenue"] - result["total_costs"]
+        assert abs(result["profit"] - expected_profit) < 0.01
 
 
 class TestOptimalPricing:
@@ -151,7 +149,7 @@ class TestOptimalPricing:
 
         assert ticket_price > 0
         assert beer_price > model.beer_cost  # Must be above marginal cost
-        assert result['profit'] > 0
+        assert result["profit"] > 0
 
     def test_optimal_beer_price_reasonable(self, model):
         """Optimal beer price should be above marginal cost but may differ from observed.
@@ -168,10 +166,12 @@ class TestOptimalPricing:
         ticket_price, beer_price, result = model.optimal_pricing()
 
         # Should be above marginal cost
-        assert beer_price > model.beer_cost, f"Beer price ${beer_price:.2f} not above cost ${model.beer_cost}"
+        assert (
+            beer_price > model.beer_cost
+        ), f"Beer price ${beer_price:.2f} not above cost ${model.beer_cost}"
 
         # Should generate positive profit
-        assert result['profit'] > 0, "Should generate profit"
+        assert result["profit"] > 0, "Should generate profit"
 
         # Price should be reasonable (not at bounds)
         assert beer_price < 30.0, f"Beer price ${beer_price:.2f} at upper bound"
@@ -202,23 +202,25 @@ class TestWelfareCalculations:
         """Producer surplus should equal profit."""
         ps = model.producer_surplus(80, 12.5)
         result = model.stadium_revenue(80, 12.5)
-        assert abs(ps - result['profit']) < 0.01
+        assert abs(ps - result["profit"]) < 0.01
 
     def test_externality_cost_calculation(self, model):
         """Externality costs should increase with beer consumption."""
         result = model.stadium_revenue(80, 12.5)
-        ext_cost = model.externality_cost(result['total_beers'])
+        ext_cost = model.externality_cost(result["total_beers"])
 
         assert ext_cost > 0
-        assert ext_cost == result['total_beers'] * (2.5 + 1.5)  # default costs
+        assert ext_cost == result["total_beers"] * (2.5 + 1.5)  # default costs
 
     def test_social_welfare_structure(self, model):
         """Social welfare should include all components."""
         sw = model.social_welfare(80, 12.5)
 
         required_keys = [
-            'consumer_surplus', 'producer_surplus',
-            'externality_cost', 'social_welfare'
+            "consumer_surplus",
+            "producer_surplus",
+            "externality_cost",
+            "social_welfare",
         ]
         for key in required_keys:
             assert key in sw
@@ -227,12 +229,8 @@ class TestWelfareCalculations:
         """Social welfare should equal CS + PS - externalities."""
         sw = model.social_welfare(80, 12.5)
 
-        expected_sw = (
-            sw['consumer_surplus'] +
-            sw['producer_surplus'] -
-            sw['externality_cost']
-        )
-        assert abs(sw['social_welfare'] - expected_sw) < 0.01
+        expected_sw = sw["consumer_surplus"] + sw["producer_surplus"] - sw["externality_cost"]
+        assert abs(sw["social_welfare"] - expected_sw) < 0.01
 
 
 class TestEdgeCases:
@@ -245,16 +243,13 @@ class TestEdgeCases:
     def test_very_high_prices(self, model):
         """Model should handle very high prices gracefully."""
         result = model.stadium_revenue(500, 50)
-        assert result['attendance'] >= 0
-        assert result['total_beers'] >= 0
+        assert result["attendance"] >= 0
+        assert result["total_beers"] >= 0
 
     def test_prices_at_cost(self, model):
         """Model should handle prices at marginal cost."""
-        result = model.stadium_revenue(
-            model.ticket_cost,
-            model.beer_cost
-        )
-        assert result['profit'] <= 0.01  # Should be ~zero profit
+        result = model.stadium_revenue(model.ticket_cost, model.beer_cost)
+        assert result["profit"] <= 0.01  # Should be ~zero profit
 
     def test_capacity_constraint(self, model):
         """Attendance should never exceed capacity."""
@@ -336,9 +331,6 @@ class TestStadiumSpecificFeatures:
 
         # Log-concavity: ln(Q(αP1 + (1-α)P2)) ≥ α*ln(Q(P1)) + (1-α)*ln(Q(P2))
         # Or equivalently: Q_mid ≥ Q1^α * Q2^(1-α)
-        import numpy as np
-        expected_log = alpha * np.log(Q1) + (1 - alpha) * np.log(Q2)
-        actual_log = np.log(Q_mid)
         
         # NOTE: Aggregate demand from heterogeneous types (sum of log-concave functions)
         # is not necessarily log-concave. We relax this check for the aggregate curve.
@@ -349,9 +341,11 @@ class TestStadiumSpecificFeatures:
         # Test ticket demand log-concavity (similar structure)
         A1 = model._attendance_demand(60, 12.5)
         A2 = model._attendance_demand(100, 12.5)
-        A_mid = model._attendance_demand(alpha * 60 + (1-alpha) * 100, 12.5)
+        A_mid = model._attendance_demand(alpha * 60 + (1 - alpha) * 100, 12.5)
 
         expected_log_a = alpha * np.log(A1) + (1 - alpha) * np.log(A2)
         actual_log_a = np.log(A_mid)
-        assert actual_log_a == pytest.approx(expected_log_a, rel=1e-6) or actual_log_a >= expected_log_a, \
-            f"Ticket demand should be log-concave: {actual_log_a} < {expected_log_a}"
+        assert (
+            actual_log_a == pytest.approx(expected_log_a, rel=1e-6)
+            or actual_log_a >= expected_log_a
+        ), f"Ticket demand should be log-concave: {actual_log_a} < {expected_log_a}"
