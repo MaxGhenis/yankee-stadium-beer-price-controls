@@ -306,28 +306,32 @@ class StadiumEconomicModel:
         ticket_bounds = (self.ticket_cost, self.TICKET_PRICE_MAX)
 
         # Step 1: Determine beer price (before optimization)
-        if beer_price_control is not None and ceiling_mode:
-            # Get unconstrained beer optimum (cache to avoid recomputing)
-            if not hasattr(self, '_unconstrained_beer_optimum'):
-                def objective_both(prices):
-                    ticket_p, beer_p = prices
-                    if beer_p < 0 or ticket_p < 0:
-                        return 1e10
-                    result = self.stadium_revenue(ticket_p, beer_p)
-                    return -result['profit']
+        if beer_price_control is not None:
+            if ceiling_mode:
+                # Get unconstrained beer optimum (cache to avoid recomputing)
+                if not hasattr(self, '_unconstrained_beer_optimum'):
+                    def objective_both(prices):
+                        ticket_p, beer_p = prices
+                        if beer_p < 0 or ticket_p < 0:
+                            return 1e10
+                        result = self.stadium_revenue(ticket_p, beer_p)
+                        return -result['profit']
 
-                unconstrained = minimize(
-                    objective_both,
-                    x0=[self.base_ticket_price, self.base_beer_price],
-                    bounds=[ticket_bounds, (beer_min, self.BEER_PRICE_MAX)],
-                    method='L-BFGS-B'
-                )
-                self._unconstrained_beer_optimum = unconstrained.x[1]
+                    unconstrained = minimize(
+                        objective_both,
+                        x0=[self.base_ticket_price, self.base_beer_price],
+                        bounds=[ticket_bounds, (beer_min, self.BEER_PRICE_MAX)],
+                        method='L-BFGS-B'
+                    )
+                    self._unconstrained_beer_optimum = unconstrained.x[1]
 
-            # Beer price = min(ceiling, unconstrained_optimum)
-            optimal_beer = min(beer_price_control, self._unconstrained_beer_optimum)
+                # Beer price = min(ceiling, unconstrained_optimum)
+                optimal_beer = min(beer_price_control, self._unconstrained_beer_optimum)
+            else:
+                # Fixed price mode
+                optimal_beer = beer_price_control
         else:
-            # No ceiling - optimize both prices together
+            # No constraints - optimize both prices together
             def objective_both(prices):
                 ticket_p, beer_p = prices
                 if beer_p < 0 or ticket_p < 0:

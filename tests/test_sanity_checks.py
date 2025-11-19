@@ -60,13 +60,12 @@ class TestMonotonicity:
         """External costs should scale linearly with beer quantity."""
         beers_1 = 1000
         beers_2 = 2000
-
-        ext_1 = model.externality_cost(beers_1, crime_cost_per_beer=2.5, health_cost_per_beer=1.5)
-        ext_2 = model.externality_cost(beers_2, crime_cost_per_beer=2.5, health_cost_per_beer=1.5)
-
-        # Should be exactly proportional
-        assert ext_2 == pytest.approx(2 * ext_1), \
-            "Externalities should scale linearly with consumption"
+        
+        ext_1 = model.externality_cost(beers_1)
+        ext_2 = model.externality_cost(beers_2)
+        
+        # Should be exactly double (linear)
+        assert ext_2 == pytest.approx(ext_1 * 2)
 
 
 class TestAccountingIdentities:
@@ -235,11 +234,11 @@ class TestDataQuality:
     def test_no_nans_or_infs(self, model):
         """Verify no NaN/Inf in outputs."""
         result = model.stadium_revenue(80, 12.5)
-
+        
         for key, value in result.items():
-            assert not np.isnan(value), f"{key} is NaN"
-            assert not np.isinf(value), f"{key} is Inf"
-
+            if isinstance(value, (int, float)):
+                assert not np.isnan(value), f"{key} is NaN"
+                assert not np.isinf(value), f"{key} is Inf"
     def test_attendance_not_exceeds_capacity(self, model):
         """Attendance should never exceed stadium capacity."""
         # Try very low prices
@@ -470,22 +469,21 @@ class TestEdgeCasesRobustness:
     def test_zero_externality_costs(self):
         """Model should work with zero externality costs."""
         model = StadiumEconomicModel()
-        welfare = model.social_welfare(80, 12.5, crime_cost_per_beer=0, health_cost_per_beer=0)
-
+        model.external_costs['crime'] = 0
+        model.external_costs['health'] = 0
+        welfare = model.social_welfare(80, 12.5)
+        
+        # SW should equal CS + PS (no externality subtraction)
+        assert welfare['social_welfare'] == pytest.approx(welfare['consumer_surplus'] + welfare['producer_surplus'])
         assert welfare['externality_cost'] == 0
-        # SW should equal CS + PS with no externalities
-        assert welfare['social_welfare'] == pytest.approx(
-            welfare['consumer_surplus'] + welfare['producer_surplus'],
-            rel=1e-6
-        )
 
     def test_very_high_externality_costs(self):
         """Model should handle very high externality estimates."""
         model = StadiumEconomicModel()
         # Extreme externality costs (e.g., $50/beer)
-        welfare = model.social_welfare(80, 12.5, crime_cost_per_beer=30, health_cost_per_beer=20)
-
-        # Should compute without error
-        assert 'social_welfare' in welfare
-        # Social welfare might be negative with extreme externalities
-        assert welfare['externality_cost'] > 0
+        model.external_costs['crime'] = 30
+        model.external_costs['health'] = 20
+        welfare = model.social_welfare(80, 12.5)
+        
+        # Externality cost should be huge
+        assert welfare['externality_cost'] > 1000000

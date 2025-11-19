@@ -82,9 +82,10 @@ class BeerPriceControlSimulator:
             # Price floor
             ticket_price, beer_price, result = self.model.optimal_pricing()
             if beer_price < beer_price_min:
-                # Floor binds, re-optimize
+                # Floor binds, re-optimize with fixed price
                 ticket_price, beer_price, result = self.model.optimal_pricing(
-                    beer_price_control=beer_price_min
+                    beer_price_control=beer_price_min,
+                    ceiling_mode=False
                 )
         elif beer_price_max is not None:
             # Price ceiling
@@ -99,12 +100,22 @@ class BeerPriceControlSimulator:
             ticket_price, beer_price, result = self.model.optimal_pricing()
 
         # Calculate welfare metrics
-        welfare = self.model.social_welfare(
-            ticket_price,
-            beer_price,
-            crime_cost_per_beer,
-            health_cost_per_beer
-        )
+        # Temporarily override model's external costs for this simulation run
+        original_crime_cost = self.model.external_costs.get('crime', 2.50)
+        original_health_cost = self.model.external_costs.get('health', 1.50)
+        
+        self.model.external_costs['crime'] = crime_cost_per_beer
+        self.model.external_costs['health'] = health_cost_per_beer
+        
+        try:
+            welfare = self.model.social_welfare(
+                ticket_price,
+                beer_price
+            )
+        finally:
+            # Restore original costs
+            self.model.external_costs['crime'] = original_crime_cost
+            self.model.external_costs['health'] = original_health_cost
 
         # Combine results
         output = {
@@ -212,12 +223,22 @@ class BeerPriceControlSimulator:
             ticket_p, beer_p = prices
             if beer_p < 0:
                 return 1e10  # penalty
-            welfare = self.model.social_welfare(
-                ticket_p,
-                beer_p,
-                crime_cost_per_beer,
-                health_cost_per_beer
-            )
+            
+            # Temporarily override external costs for optimization
+            original_crime = self.model.external_costs.get('crime', 2.50)
+            original_health = self.model.external_costs.get('health', 1.50)
+            self.model.external_costs['crime'] = crime_cost_per_beer
+            self.model.external_costs['health'] = health_cost_per_beer
+            
+            try:
+                welfare = self.model.social_welfare(
+                    ticket_p,
+                    beer_p
+                )
+            finally:
+                self.model.external_costs['crime'] = original_crime
+                self.model.external_costs['health'] = original_health
+                
             return -welfare['social_welfare']  # minimize negative SW
 
         result = minimize(

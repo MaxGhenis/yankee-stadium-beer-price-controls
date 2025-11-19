@@ -48,13 +48,20 @@ def simulate_price_ceilings(
         )
 
         # Get welfare metrics
-        welfare = model.social_welfare(
-            ticket_price,
-            beer_price,
-            crime_cost,
-            health_cost
-        )
-
+        # Temporarily override model's external costs
+        original_crime = model.external_costs.get('crime', 2.50)
+        original_health = model.external_costs.get('health', 1.50)
+        model.external_costs['crime'] = crime_cost
+        model.external_costs['health'] = health_cost
+        
+        try:
+            welfare = model.social_welfare(
+                ticket_price,
+                beer_price
+            )
+        finally:
+            model.external_costs['crime'] = original_crime
+            model.external_costs['health'] = original_health
         results.append({
             'beer_ceiling': ceiling,
             'ticket_price': ticket_price,

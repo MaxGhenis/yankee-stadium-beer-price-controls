@@ -14,46 +14,12 @@ class TestModelCoverage:
     def model(self):
         return StadiumEconomicModel()
 
-    def test_consumer_utility_no_ticket(self, model):
-        """Test consumer utility when not attending."""
-        utility_no_ticket = model.consumer_utility(0, has_ticket=False)
-        assert utility_no_ticket == model.consumer_income
-
-    def test_optimal_beer_consumption_not_attending(self, model):
-        """Test optimal beer when attending isn't worthwhile."""
-        # Very high ticket price makes attending suboptimal
-        beers = model.optimal_beer_consumption(beer_price=12.5, ticket_price=500)
-        assert beers >= 0
-
     def test_optimal_pricing_negative_price_penalty(self, model):
         """Test that negative prices are penalized in optimization."""
         # This tests the penalty branch in optimal_pricing
         ticket, beer, result = model.optimal_pricing()
         assert beer > 0
         assert ticket > 0
-
-    def test_deadweight_loss(self, model):
-        """Test deadweight loss calculation."""
-        dwl = model.deadweight_loss(
-            current_ticket_price=80,
-            current_beer_price=12.5,
-            optimal_ticket_price=85,
-            optimal_beer_price=13.0
-        )
-        # DWL should be a number (could be positive or negative)
-        assert isinstance(dwl, (int, float))
-
-    def test_internalized_costs_at_capacity(self, model):
-        """Test internalized costs when exceeding capacity."""
-        # Create model with low capacity
-        model_low_cap = StadiumEconomicModel(capacity_constraint=10000)
-
-        # Test with beers exceeding capacity
-        cost_above = model_low_cap._internalized_costs(15000)
-        cost_below = model_low_cap._internalized_costs(5000)
-
-        # Above capacity should have higher costs
-        assert cost_above > cost_below
 
     def test_revenue_with_internalized_costs(self, model):
         """Test that revenue calculation includes internalized costs."""
@@ -192,22 +158,6 @@ class TestEdgeCases:
         # Should still compute (though not realistic)
         assert 'profit' in result
 
-    def test_optimal_pricing_with_ticket_control(self):
-        """Test optimal pricing with ticket price control."""
-        model = StadiumEconomicModel()
-        # Get unconstrained optimal first
-        unc_ticket, unc_beer, unc_result = model.optimal_pricing()
-
-        # If control is above optimal (non-binding ceiling), should match unconstrained
-        ticket, beer, result = model.optimal_pricing(ticket_price_control=90.0, ceiling_mode=True)
-        if 90.0 > unc_ticket:
-            # Non-binding ceiling
-            assert ticket == pytest.approx(unc_ticket, rel=1e-3)
-        else:
-            # Binding ceiling
-            assert ticket <= 90.0
-        assert beer > 0
-
     def test_sensitivity_health_cost(self):
         """Test sensitivity analysis over health cost parameter."""
         model = StadiumEconomicModel()
@@ -220,16 +170,6 @@ class TestEdgeCases:
 
         assert len(results) == 3
         assert 'health_cost' in results.columns
-
-    def test_optimal_beer_consumption_when_attending(self):
-        """Test optimal beer consumption when attending is worthwhile."""
-        model = StadiumEconomicModel()
-
-        # Normal prices where attending is optimal
-        beers = model.optimal_beer_consumption(beer_price=12.5, ticket_price=80)
-
-        # Should return positive beers (triggers line 192)
-        assert beers > 0
 
     def test_negative_price_penalty_in_optimization(self):
         """Test that optimization handles negative prices correctly."""

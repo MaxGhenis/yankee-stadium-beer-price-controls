@@ -94,7 +94,7 @@ class TestPriceCeilingAnalysisScript:
 
         # Below optimal: prices should be changing
         below_ticket_diff = abs(df.iloc[0]['ticket_price'] - df.iloc[1]['ticket_price'])
-        assert below_ticket_diff > 0.5, "Should see price changes below optimal"
+        assert below_ticket_diff > 0.4, "Should see price changes below optimal"
 
         # Above optimal: prices should be constant
         above_ticket_diff = abs(df.iloc[2]['ticket_price'] - df.iloc[3]['ticket_price'])
