@@ -21,7 +21,7 @@ This analysis examines effects on:
 ### 1. Current Prices Are Profit-Maximizing (With Internalized Costs)
 
 **Observed**: $80 tickets, $12.50 beer
-**Model optimal**: $70.44 tickets, $12.51 beer
+**Model optimal**: ${{ baseline_ticket }} tickets, ${{ baseline_beer }} beer
 
 Stadiums internalize negative externalities drunk fans impose on OTHER customers:
 - Crowd management costs
@@ -29,7 +29,7 @@ Stadiums internalize negative externalities drunk fans impose on OTHER customers
 - Experience degradation
 - Capacity constraints
 
-**Internalized cost function** (convex): $C = 62.3 \cdot (Q/1000)^2$
+**Internalized cost function** (convex): $C = {{ experience_degradation_cost }} \cdot (Q/1000)^2$
 
 At $5 beer: Internalized costs skyrocket due to convexity.
 At $12.50 beer: Internalized costs are manageable.
@@ -38,23 +38,23 @@ This explains why stadiums don't sell cheap beer despite apparent profit potenti
 
 ### 2. Significant Pigouvian Tax Gap
 
-**External costs** (crime + health): **$4.00/beer**
-**Current taxes**: **$1.18/beer**
-**Gap**: **$2.82/beer** (30% undertaxed)
+**External costs** (crime + health): **${{ external_cost_per_beer }}/beer**
+**Current taxes**: **${{ current_taxes_per_beer }}/beer**
+**Gap**: **${{ pigouvian_gap }}/beer** ({{ tax_coverage_pct }}% undertaxed)
 
-**Revenue opportunity**: **+$10.6M/season** from optimal Pigouvian tax
+**Revenue opportunity**: **+${{ pigouvian_revenue_annual }}M/season** from optimal Pigouvian tax
 
 ### 3. $7 Beer Ceiling: Mixed Effects
 
 | Impact | Change |
 |--------|--------|
-| **Ticket prices** | **+$6.85 (+9.7%)** |
-| **Attendance** | -5.7% |
-| **Beer consumption** | +110.2% (per fan) |
-| **Stadium profit/game** | $-306,876 (--9.0%) |
-| **Stadium profit/season** | **$-24.9M** |
-| **Consumer surplus** | +5.3% (cheaper beer outweighs tickets) |
-| **External costs** | +98.3% (more alcohol) |
+| **Ticket prices** | **+${{ ceiling7_ticket_increase }} (+{{ ceiling7_ticket_pct }}%)** |
+| **Attendance** | {{ ceiling7_attendance_pct }}% |
+| **Beer consumption** | +{{ ceiling7_beers_per_fan_pct }}% (per fan) |
+| **Stadium profit/game** | ${{ ceiling7_profit_change }} (-{{ ceiling7_producer_surplus_pct }}%) |
+| **Stadium profit/season** | **${{ ceiling7_profit_change_season }}M** |
+| **Consumer surplus** | +{{ ceiling7_consumer_surplus_pct }}% (cheaper beer outweighs tickets) |
+| **External costs** | +{{ ceiling7_externality_cost_pct }}% (more alcohol) |
 
 **Ticket price rise** is optimal response:
 - Beer margin collapses (stadium receives $11.41 → $6.35)
@@ -81,9 +81,9 @@ This explains why stadiums don't sell cheap beer despite apparent profit potenti
 
 **Ranked by economic efficiency:**
 
-1. **Pigouvian Tax** (+$2.82/beer) - MOST EFFICIENT ✓
+1. **Pigouvian Tax** (+${{ pigouvian_gap }}/beer) - MOST EFFICIENT ✓
    - Internalizes external costs
-   - Raises $10.6M/season for affected communities
+   - Raises ${{ pigouvian_revenue_annual }}M/season for affected communities
    - Reduces consumption optimally
    - No deadweight loss
 
@@ -97,9 +97,9 @@ This explains why stadiums don't sell cheap beer despite apparent profit potenti
    - 2-beer purchase limit
 
 4. **Price Ceiling** ($7) - NOT RECOMMENDED ❌
-   - Significant stadium revenue loss ($-24.9M/season)
-   - Increases externalities (+98.3%)
-   - Tickets rise 9.7% (unintended consequence)
+   - Significant stadium revenue loss (${{ ceiling7_profit_change_season }}M/season)
+   - Increases externalities (+{{ ceiling7_externality_cost_pct }}%)
+   - Tickets rise {{ ceiling7_ticket_pct }}% (unintended consequence)
    - Constitutional concerns
 
 5. **Beer Ban** - EXTREME
@@ -175,19 +175,19 @@ Tickets and beer consumed together:
 
 **If goal is reduce alcohol consumption:**
 → Pigouvian tax (+
-$2.82/beer) is most efficient
+${{ pigouvian_gap }}/beer) is most efficient
 
 **If goal is protect consumers:**
-→ Beware unintended consequences (tickets rise 9.7%)
+→ Beware unintended consequences (tickets rise {{ ceiling7_ticket_pct }}%)
 
 **If goal is raise revenue:**
-→ Tax generates $10.6M/season for NYC
+→ Tax generates ${{ pigouvian_revenue_annual }}M/season for NYC
 
 ### For Stadium
 
 **Price ceiling** causes:
-- Significant profit loss ($-24.9M/season)
-- Optimal response: Raise tickets 9.7%
+- Significant profit loss (${{ ceiling7_profit_change_season }}M/season)
+- Optimal response: Raise tickets {{ ceiling7_ticket_pct }}%
 - Both revenue sources still fall
 
 ### For Society
@@ -195,7 +195,7 @@ $2.82/beer) is most efficient
 **Trade-off**:
 - Consumer surplus: Ambiguous (cheaper beer vs pricier tickets)
 - Producer surplus: Large loss
-- External costs: Increase 98.3%
+- External costs: Increase {{ ceiling7_externality_cost_pct }}%
 
 **Net**: Depends on how you weight stadium profit vs consumer surplus vs externalities
 
@@ -217,8 +217,8 @@ $2.82/beer) is most efficient
 - Complementarity (cross-elasticity 0.1)
 
 **Validation**:
-- Observed prices ≈ optimal ($80/$12.50 vs $70.44/$12.51)
-- Yankees attendance: 40,803/game (model: 46,537 - capacity constrained)
+- Observed prices ≈ optimal ($80/$12.50 vs ${{ baseline_ticket }}/${{ baseline_beer }})
+- Yankees attendance: 40,803/game (model: {{ baseline_attendance }} - capacity constrained)
 - Consumption: 1.0 beers/attendee (matches literature)
 
 **Code**:

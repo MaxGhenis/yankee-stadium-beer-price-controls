@@ -7,6 +7,18 @@ calibration:
   optimal_error: 0.009403581791220361
   drinker_consumption_at_baseline: 2.5
   aggregate_consumption_at_baseline: 1.0
-  notes: "Heterogeneous model calibration (\u03B1_beer + experience_degradation_cost)"
+  notes: "Heterogeneous model calibration (\u03B1_beer + experience_degradation_cost\
+    \ + rowdiness_sensitivity)"
   method: Numerical optimization to match optimal price and consumption data
-  timestamp: '2025-11-17 16:44:35.424983'
+  timestamp: '2025-11-18 19:25:27.485439'
+  beer_cost: 2.0
+  ticket_cost: 3.5
+  rowdiness_sensitivity: 0.005
+taxes:
+  excise_federal: 0.058
+  excise_state: 0.014
+  excise_local: 0.002
+  sales_tax_rate: 8.875
+external_costs:
+  crime: 2.5
+  health: 1.5

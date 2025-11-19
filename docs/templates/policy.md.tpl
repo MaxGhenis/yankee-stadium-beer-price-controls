@@ -26,33 +26,33 @@ This convention matches international minimum alcohol pricing (Scotland, Wales) 
 
 ### Price Ceiling: \$7
 
-A **\$7 price ceiling** would be a binding constraint (below optimal \$12.51).
+A **\$7 price ceiling** would be a binding constraint (below optimal \${{ baseline_beer }}).
 
 **Effects:**
 
-| Metric | Current (\$12.51) | With \$7 Ceiling | Change |
+| Metric | Current (\${{ baseline_beer }}) | With \$7 Ceiling | Change |
 |--------|------------------|-----------------|--------|
-| Consumer beer price | \$12.51 | \$7.00 | -\$5.51 (-44%) |
+| Consumer beer price | \${{ baseline_beer }} | \$7.00 | -\${{ baseline_beer_minus_ceiling7 }} (-{{ beer_price_pct_change_from_baseline }}%) |
 | Stadium receives | \$11.41 | \$6.35 | -\$5.06 (-44%) |
-| Total beers sold | 46,488 | 92,178 | +45,690 (+98.3%) |
-| Stadium profit | \$3.42M | \$3.11M | \$-0.31M (-9.0%) |
-| Consumer surplus | \$11.4M | \$12.0M | +\$0.6M (+5.3%) |
-| Externality cost | \$0.2M | \$0.4M | +\$0.2M (+98.3%) |
-| Social welfare | \$14.7M | \$14.8M | +\$0.1M (+0.8%) |
+| Total beers sold | {{ baseline_total_beers }} | {{ ceiling7_total_beers }} | +{{ ceiling7_total_beers_change }} (+{{ ceiling7_total_beers_pct }}%) |
+| Stadium profit | \${{ baseline_profit_per_game_M }}M | \${{ ceiling7_profit_per_game_M }}M | \${{ ceiling7_profit_change_M }}M ({{ ceiling7_producer_surplus_pct }}%) |
+| Consumer surplus | \${{ baseline_consumer_surplus }}M | \${{ ceiling7_consumer_surplus }}M | +\${{ ceiling7_consumer_surplus_change }}M (+{{ ceiling7_consumer_surplus_pct }}%) |
+| Externality cost | \${{ baseline_externality_cost }}M | \${{ ceiling7_externality_cost }}M | +\${{ ceiling7_externality_cost_change }}M (+{{ ceiling7_externality_cost_pct }}%) |
+| Social welfare | \${{ baseline_social_welfare }}M | \${{ ceiling7_social_welfare }}M | +\${{ ceiling7_social_welfare_change }}M (+{{ ceiling7_social_welfare_pct }}%) |
 
 **Annual impacts (81 games):**
-- Stadium revenue loss: **-\$25M/season**
-- Consumer surplus gain: **+\$48.6M/season**
-- External cost increase: **+\$14.8M/season**
-- Net social welfare gain: **+\$9.0M/season**
+- Stadium revenue loss: **-\${{ ceiling7_profit_loss_annual_M }}M/season**
+- Consumer surplus gain: **+\${{ ceiling7_consumer_surplus_change_annual }}M/season**
+- External cost increase: **+\${{ ceiling7_externality_cost_change_annual }}M/season**
+- Net social welfare gain: **+\${{ ceiling7_social_welfare_change_annual }}M/season**
 
 **Winners:**
-- Consumers (+\$48.6M surplus) - Cheaper beer outweighs higher tickets on average
+- Consumers (+\${{ ceiling7_consumer_surplus_change_annual }}M surplus) - Cheaper beer outweighs higher tickets on average
 - Government (+ tax revenue from higher volume)
 
 **Losers:**
-- Stadium (-\$25M profit)
-- Society (+\$14.8M externality costs)
+- Stadium (-\${{ ceiling7_profit_loss_annual_M }}M profit)
+- Society (+\${{ ceiling7_externality_cost_change_annual }}M externality costs)
 
 ### Price Ceiling: \$8
 
@@ -66,7 +66,7 @@ Less restrictive than \$7 ceiling:
 
 ### Price Floor: \$15
 
-**Non-binding** (above optimal \$12.51), minimal effects.
+**Non-binding** (above optimal \${{ baseline_beer }}), minimal effects.
 
 ### Beer Ban
 
@@ -86,10 +86,10 @@ Price controls create **deadweight loss** (economic inefficiency):
 $$DWL = SW_{optimal} - SW_{controlled}$$
 
 For $7 ceiling:
-- Consumer surplus gain: +\$48.6M
-- Producer surplus loss: -\$25M
-- Externality increase: -\$14.8M (Note: this is a cost, so it's a negative impact)
-- **Net gain: +\$9.0M** (positive despite DWL)
+- Consumer surplus gain: +\${{ ceiling7_consumer_surplus_change_annual }}M
+- Producer surplus loss: -\${{ ceiling7_profit_loss_annual_M }}M
+- Externality increase: -\${{ ceiling7_externality_cost_change_annual }}M (Note: this is a cost, so it's a negative impact)
+- **Net gain: +\${{ ceiling7_social_welfare_change_annual }}M** (positive despite DWL)
 
 The positive net reflects that current equilibrium has underpriced externalities.
 
@@ -99,13 +99,13 @@ Alternative to price controls: **tax** to internalize externalities.
 
 ### Optimal Additional Tax
 
-$$t_{Pigovian} = MEC = \$4.00 - \$1.18 = \$2.82/beer$$
+$$t_{Pigovian} = MEC = \${{ external_cost_sum_raw }} - \${{ current_taxes_per_beer_raw }} = \${{ pigouvian_gap }}/beer$$
 
 **Effects:**
-- Consumer price: \$12.51 + \$2.82 = \$15.33
+- Consumer price: \${{ baseline_beer }} + \${{ pigouvian_gap }} = \${{ pigouvian_consumer_price }}
 - Reduces consumption ~28% (elasticity -0.29)
 - Total beers: ~28,500 (from 39,556)
-- **Revenue: ~\$10.6M/season**
+- **Revenue: ~\${{ pigouvian_revenue_annual }}M/season**
 
 ### Pigouvian Tax vs Price Ceiling
 
@@ -119,22 +119,22 @@ $$t_{Pigovian} = MEC = \$4.00 - \$1.18 = \$2.82/beer$$
   - Gov Revenue
   - Efficiency
 * - **Current**
-  - \$12.51
-  - 46,488
-  - \$3.42M
-  - \$55k
+  - \${{ baseline_beer }}
+  - {{ baseline_total_beers }}
+  - \${{ baseline_profit_per_game_M }}M
+  - \${{ baseline_tax_revenue_k }}k
   - Baseline
 * - **$7 Ceiling**
   - $7.00
-  - 92,178
-  - \$3.11M
-  - \$109k
+  - {{ ceiling7_total_beers }}
+  - \${{ ceiling7_profit_per_game_M }}M
+  - \${{ ceiling7_tax_revenue_k }}k
   - DWL from binding constraint
 * - **Pigouvian Tax**
-  - \$15.33
+  - \${{ pigouvian_consumer_price }}
   - 28,500
   - $2.1M
-  - \$114k
+  - \${{ pigouvian_tax_revenue_k }}k
   - **Most efficient**
 ```
 
@@ -146,9 +146,9 @@ $$t_{Pigovian} = MEC = \$4.00 - \$1.18 = \$2.82/beer$$
 
 ## Policy Recommendations
 
-1. **First-best**: Add \$2.82/beer Pigouvian tax
+1. **First-best**: Add \${{ pigouvian_gap }}/beer Pigouvian tax
    - Internalizes external costs
-   - Raises \$10.6M/season for NYC
+   - Raises \${{ pigouvian_revenue_annual }}M/season for NYC
    - Economically efficient
 
 2. **Second-best**: Price floor at \$15

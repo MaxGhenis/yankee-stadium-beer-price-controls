@@ -1,5 +1,4 @@
-<!-- This file is auto-generated from templates/AGENTS.md.tpl. Do not edit directly. -->
-
+<!--AGENT: ALL-->
 # Project Context for AI Agents
 
 <!-- This file is the template for generating CLAUDE.md and GEMINI.md. -->
@@ -11,10 +10,10 @@
 **Purpose:** An economic research project and simulation engine analyzing the impact of beer price controls (ceilings, floors) at Yankee Stadium. It uses a rigorous economic model to simulate consumer behavior, stadium revenue maximization, and social welfare outcomes (including externalities like crime and health costs).
 
 **Key Findings:**
-*   **Unintended Consequences:** A $7 beer ceiling causes ticket prices to rise by ~$6.85 (+9.7%) as the stadium shifts revenue capture to tickets. Attendance falls ~5.7%.
+*   **Unintended Consequences:** A $7 beer ceiling causes ticket prices to rise by ~${{ ceiling7_ticket_increase }} (+{{ ceiling7_ticket_pct }}%) as the stadium shifts revenue capture to tickets. Attendance falls ~{{ ceiling7_attendance_pct }}%.
 *   **Pigouvian Tax Gap:** Current taxes ($1.09) are significantly lower than external costs ($4.00), suggesting an optimal additional tax of ~$2.91.
 *   **Internalized Costs:** The model distinguishes between costs the stadium pays (security, brand damage) and costs society pays (crime, public health).
-*   **Welfare Paradox:** A $7 ceiling actually *increases* net social welfare slightly (+0.8%) because consumer surplus gains outweigh stadium profit losses and externality increases ("Second Best" theory), but it drastically increases negative externalities (+98%).
+*   **Welfare Paradox:** A $7 ceiling actually *increases* net social welfare slightly (+{{ ceiling7_welfare_pct }}%) because consumer surplus gains outweigh stadium profit losses and externality increases ("Second Best" theory), but it drastically increases negative externalities (+{{ ceiling7_externality_pct }}%).
 
 ## Technical Stack
 
@@ -89,6 +88,7 @@ mypy src
 *   The output is generated in `docs/_build/site/`.
 *   Never rely on `myst build` alone without cleaning first.
 
+<!--AGENT: CLAUDE-->
 ## Architecture Details (Claude Specific)
 
 ### Core Model (`src/model.py`)
@@ -141,6 +141,21 @@ The model uses **semi-log demand calibrated to observed prices** rather than con
 
 ## Critical Parameters
 - `cross_price_elasticity` (default 0.1): Beer price effect on attendance. This is ASSUMED, not empirically estimated. Default is conservative (weak complementarity).
-- `experience_degradation_cost` (default 62.3): Calibrated convex cost for internalized externalities
+- `experience_degradation_cost` (default {{ experience_degradation_cost }}): Calibrated convex cost for internalized externalities
 - Tax structure: Excise $0.074/beer, sales tax 8.875%
 
+<!--AGENT: GEMINI-->
+## Key Economic Concepts
+
+*   **Heterogeneous Consumers:** The model separates fans into "Drinkers" (40%) and "Non-Drinkers" (60%) to accurately model demand response.
+*   **Complementarity:** Assumes a cross-price elasticity (default 0.1) where beer price affects ticket demand (and vice versa).
+*   **Selection Effects:** Price policies change the composition of the crowd (e.g., cheap beer attracts more drinkers).
+*   **Social Welfare:** Calculated as Consumer Surplus + Producer Surplus - External Costs.
+
+## Conventions
+
+*   **Line Length:** 100 characters.
+*   **Type Hints:** Encouraged but strictly enforced only where `mypy` passes.
+*   **Docstrings:** Google style.
+*   **Reverting:** Do not revert changes unless explicitly asked.
+*   **Tests:** All new features must include tests.

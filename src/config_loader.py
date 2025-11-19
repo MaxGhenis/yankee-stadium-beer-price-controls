@@ -16,6 +16,7 @@ DEFAULTS = {
     'alpha_beer_nondrinker': 1.0,
     'beer_cost': 2.0,
     'ticket_cost': 3.5,
+    'rowdiness_sensitivity': 0.005,
 }
 
 
@@ -56,3 +57,11 @@ def get_parameter(param_name: str, default=None) -> Any:
         default = DEFAULTS[param_name]
 
     return config.get(param_name, default)
+
+def load_full_config() -> Dict[str, Any]:
+    """Load the entire config.yaml file."""
+    config_path = Path(__file__).parent.parent / 'config.yaml'
+    if config_path.exists():
+        with open(config_path, 'r') as f:
+            return yaml.safe_load(f)
+    return {} # Return empty dict if not found

@@ -24,6 +24,8 @@ class ConsumerType:
     income: float  # Income/budget
 
 
+from src.config_loader import load_full_config # Import load_full_config to be available here
+
 class StadiumEconomicModel:
     """
     Stadium model with heterogeneous consumer preferences.
@@ -46,8 +48,6 @@ class StadiumEconomicModel:
         base_beer_price: float = 12.5,
         ticket_cost: float = 3.5,
         beer_cost: float = 2.0,
-        beer_excise_tax: float = 0.074,
-        beer_sales_tax_rate: float = 0.08875,
         experience_degradation_cost: float = None,  # Auto-load from config.yaml if None
         cross_price_elasticity: float = 0.1,
         beer_demand_sensitivity: float = 0.30,
@@ -70,8 +70,6 @@ class StadiumEconomicModel:
             base_beer_price: Baseline beer price
             ticket_cost: Marginal cost per ticket
             beer_cost: Marginal cost per beer
-            beer_excise_tax: Excise tax per beer
-            beer_sales_tax_rate: Sales tax rate
             experience_degradation_cost: Internalized cost parameter
             cross_price_elasticity: Beer price effect on attendance
             beer_demand_sensitivity: Price sensitivity parameter
@@ -81,8 +79,16 @@ class StadiumEconomicModel:
         self.base_beer_price = base_beer_price
         self.ticket_cost = ticket_cost
         self.beer_cost = beer_cost
-        self.beer_excise_tax = beer_excise_tax
-        self.beer_sales_tax_rate = beer_sales_tax_rate
+
+        # Load full config to get taxes and external costs
+        full_config = load_full_config()
+        self.taxes = full_config.get('taxes', {})
+        self.external_costs = full_config.get('external_costs', {})
+
+        self.beer_excise_tax = self.taxes.get('excise_federal', 0.0) + \
+                               self.taxes.get('excise_state', 0.0) + \
+                               self.taxes.get('excise_local', 0.0)
+        self.beer_sales_tax_rate = self.taxes.get('sales_tax_rate', 0.0) / 100
 
         # Load experience_degradation_cost from config if not specified
         if experience_degradation_cost is None:
@@ -91,6 +97,7 @@ class StadiumEconomicModel:
 
         self.cross_price_elasticity = cross_price_elasticity
         self.beer_demand_sensitivity = beer_demand_sensitivity
+
 
         # Default to 2-type model if not specified
         if consumer_types is None:
@@ -127,14 +134,14 @@ class StadiumEconomicModel:
             ConsumerType(
                 name="Non-Drinker",
                 share=0.60,
-                alpha_beer=get_parameter('alpha_beer_nondrinker'),
+                alpha_beer=get_parameter('alpha_beer_nondrinker', 1.0),
                 alpha_experience=3.0,
                 income=200.0
             ),
             ConsumerType(
                 name="Drinker",
                 share=0.40,
-                alpha_beer=get_parameter('alpha_beer_drinker'),
+                alpha_beer=get_parameter('alpha_beer_drinker', 43.75),
                 alpha_experience=2.5,
                 income=200.0
             )
@@ -383,19 +390,17 @@ class StadiumEconomicModel:
 
     def externality_cost(
         self,
-        total_beers: float,
-        crime_cost_per_beer: float = 2.50,
-        health_cost_per_beer: float = 1.50
+        total_beers: float
     ) -> float:
         """Calculate external costs from alcohol consumption."""
+        crime_cost_per_beer = self.external_costs.get('crime', 2.50)
+        health_cost_per_beer = self.external_costs.get('health', 1.50)
         return total_beers * (crime_cost_per_beer + health_cost_per_beer)
 
     def social_welfare(
         self,
         ticket_price: float,
-        beer_price: float,
-        crime_cost_per_beer: float = 2.50,
-        health_cost_per_beer: float = 1.50
+        beer_price: float
     ) -> Dict[str, float]:
         """Calculate total social welfare including externalities."""
         cs = self.consumer_surplus(ticket_price, beer_price)
@@ -403,9 +408,7 @@ class StadiumEconomicModel:
 
         result = self.stadium_revenue(ticket_price, beer_price)
         ext_cost = self.externality_cost(
-            result['total_beers'],
-            crime_cost_per_beer,
-            health_cost_per_beer
+            result['total_beers']
         )
 
         sw = cs + ps - ext_cost
@@ -435,10 +438,13 @@ class StadiumEconomicModel:
     def _load_calibrated_internalized_cost(self) -> float:
         """Load experience_degradation_cost from config.yaml."""
         try:
-            from .config_loader import get_parameter
+            from .config_loader import load_full_config
         except ImportError:
-            from config_loader import get_parameter
-        return get_parameter('experience_degradation_cost')
+            from config_loader import load_full_config
+        full_config = load_full_config()
+        return full_config.get('calibration', {}).get('experience_degradation_cost', 62.28)
+
+
 
 
 # Quick test

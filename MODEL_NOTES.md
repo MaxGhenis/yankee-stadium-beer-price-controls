@@ -33,7 +33,7 @@ C_internalized = α · (Q/1000)²
 
 Where:
 - Q = total beers sold
-- α = experience_degradation_cost parameter (calibrated to 250)
+- α = experience_degradation_cost parameter (calibrated to ~62.3)
 
 **Why Quadratic?**
 - Linear costs would shift optimum only slightly
@@ -44,10 +44,10 @@ Where:
 
 ### Calibration
 
-With α = 250:
-- **Profit-maximizing beer price: $12.67** ≈ $12.50 observed
-- At $12.50: 39,556 beers, internalized cost = $1,563
-- At $5.00: 117,549 beers, internalized cost = $13.8M (!)
+With α ≈ 62.3:
+- **Profit-maximizing beer price: $12.51** ≈ $12.50 observed
+- At $12.50: 39,556 beers, internalized cost = $97,453
+- At $5.00: 134,392 beers, internalized cost = $1.12M
 
 The monopolist stadium chooses higher prices to avoid these compounding costs.
 
@@ -80,7 +80,7 @@ This is NOT an externality for policy purposes - it's already internalized!
 |-----------|-------|--------|
 | Base beer price | $12.50 | Industry data (2025) |
 | Beer cost (all-in) | $5.00 | Labor + materials + overhead |
-| Experience cost (α) | 250.0 | Calibrated to observed prices |
+| Experience cost (α) | 62.28 | Calibrated to observed prices |
 | Capacity constraint | 50,000 | Operational estimate |
 | Price sensitivity (λ) | 0.133 | Semi-log demand calibration |
 | Captive share | 50% | Stadium-specific adjustment |

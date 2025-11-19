@@ -89,58 +89,17 @@ mypy src
 *   The output is generated in `docs/_build/site/`.
 *   Never rely on `myst build` alone without cleaning first.
 
-## Architecture Details (Claude Specific)
+## Key Economic Concepts
 
-### Core Model (`src/model.py`)
+*   **Heterogeneous Consumers:** The model separates fans into "Drinkers" (40%) and "Non-Drinkers" (60%) to accurately model demand response.
+*   **Complementarity:** Assumes a cross-price elasticity (default 0.1) where beer price affects ticket demand (and vice versa).
+*   **Selection Effects:** Price policies change the composition of the crowd (e.g., cheap beer attracts more drinkers).
+*   **Social Welfare:** Calculated as Consumer Surplus + Producer Surplus - External Costs.
 
-The `StadiumEconomicModel` class features **heterogeneous consumers**:
+## Conventions
 
-**Consumer Types**:
-- **Non-Drinkers (60%)**: α_beer=1.0 → 0 beers at typical prices
-- **Drinkers (40%)**: α_beer=43.75 → 2.5 beers at \$12.50
-- Matches empirical data: 40% drink, 1.0 beers/fan average
-
-**Revenue Calculations** (`stadium_revenue()`):
-- Handles NYC tax structure: 8.875% sales tax + $0.074/beer excise tax
-- Stadium receives: `beer_price / (1 + sales_tax_rate) - excise_tax`
-- Includes internalized costs via `_internalized_costs()` with convex cost function
-- Returns dict with attendance, consumption, revenue, costs, profit, and tax revenue
-
-**Optimization** (`optimal_pricing()`):
-- Uses scipy L-BFGS-B to find profit-maximizing ticket and beer prices
-- Supports price controls via `beer_price_control` parameter
-- Returns tuple: `(optimal_ticket_price, optimal_beer_price, results_dict)`
-
-**Welfare Analysis**:
-- `consumer_surplus()`: Using elasticity formula adjusted for captive audience
-- `producer_surplus()`: Stadium profit
-- `externality_cost()`: External costs from crime ($2.50/beer) and health ($1.50/beer)
-- `social_welfare()`: CS + PS - externalities
-
-### Simulation Engine (`src/simulation.py`)
-
-The `BeerPriceControlSimulator` class runs policy scenarios:
-
-**Scenarios**:
-1. Baseline (current profit-maximizing prices)
-2. Current observed prices (for comparison)
-3. Price ceiling (e.g., $7-8 max beer price)
-4. Price floor (e.g., $15 min beer price)
-5. Beer ban (zero sales)
-6. Social optimum (maximize social welfare, not just profit)
-
-## Calibration Philosophy
-
-The model uses **semi-log demand calibrated to observed prices** rather than constant elasticity:
-- Literature elasticities inform calibration but aren't directly used
-- Baseline prices ($80 tickets, $12.50 beer) should be approximately profit-maximizing
-- This reflects that stadiums are sophisticated monopolists
-- Stadium-specific adjustments: captive audience, experiential value, complementarity
-
-**Why tickets may differ from pure profit max**: Real stadiums consider brand value, crowd management, and social responsibility not fully captured in the model. The model is for *comparative analysis* of policies, not exact price prediction.
-
-## Critical Parameters
-- `cross_price_elasticity` (default 0.1): Beer price effect on attendance. This is ASSUMED, not empirically estimated. Default is conservative (weak complementarity).
-- `experience_degradation_cost` (default 62.3): Calibrated convex cost for internalized externalities
-- Tax structure: Excise $0.074/beer, sales tax 8.875%
-
+*   **Line Length:** 100 characters.
+*   **Type Hints:** Encouraged but strictly enforced only where `mypy` passes.
+*   **Docstrings:** Google style.
+*   **Reverting:** Do not revert changes unless explicitly asked.
+*   **Tests:** All new features must include tests.

@@ -200,20 +200,28 @@ def save_calibration(params: dict, config_path: str = 'config.yaml'):
     """
     config_file = Path(__file__).parent.parent / config_path
 
-    # Load existing config if it exists
-    if config_file.exists():
-        with open(config_file, 'r') as f:
-            config = yaml.safe_load(f) or {}
-    else:
-        config = {}
+    # Use config_loader to load existing config including default structure
+    # This prevents overwriting 'taxes' and 'external_costs'
+    from src.config_loader import load_full_config, DEFAULTS
+    full_config = load_full_config()
 
-    # Update calibration section
-    config['calibration'] = params
-    config['calibration']['timestamp'] = str(pd.Timestamp.now())
+    # Update calibration section within the full config
+    # Ensure all calibration params from DEFAULTS are included if not calibrated
+    calibration_section = full_config.get('calibration', {})
+    for k, v in DEFAULTS.items():
+        if k not in calibration_section:
+            calibration_section[k] = v
+
+    # Add newly calibrated parameters
+    calibration_section.update(params)
+    calibration_section['timestamp'] = str(pd.Timestamp.now())
+    calibration_section['notes'] = 'Heterogeneous model calibration (α_beer + experience_degradation_cost + rowdiness_sensitivity)'
+    
+    full_config['calibration'] = calibration_section
 
     # Save
     with open(config_file, 'w') as f:
-        yaml.dump(config, f, default_flow_style=False, sort_keys=False)
+        yaml.dump(full_config, f, default_flow_style=False, sort_keys=False)
 
     print(f"\n✓ Saved calibration to: {config_file}")
     return config_file
