@@ -106,10 +106,12 @@ jobs:
     - name: Check for uncommitted changes
       run: |
         if ! git diff --quiet docs/; then
-          echo "⚠️  Documentation values were updated but not committed!"
-          echo "Run: python scripts/update_docs_values.py"
-          git diff --stat docs/
-          exit 1
+          echo "⚠️  Documentation values were updated. Committing changes..."
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/
+          git commit -m "Update documentation values [skip ci]"
+          git push
         fi
 
     - name: Build documentation
