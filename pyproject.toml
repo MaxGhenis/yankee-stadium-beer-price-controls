@@ -6,7 +6,7 @@ authors = [
     {name = "Max Ghenis", email = "max@policyengine.org"}
 ]
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.10"
 license = {text = "MIT"}
 keywords = ["economics", "sports", "policy", "price-controls", "externalities"]
 classifiers = [
@@ -72,12 +72,12 @@ addopts = [
 
 [tool.black]
 line-length = 100
-target-version = ["py313"]
+target-version = ["py310"]
 include = '\.pyi?$'
 
 [tool.ruff]
 line-length = 100
-target-version = "py313"
+target-version = "py310"
 select = [
     "E",   # pycodestyle errors
     "W",   # pycodestyle warnings
@@ -97,7 +97,7 @@ ignore = [
 "__init__.py" = ["F401"]  # unused imports in __init__.py
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.10"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
