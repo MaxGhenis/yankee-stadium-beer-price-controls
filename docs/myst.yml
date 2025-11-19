@@ -20,6 +20,8 @@ site:
   title: Beer Price Controls at Yankee Stadium
   # logo: logo.png  # TODO: Add logo
   options:
+    logo_text: Max Ghenis
+    logo_url: https://github.com/maxghenis
     logo_only: false
     favicon: ''
   nav:

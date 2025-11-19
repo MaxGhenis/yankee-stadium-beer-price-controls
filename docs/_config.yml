@@ -1,48 +1,90 @@
-# Legacy Jupyter Book 1 config (for compatibility)
 title: Beer Price Controls at Yankee Stadium
 author: Max Ghenis
 copyright: '2025'
-# logo: logo.png  # TODO: Add logo
-
 execute:
   execute_notebooks: cache
   timeout: 120
-
 repository:
   url: https://github.com/maxghenis/yankee-stadium-beer-price-controls
   branch: main
-
 html:
   use_repository_button: true
   use_issues_button: true
   use_edit_button: true
   favicon: ''
   baseurl: https://maxghenis.github.io/yankee-stadium-beer-price-controls
-
 launch_buttons:
   notebook_interface: jupyterlab
   binderhub_url: https://mybinder.org
-
 sphinx:
   extra_extensions:
-    - sphinx_togglebutton
-    - sphinx_copybutton
-    - sphinxcontrib.bibtex
+  - sphinx_togglebutton
+  - sphinx_copybutton
+  - sphinxcontrib.bibtex
   config:
     bibtex_bibfiles:
-      - references.bib
+    - references.bib
     html_theme_options:
       repository_url: https://github.com/maxghenis/yankee-stadium-beer-price-controls
       use_repository_button: true
-
 parse:
   myst_enable_extensions:
-    - colon_fence
-    - deflist
-    - dollarmath
-    - linkify
-    - substitution
-    - tasklist
+  - colon_fence
+  - deflist
+  - dollarmath
+  - linkify
+  - substitution
+  - tasklist
   myst_substitutions:
-    base_beer_price: "$12.50"
-    optimal_beer_price: "$12.85"
+    baseline_ticket: '70.44'
+    baseline_beer: '12.51'
+    baseline_beers_per_fan: '1.00'
+    ceiling7_ticket: '77.29'
+    ceiling7_ticket_pct: '9.7'
+    ceiling7_attendance_pct: '-5.7'
+    ceiling7_beers_pct: '98.3'
+    ceiling7_beers_per_fan: '2.10'
+    ceiling7_beers_per_fan_pct: '110.2'
+    ceiling7_profit_change_season: '-24.9'
+    current_tax: '1.09'
+    external_cost: '4.00'
+    pigouvian_gap: '2.91'
+    tax_coverage_pct: '27'
+    pigouvian_revenue_annual: '11.0'
+myst_substitutions:
+  baseline_ticket: '70.44'
+  baseline_beer: '12.51'
+  baseline_attendance: 46,537
+  baseline_beers_total: 46,488
+  baseline_beers_per_fan: '1.00'
+  baseline_profit_game: '3.42'
+  baseline_profit_season: '276.9'
+  ceiling7_ticket: '77.29'
+  ceiling7_ticket_increase: '6.85'
+  ceiling7_ticket_pct: '9.7'
+  ceiling7_attendance: 43,894
+  ceiling7_attendance_pct: '-5.7'
+  ceiling7_beers_total: 92,178
+  ceiling7_beers_pct: '98.3'
+  ceiling7_beers_per_fan: '2.10'
+  ceiling7_beers_per_fan_pct: '110.2'
+  ceiling7_profit_game: '3.11'
+  ceiling7_profit_season: '252.0'
+  ceiling7_profit_change: '-0.31'
+  ceiling7_profit_change_season: '-24.9'
+  ceiling8_ticket: '73.07'
+  ceiling8_ticket_pct: '3.7'
+  ceiling8_beers_pct: '78.9'
+  ceiling5_ticket: '94.84'
+  ceiling5_ticket_increase: '24.40'
+  ceiling5_ticket_pct: '34.6'
+  ceiling5_attendance_pct: '-27.6'
+  ceiling5_beers_pct: '124.6'
+  multiplier: '1.24'
+  external_cost: '4.00'
+  current_tax: '1.09'
+  pigouvian_gap: '2.91'
+  tax_coverage_pct: '27'
+  pigouvian_revenue_annual: '11.0'
+  external_costs_annual: '15.1'
+  current_tax_revenue_annual: '4.1'

@@ -17,12 +17,12 @@
 
 **Direct effects:**
 - Beer price: $12.50 → $7.00 (-44%)
-- Beer consumption per fan: 1.0 → 2.1 beers (+108%)
+- Beer consumption per fan: 1.0 → 2.1 beers (+111%)
 
-**UNINTENDED: Tickets rise dramatically:**
-- **Ticket price: $89 → $121 (+$32, +36%)**
-- Attendance falls 38% (higher tickets + complementarity)
-- Stadium profit: -$47M/season
+**UNINTENDED: Tickets rise:**
+- **Ticket price: $70 → $77 (+$7, +10%)**
+- Attendance falls 6% (higher tickets + complementarity)
+- Stadium profit: -$25M/season
 
 **Why tickets rise:**
 - Beer margin collapses (stadium receives $11.41 → $6.35)
@@ -35,7 +35,7 @@
 **Current taxes**: $1.09/beer (excise $0.07 + sales $1.02)
 **Optimal additional tax**: **$2.91/beer**
 
-**Revenue potential**: **$6.7M/season** for NYC
+**Revenue potential**: **$11.0M/season** for NYC
 
 ---
 
@@ -62,7 +62,7 @@ This distinction is crucial - only **external costs** ($4/beer) justify policy b
 
 - ✅ **Tax-aware**: Stadium receives $11.41 after $1.09 taxes
 - ✅ **Complementarity**: Adjustable cross-price elasticity (0.1 default)
-- ✅ **Convex internalized costs**: $C = 250(Q/1000)^2$
+- ✅ **Convex internalized costs**: $C = 62.3(Q/1000)^2$
 - ✅ **Literature-based**: 30+ academic papers
 - ✅ **Uncertainty quantified**: Monte Carlo over parameters
 

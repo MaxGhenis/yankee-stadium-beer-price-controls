@@ -8,15 +8,18 @@ Key difference from base model: Fans have different beer preferences.
 This captures the empirical fact that ~40% of fans consume alcohol.
 """
 
+from dataclasses import dataclass
+
 import numpy as np
 from scipy.optimize import minimize
-from typing import Tuple, Dict, List
-from dataclasses import dataclass
+
+from src.config_loader import load_full_config  # Import load_full_config to be available here
 
 
 @dataclass
 class ConsumerType:
     """Represents a type of consumer with specific preferences."""
+
     name: str
     share: float  # Population share (must sum to 1 across types)
     alpha_beer: float  # Utility weight on beer
@@ -41,13 +44,11 @@ class StadiumEconomicModel:
     def __init__(
         self,
         capacity: int = 46537,
-        consumer_types: List[ConsumerType] = None,
+        consumer_types: list[ConsumerType] = None,
         base_ticket_price: float = 80.0,
         base_beer_price: float = 12.5,
         ticket_cost: float = 3.5,
         beer_cost: float = 2.0,
-        beer_excise_tax: float = 0.074,
-        beer_sales_tax_rate: float = 0.08875,
         experience_degradation_cost: float = None,  # Auto-load from config.yaml if None
         cross_price_elasticity: float = 0.1,
         beer_demand_sensitivity: float = 0.30,
@@ -58,7 +59,7 @@ class StadiumEconomicModel:
         beta: float = 3.0,
         consumer_income: float = 200.0,
         captive_demand_share: float = 0.5,
-        capacity_constraint: float = 50000
+        capacity_constraint: float = 50000,
     ):
         """
         Initialize heterogeneous consumer model.
@@ -70,8 +71,6 @@ class StadiumEconomicModel:
             base_beer_price: Baseline beer price
             ticket_cost: Marginal cost per ticket
             beer_cost: Marginal cost per beer
-            beer_excise_tax: Excise tax per beer
-            beer_sales_tax_rate: Sales tax rate
             experience_degradation_cost: Internalized cost parameter
             cross_price_elasticity: Beer price effect on attendance
             beer_demand_sensitivity: Price sensitivity parameter
@@ -81,8 +80,18 @@ class StadiumEconomicModel:
         self.base_beer_price = base_beer_price
         self.ticket_cost = ticket_cost
         self.beer_cost = beer_cost
-        self.beer_excise_tax = beer_excise_tax
-        self.beer_sales_tax_rate = beer_sales_tax_rate
+
+        # Load full config to get taxes and external costs
+        full_config = load_full_config()
+        self.taxes = full_config.get("taxes", {})
+        self.external_costs = full_config.get("external_costs", {})
+
+        self.beer_excise_tax = (
+            self.taxes.get("excise_federal", 0.0)
+            + self.taxes.get("excise_state", 0.0)
+            + self.taxes.get("excise_local", 0.0)
+        )
+        self.beer_sales_tax_rate = self.taxes.get("sales_tax_rate", 0.0) / 100
 
         # Load experience_degradation_cost from config if not specified
         if experience_degradation_cost is None:
@@ -110,7 +119,7 @@ class StadiumEconomicModel:
         self.beer_elasticity = -0.965  # Average elasticity (for compatibility)
         self.consumer_income = 200.0  # Average income (for compatibility)
 
-    def _create_default_types(self) -> List[ConsumerType]:
+    def _create_default_types(self) -> list[ConsumerType]:
         """
         Create default 2-type model with calibrated parameters from config.yaml.
 
@@ -127,25 +136,21 @@ class StadiumEconomicModel:
             ConsumerType(
                 name="Non-Drinker",
                 share=0.60,
-                alpha_beer=get_parameter('alpha_beer_nondrinker'),
+                alpha_beer=get_parameter("alpha_beer_nondrinker", 1.0),
                 alpha_experience=3.0,
-                income=200.0
+                income=200.0,
             ),
             ConsumerType(
                 name="Drinker",
                 share=0.40,
-                alpha_beer=get_parameter('alpha_beer_drinker'),
+                alpha_beer=get_parameter("alpha_beer_drinker", 43.75),
                 alpha_experience=2.5,
-                income=200.0
-            )
+                income=200.0,
+            ),
         ]
         return types
 
-    def _beers_consumed_by_type(
-        self,
-        beer_price: float,
-        consumer_type: ConsumerType
-    ) -> float:
+    def _beers_consumed_by_type(self, beer_price: float, consumer_type: ConsumerType) -> float:
         """
         Calculate beer consumption for a specific consumer type.
 
@@ -178,10 +183,7 @@ class StadiumEconomicModel:
         return max(0, min(optimal_beers, MAX_BEERS_PHYSIOLOGICAL))
 
     def _attendance_by_type(
-        self,
-        ticket_price: float,
-        beer_price: float,
-        consumer_type: ConsumerType
+        self, ticket_price: float, beer_price: float, consumer_type: ConsumerType
     ) -> float:
         """
         Attendance for a specific consumer type.
@@ -206,21 +208,20 @@ class StadiumEconomicModel:
             cross_effect = 0.95  # Small reduction for beer ban
 
         attendance = type_base_attendance * ticket_effect * cross_effect
-        return min(attendance, self.capacity * consumer_type.share)  # Cap at type's share of capacity
+        return min(
+            attendance, self.capacity * consumer_type.share
+        )  # Cap at type's share of capacity
 
     def total_attendance(self, ticket_price: float, beer_price: float) -> float:
         """Sum attendance across all consumer types."""
         total = sum(
-            self._attendance_by_type(ticket_price, beer_price, ct)
-            for ct in self.consumer_types
+            self._attendance_by_type(ticket_price, beer_price, ct) for ct in self.consumer_types
         )
         return min(total, self.capacity)
 
     def total_beer_consumption(
-        self,
-        ticket_price: float,
-        beer_price: float
-    ) -> Tuple[float, Dict[str, float]]:
+        self, ticket_price: float, beer_price: float
+    ) -> tuple[float, dict[str, float]]:
         """
         Calculate total beer consumption across all types.
 
@@ -236,15 +237,15 @@ class StadiumEconomicModel:
             type_total = attendance * beers_per_fan
 
             breakdown[ct.name] = {
-                'attendance': attendance,
-                'beers_per_fan': beers_per_fan,
-                'total_beers': type_total
+                "attendance": attendance,
+                "beers_per_fan": beers_per_fan,
+                "total_beers": type_total,
             }
             total += type_total
 
         return total, breakdown
 
-    def stadium_revenue(self, ticket_price: float, beer_price: float) -> Dict[str, float]:
+    def stadium_revenue(self, ticket_price: float, beer_price: float) -> dict[str, float]:
         """Calculate stadium revenues with heterogeneous consumers."""
         attendance = self.total_attendance(ticket_price, beer_price)
         total_beers, breakdown = self.total_beer_consumption(ticket_price, beer_price)
@@ -267,7 +268,7 @@ class StadiumEconomicModel:
 
         # Internalized costs
         beers_per_1000 = total_beers / 1000
-        internalized_costs = self.experience_degradation_cost * (beers_per_1000 ** 2)
+        internalized_costs = self.experience_degradation_cost * (beers_per_1000**2)
 
         total_costs = ticket_costs + beer_costs + internalized_costs
         profit = total_revenue - total_costs
@@ -277,53 +278,87 @@ class StadiumEconomicModel:
         excise_tax_revenue = self.beer_excise_tax * total_beers
 
         return {
-            'attendance': attendance,
-            'beers_per_fan': beers_per_fan,
-            'total_beers': total_beers,
-            'ticket_revenue': ticket_revenue,
-            'beer_revenue': beer_revenue,
-            'total_revenue': total_revenue,
-            'ticket_costs': ticket_costs,
-            'beer_costs': beer_costs,
-            'internalized_costs': internalized_costs,
-            'total_costs': total_costs,
-            'profit': profit,
-            'sales_tax_revenue': sales_tax_revenue,
-            'excise_tax_revenue': excise_tax_revenue,
-            'breakdown_by_type': breakdown
+            "attendance": attendance,
+            "beers_per_fan": beers_per_fan,
+            "total_beers": total_beers,
+            "ticket_revenue": ticket_revenue,
+            "beer_revenue": beer_revenue,
+            "total_revenue": total_revenue,
+            "ticket_costs": ticket_costs,
+            "beer_costs": beer_costs,
+            "internalized_costs": internalized_costs,
+            "total_costs": total_costs,
+            "profit": profit,
+            "sales_tax_revenue": sales_tax_revenue,
+            "excise_tax_revenue": excise_tax_revenue,
+            "breakdown_by_type": breakdown,
         }
 
-    def optimal_pricing(self, beer_price_control: float = None, ceiling_mode: bool = True) -> Tuple[float, float, Dict]:
+    def optimal_pricing(
+        self, beer_price_control: float = None, ceiling_mode: bool = True
+    ) -> tuple[float, float, dict]:
         """Find profit-maximizing prices with heterogeneous consumers."""
-        def objective(prices):
-            ticket_p, beer_p = prices
-            if beer_p < 0 or ticket_p < 0:
-                return 1e10
-            result = self.stadium_revenue(ticket_p, beer_p)
-            return -result['profit']
-
-        # Set bounds
-        ticket_bounds = (self.ticket_cost, self.TICKET_PRICE_MAX)
         beer_min = self.beer_cost + self.BEER_PRICE_MIN_MARGIN
-        beer_bounds = (beer_min, self.BEER_PRICE_MAX)
+        ticket_bounds = (self.ticket_cost, self.TICKET_PRICE_MAX)
 
-        # Apply ceiling if specified
-        if beer_price_control is not None and ceiling_mode:
-            if beer_price_control < beer_min:
-                beer_bounds = (beer_price_control, beer_price_control)
+        # Step 1: Determine beer price (before optimization)
+        if beer_price_control is not None:
+            if ceiling_mode:
+                # Get unconstrained beer optimum (cache to avoid recomputing)
+                if not hasattr(self, "_unconstrained_beer_optimum"):
+
+                    def objective_both(prices):
+                        ticket_p, beer_p = prices
+                        if beer_p < 0 or ticket_p < 0:
+                            return 1e10
+                        result = self.stadium_revenue(ticket_p, beer_p)
+                        return -result["profit"]
+
+                    unconstrained = minimize(
+                        objective_both,
+                        x0=[self.base_ticket_price, self.base_beer_price],
+                        bounds=[ticket_bounds, (beer_min, self.BEER_PRICE_MAX)],
+                        method="L-BFGS-B",
+                    )
+                    self._unconstrained_beer_optimum = unconstrained.x[1]
+
+                # Beer price = min(ceiling, unconstrained_optimum)
+                optimal_beer = min(beer_price_control, self._unconstrained_beer_optimum)
             else:
-                beer_bounds = (beer_min, beer_price_control)
+                # Fixed price mode
+                optimal_beer = beer_price_control
+        else:
+            # No constraints - optimize both prices together
+            def objective_both(prices):
+                ticket_p, beer_p = prices
+                if beer_p < 0 or ticket_p < 0:
+                    return 1e10
+                result = self.stadium_revenue(ticket_p, beer_p)
+                return -result["profit"]
 
-        # Optimize
+            result = minimize(
+                objective_both,
+                x0=[self.base_ticket_price, self.base_beer_price],
+                bounds=[ticket_bounds, (beer_min, self.BEER_PRICE_MAX)],
+                method="L-BFGS-B",
+            )
+            optimal_ticket = result.x[0]
+            optimal_beer = result.x[1]
+            metrics = self.stadium_revenue(optimal_ticket, optimal_beer)
+            return optimal_ticket, optimal_beer, metrics
+
+        # Step 2: Optimize ticket price given fixed beer price
+        def objective_ticket(ticket_p):
+            if ticket_p < 0:
+                return 1e10
+            result = self.stadium_revenue(ticket_p, optimal_beer)
+            return -result["profit"]
+
         result = minimize(
-            objective,
-            x0=[self.base_ticket_price, self.base_beer_price],
-            bounds=[ticket_bounds, beer_bounds],
-            method='L-BFGS-B'
+            objective_ticket, x0=self.base_ticket_price, bounds=[ticket_bounds], method="L-BFGS-B"
         )
 
         optimal_ticket = result.x[0]
-        optimal_beer = result.x[1]
         metrics = self.stadium_revenue(optimal_ticket, optimal_beer)
 
         return optimal_ticket, optimal_beer, metrics
@@ -349,44 +384,31 @@ class StadiumEconomicModel:
     def producer_surplus(self, ticket_price: float, beer_price: float) -> float:
         """Calculate producer surplus (profit)."""
         result = self.stadium_revenue(ticket_price, beer_price)
-        return result['profit']
+        return result["profit"]
 
-    def externality_cost(
-        self,
-        total_beers: float,
-        crime_cost_per_beer: float = 2.50,
-        health_cost_per_beer: float = 1.50
-    ) -> float:
+    def externality_cost(self, total_beers: float) -> float:
         """Calculate external costs from alcohol consumption."""
+        crime_cost_per_beer = self.external_costs.get("crime", 2.50)
+        health_cost_per_beer = self.external_costs.get("health", 1.50)
         return total_beers * (crime_cost_per_beer + health_cost_per_beer)
 
-    def social_welfare(
-        self,
-        ticket_price: float,
-        beer_price: float,
-        crime_cost_per_beer: float = 2.50,
-        health_cost_per_beer: float = 1.50
-    ) -> Dict[str, float]:
+    def social_welfare(self, ticket_price: float, beer_price: float) -> dict[str, float]:
         """Calculate total social welfare including externalities."""
         cs = self.consumer_surplus(ticket_price, beer_price)
         ps = self.producer_surplus(ticket_price, beer_price)
 
         result = self.stadium_revenue(ticket_price, beer_price)
-        ext_cost = self.externality_cost(
-            result['total_beers'],
-            crime_cost_per_beer,
-            health_cost_per_beer
-        )
+        ext_cost = self.externality_cost(result["total_beers"])
 
         sw = cs + ps - ext_cost
 
         return {
-            'consumer_surplus': cs,
-            'producer_surplus': ps,
-            'externality_cost': ext_cost,
-            'social_welfare': sw,
-            'total_beers': result['total_beers'],
-            'attendance': result['attendance']
+            "consumer_surplus": cs,
+            "producer_surplus": ps,
+            "externality_cost": ext_cost,
+            "social_welfare": sw,
+            "total_beers": result["total_beers"],
+            "attendance": result["attendance"],
         }
 
     # Compatibility methods for old tests/code
@@ -405,29 +427,32 @@ class StadiumEconomicModel:
     def _load_calibrated_internalized_cost(self) -> float:
         """Load experience_degradation_cost from config.yaml."""
         try:
-            from .config_loader import get_parameter
+            from .config_loader import load_full_config
         except ImportError:
-            from config_loader import get_parameter
-        return get_parameter('experience_degradation_cost')
+            from config_loader import load_full_config
+        full_config = load_full_config()
+        return full_config.get("calibration", {}).get("experience_degradation_cost", 62.28)
 
 
 # Quick test
 if __name__ == "__main__":
-    print("="*70)
+    print("=" * 70)
     print("HETEROGENEOUS CONSUMER MODEL TEST")
-    print("="*70)
+    print("=" * 70)
     print()
 
     model = StadiumEconomicModel()
 
     print("Consumer Types:")
     for ct in model.consumer_types:
-        print(f"  {ct.name} ({ct.share*100:.0f}%): α_beer={ct.alpha_beer}, α_exp={ct.alpha_experience}")
+        print(
+            f"  {ct.name} ({ct.share*100:.0f}%): α_beer={ct.alpha_beer}, α_exp={ct.alpha_experience}"
+        )
     print()
 
     # Test at observed prices
     result_obs = model.stadium_revenue(80, 12.50)
-    print(f"At observed prices ($80 tickets, $12.50 beer):")
+    print("At observed prices ($80 tickets, $12.50 beer):")
     print(f"  Attendance: {result_obs['attendance']:,.0f}")
     print(f"  Total beers: {result_obs['total_beers']:,.0f}")
     print(f"  Beers/fan: {result_obs['beers_per_fan']:.2f}")
@@ -436,13 +461,13 @@ if __name__ == "__main__":
 
     # Breakdown by type
     print("Consumption by type:")
-    for type_name, data in result_obs['breakdown_by_type'].items():
+    for type_name, data in result_obs["breakdown_by_type"].items():
         print(f"  {type_name}: {data['beers_per_fan']:.2f} beers/fan")
     print()
 
     # Find optimal
     opt_ticket, opt_beer, opt_result = model.optimal_pricing()
-    print(f"Model-predicted optimal:")
+    print("Model-predicted optimal:")
     print(f"  Beer: ${opt_beer:.2f} (observed: $12.50, gap: ${opt_beer - 12.50:+.2f})")
     print(f"  Ticket: ${opt_ticket:.2f} (observed: $80, gap: ${opt_ticket - 80:+.2f})")
     print(f"  Profit: ${opt_result['profit']:,.0f}")
@@ -450,34 +475,20 @@ if __name__ == "__main__":
 
     # Compare to homogeneous model
     from model import StadiumEconomicModel
+
     homo_model = StadiumEconomicModel()
     homo_opt_t, homo_opt_b, _ = homo_model.optimal_pricing()
 
-    print("="*70)
+    print("=" * 70)
     print("COMPARISON: Heterogeneous vs Homogeneous")
-    print("="*70)
+    print("=" * 70)
     print(f"Homogeneous model optimal beer: ${homo_opt_b:.2f}")
     print(f"Heterogeneous model optimal beer: ${opt_beer:.2f}")
-    print(f"Observed: $12.50")
+    print("Observed: $12.50")
     print()
 
     if abs(opt_beer - 12.50) < abs(homo_opt_b - 12.50):
         improvement = abs(homo_opt_b - 12.50) - abs(opt_beer - 12.50)
         print(f"✓ Heterogeneous model is ${improvement:.2f} closer to observed price!")
     else:
-        print(f"✗ Heterogeneous model didn't improve calibration")
-
-    def _load_calibrated_internalized_cost(self) -> float:
-        """Load internalized cost from config.yaml."""
-        try:
-            import yaml
-            from pathlib import Path
-            config_path = Path(__file__).parent.parent / 'config.yaml'
-            if config_path.exists():
-                with open(config_path) as f:
-                    config = yaml.safe_load(f)
-                    if config and 'calibration' in config:
-                        return config['calibration'].get('experience_degradation_cost', 62.28)
-        except:
-            pass
-        return 62.28  # Calibrated default
+        print("✗ Heterogeneous model didn't improve calibration")

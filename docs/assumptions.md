@@ -14,7 +14,7 @@
 
 **Externalities:**
 - Crime: 10% alcohol ↑ → 1% assault ↑, 2.9% rape ↑ {cite}`carpenter2015mlda`
-- External costs: $0.48-$1.19/drink (1986$) {cite}`manning1991costs`
+- External costs: \$0.48-\$1.19/drink (1986\$) {cite}`manning1991costs`
 
 ### ⚠️  ASSUMED (Not From Empirical Estimates)
 
@@ -62,8 +62,8 @@ Both models predict beer ceilings cause ticket prices to rise, but through diffe
 ### ⚙️  CALIBRATED (To Match Observed Prices)
 
 **Demand Sensitivities (λ):**
-- Beer: 0.133 (calibrated so $12.50 is optimal)
-- Tickets: 0.017 (calibrated so $80 is optimal)
+- Beer: 0.133 (calibrated so \$12.50 is optimal)
+- Tickets: 0.017 (calibrated so \$80 is optimal)
 
 These are NOT elasticities - they're parameters in semi-log demand that produce realistic price levels.
 
@@ -75,8 +75,8 @@ These are NOT elasticities - they're parameters in semi-log demand that produce 
 ### 💭 EDUCATED GUESSES
 
 **Marginal Costs:**
-- Beer: $5.00 (materials + labor + overhead)
-- Tickets: $3.50 (variable labor + cleaning)
+- Beer: \$5.00 (materials + labor + overhead)
+- Tickets: \$3.50 (variable labor + cleaning)
 
 **Basis**: Industry knowledge, reasonable cost accounting
 **Not from**: Yankees financial data (proprietary)

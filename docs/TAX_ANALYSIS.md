@@ -3,20 +3,20 @@
 ## Current Tax Structure (NYC/Yankee Stadium)
 
 ### Excise Taxes (per 12 oz beer)
-- **Federal excise tax**: $0.05 (large brewers at $18/barrel)
-- **New York State**: $0.013 ($0.14/gallon)
-- **NYC additional**: $0.011 ($0.12/gallon)
-- **Total excise**: **$0.074** (~0.6% of $12.50 price)
+- **Federal excise tax**: \$0.05 (large brewers at \$18/barrel)
+- **New York State**: \$0.013 (\$0.14/gallon)
+- **NYC additional**: \$0.011 (\$0.12/gallon)
+- **Total excise**: **\$0.074** (~0.6% of \$12.50 price)
 
 ### Sales Tax
 - **NYC sales tax**: 8.875%
-- **On $12.50 beer**: $1.02
+- **On \$12.50 beer**: \$1.02
 - **Share of final price**: 8.2%
 
 ### Total Current Taxation
-- **Total tax per beer**: **$1.09**
+- **Total tax per beer**: **\$1.09**
 - **Share of consumer price**: 8.7%
-- **Pre-tax price to stadium**: $11.41
+- **Pre-tax price to stadium**: \$11.41
 
 ---
 
@@ -24,21 +24,21 @@
 
 Based on academic literature (Carpenter & Dobkin 2015, Manning et al. 1991):
 
-### Crime Externalities: $2.50/beer
+### Crime Externalities: \$2.50/beer
 - Assault (10% alcohol ↑ → 1% assault ↑)
 - Sexual assault (10% alcohol ↑ → 2.9% rape ↑)
 - Vandalism, disorderly conduct
 - Police, courts, incarceration costs
 - **Concentrated around stadium** on game days
 
-### Health Externalities: $1.50/beer
+### Health Externalities: \$1.50/beer
 - Emergency room visits
 - Trauma care (fights, accidents)
 - Long-run health system burden
 - Drunk driving crashes (to/from stadium)
 - Lost productivity
 
-### Total External Cost: $4.00/beer
+### Total External Cost: \$4.00/beer
 
 ---
 
@@ -56,43 +56,43 @@ Externalities covered:   27.3%
 
 Under Pigouvian theory, optimal tax = marginal external cost:
 
-**Optimal tax: $4.00/beer**
+**Optimal tax: \$4.00/beer**
 
 This would:
 - **Internalize** all external costs
 - **Reduce** consumption to socially optimal level
-- **Raise revenue** for affected communities ($2.91 × beers sold)
+- **Raise revenue** for affected communities (\$2.91 × beers sold)
 
 ### Revenue Implications (per game)
 
 At current consumption (~40,000 beers/game):
 
 **Current tax revenue:**
-- Excise: $2,960/game
-- Sales: $40,800/game
-- **Total: $43,760/game**
+- Excise: \$2,960/game
+- Sales: \$40,800/game
+- **Total: \$43,760/game**
 
-**Under optimal Pigouvian tax (+$2.91/beer):**
-- Additional revenue: ~$116,400/game (if quantity unchanged)
+**Under optimal Pigouvian tax (+\$2.91/beer):**
+- Additional revenue: ~\$116,400/game (if quantity unchanged)
 - But: Higher price → lower consumption → lower revenue
 - With elasticity -0.29 (semi-log), price increase → moderate reduction
 
 **Annual implications (81 home games):**
-- Current: $3.5M/season in taxes
-- Optimal additional: $9.4M/season (if quantity constant)
-- Actual: $6-8M/season (accounting for demand reduction)
+- Current: \$3.5M/season in taxes
+- Optimal additional: \$9.4M/season (if quantity constant)
+- Actual: \$6-8M/season (accounting for demand reduction)
 
 ---
 
 ## Stadium vs Society Perspective
 
-### What Stadium Internalizes (already in $12.50 price):
+### What Stadium Internalizes (already in \$12.50 price):
 ✅ Experience degradation (drunk fans hurt other customers)
 ✅ Brand/reputation damage
 ✅ Crowd management costs
 ✅ Capacity constraints
 
-**Effective internalized cost: $7.50/beer** (via convex cost function)
+**Effective internalized cost: \$7.50/beer** (via convex cost function)
 
 ### What Society Bears (NOT internalized):
 ❌ Crime in surrounding neighborhood
@@ -100,17 +100,17 @@ At current consumption (~40,000 beers/game):
 ❌ Drunk driving
 ❌ Non-attendee costs
 
-**External cost: $4.00/beer**
+**External cost: \$4.00/beer**
 
 ### Policy Implication
 
 Current taxes capture only **27% of external costs**.
 
-**Optimal policy**: Additional $2.91/beer Pigouvian tax on stadium alcohol
+**Optimal policy**: Additional \$2.91/beer Pigouvian tax on stadium alcohol
 
 This would:
 1. Reduce consumption to socially optimal level
-2. Raise $6-8M/year for affected communities
+2. Raise \$6-8M/year for affected communities
 3. Not affect stadium profit maximization (it's a tax, not price control)
 4. Allow stadium to keep current pricing structure
 
@@ -120,10 +120,10 @@ This would:
 
 | Good | External Cost | Current Tax | Tax Coverage |
 |------|---------------|-------------|--------------|
-| **Stadium beer** | $4.00/unit | $1.09/unit | 27% |
-| Cigarettes | $5-10/pack | ~$5-8/pack | 50-80% |
-| Gasoline | $0.50-2.00/gal | $0.50-0.70/gal | 25-100% |
-| Carbon | $50-100/ton | $0-30/ton | 0-60% |
+| **Stadium beer** | \$4.00/unit | \$1.09/unit | 27% |
+| Cigarettes | \$5-10/pack | ~\$5-8/pack | 50-80% |
+| Gasoline | \$0.50-2.00/gal | \$0.50-0.70/gal | 25-100% |
+| Carbon | \$50-100/ton | \$0-30/ton | 0-60% |
 
 Stadium beer is **undertaxed** relative to externalities compared to cigarettes, similar to gasoline/carbon.
 
@@ -131,13 +131,13 @@ Stadium beer is **undertaxed** relative to externalities compared to cigarettes,
 
 ## Alternative Policies
 
-### Option 1: Pigouvian Tax (+$2.91/beer)
+### Option 1: Pigouvian Tax (+\$2.91/beer)
 - ✅ Efficient (marginal cost = marginal benefit)
 - ✅ Raises revenue
 - ✅ Preserves stadium pricing autonomy
 - ❌ Politically difficult ("beer tax")
 
-### Option 2: Price Floor ($16.50)
+### Option 2: Price Floor (\$16.50)
 - Would achieve similar consumption reduction
 - No tax revenue
 - Stadium keeps higher margin
@@ -149,7 +149,7 @@ Stadium beer is **undertaxed** relative to externalities compared to cigarettes,
 - Less efficient than price mechanisms
 
 ### Option 4: Combination
-- Moderate tax (+$1.50) + 7th inning cutoff
+- Moderate tax (+\$1.50) + 7th inning cutoff
 - Balances efficiency and feasibility
 
 ---

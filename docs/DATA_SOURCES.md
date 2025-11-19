@@ -5,33 +5,33 @@
 ### ✅ ACTUAL DATA (Published)
 
 **1. Beer Prices (2025)**
-- Range: $10-15 at Yankee Stadium (industry reports, fan reports)
-- **Model baseline: $12.50**
+- Range: \$10-15 at Yankee Stadium (industry reports, fan reports)
+- **Model baseline: \$12.50**
 - Source: Team Marketing Report (TMR), StubHub, TripAdvisor reviews, fan reports
 - **Interpretation:** Most likely this represents the **menu/sticker price (pre-sales-tax)**
-  - When fans report "I paid $12 for beer," they typically mean the posted menu price
-  - With 8.875% NYC sales tax: **Consumer actually pays $13.59**
-  - Stadium receives: **$12.37** after taxes ($1.02 sales tax + $0.07 excise)
-  - **For our model:** We treat $12.50 as the consumer-facing decision price
-  - Demand responds to $12.50 (the price consumers see and compare)
+  - When fans report "I paid \$12 for beer," they typically mean the posted menu price
+  - With 8.875% NYC sales tax: **Consumer actually pays \$13.59**
+  - Stadium receives: **\$12.37** after taxes (\$1.02 sales tax + \$0.07 excise)
+  - **For our model:** We treat \$12.50 as the consumer-facing decision price
+  - Demand responds to \$12.50 (the price consumers see and compare)
   - Revenue calculations properly account for tax wedge
 
 **Tax Structure per Beer:**
 | Item | Amount |
 |------|--------|
-| Menu price (what consumer sees) | $12.50 |
-| NYC sales tax (8.875%) | +$1.11 |
-| **Total consumer pays** | **$13.61** |
-| Less: Sales tax to government | -$1.11 |
-| Less: Federal excise tax ($18/barrel) | -$0.058 |
-| Less: NY State excise ($0.14/gal) | -$0.012 |
-| Less: NYC excise ($0.12/gal) | -$0.004 |
-| **Stadium receives** | **$12.43** |
+| Menu price (what consumer sees) | \$12.50 |
+| NYC sales tax (8.875%) | +\$1.11 |
+| **Total consumer pays** | **\$13.61** |
+| Less: Sales tax to government | -\$1.11 |
+| Less: Federal excise tax (\$18/barrel) | -\$0.058 |
+| Less: NY State excise (\$0.14/gal) | -\$0.012 |
+| Less: NYC excise (\$0.12/gal) | -\$0.004 |
+| **Stadium receives** | **\$12.43** |
 
 - **Limitation:** Industry price reports rarely clarify whether prices are pre-tax or post-tax, leading to ambiguity across sources
 
 **2. Ticket Prices**
-- Average: ~$80 (likely secondary market all-in price)
+- Average: ~\$80 (likely secondary market all-in price)
 - Source: Secondary market data (StubHub, SeatGeek)
 - **Note:** Secondary market prices typically include all fees and taxes
 
@@ -53,13 +53,13 @@
 **6. Externality Estimates**
 - Crime: 10% alcohol ↑ → 1% assault ↑
 - Source: Carpenter & Dobkin (2015) - regression discontinuity
-- External costs: $0.48-$1.19/drink (1986 dollars)
+- External costs: \$0.48-\$1.19/drink (1986 dollars)
 - Source: Manning et al. (1991)
 
 **7. Tax Rates**
-- Federal excise: $18/barrel
-- NY State: $0.14/gallon
-- NYC: $0.12/gallon
+- Federal excise: \$18/barrel
+- NY State: \$0.14/gallon
+- NYC: \$0.12/gallon
 - Sales tax: 8.875%
 - Source: TTB, NY Dept of Taxation
 
@@ -97,11 +97,11 @@
 
 **1. Beer demand sensitivity: λ = 0.133**
 - Chose semi-log functional form
-- Calibrated so $12.50 is profit-maximizing
+- Calibrated so \$12.50 is profit-maximizing
 - Based on: observed price + assumed costs
 
 **2. Ticket demand sensitivity: λ = 0.017**
-- Calibrated so $80 is approximately optimal
+- Calibrated so \$80 is approximately optimal
 - Assumption: Similar approach to beer
 
 **3. Internalized cost parameter: α = 250**
@@ -116,11 +116,11 @@
 
 ### ASSUMED (Reasonable Guesses)
 
-**1. Beer cost: $5**
-- Assumption: Materials ($2) + labor ($2) + overhead ($1)
+**1. Beer cost: \$5**
+- Assumption: Materials (\$2) + labor (\$2) + overhead (\$1)
 - Not from Yankees financial data
 
-**2. Ticket cost: $20**
+**2. Ticket cost: \$20**
 - Assumption: Operational costs per attendee
 - Not from actual cost accounting
 
@@ -138,7 +138,7 @@
 
 What we CAN validate:
 
-✅ **Observed prices near optimal** ($12.50 vs $12.85 model)
+✅ **Observed prices near optimal** (\$12.50 vs \$12.85 model)
 ✅ **Consumption rates match literature** (1.0 beers/attendee)
 ✅ **Elasticities in reasonable range** (inelastic, as literature shows)
 ✅ **Tax calculations exact** (public tax code)

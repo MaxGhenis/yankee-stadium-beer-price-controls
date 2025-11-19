@@ -4,7 +4,7 @@ This section presents a systematic analysis of how key outcomes vary with beer p
 
 ## Methodology
 
-We simulate stadium optimization across beer price ceilings ranging from \\$5 to \\$20, computing optimal ticket prices and all downstream effects. This comparative statics exercise reveals:
+We simulate stadium optimization across beer price ceilings ranging from \$5 to \$20, computing optimal ticket prices and all downstream effects. This comparative statics exercise reveals:
 
 1. **Stadium response**: How ticket prices adjust to compensate for constrained beer revenue
 2. **Quantity effects**: Changes in attendance and consumption
@@ -20,10 +20,10 @@ We simulate stadium optimization across beer price ceilings ranging from \\$5 to
 name: price-response
 alt: Price response to beer ceilings
 ---
-**Left**: Ticket prices rise by up to \\$44 (+57%) as beer ceilings tighten from \\$13 to \\$5. Above \\$13, the ceiling is non-binding and prices plateau at baseline. **Right**: Beer price tracks the ceiling when binding (below ~\\$13).
+**Left**: Ticket prices rise by ~\$6.85 (+9.7%) as beer ceilings tighten to \$7. The rise is less dramatic than in previous calibrations but still significant. **Right**: Beer price tracks the ceiling when binding.
 ```
 
-**Economic mechanism:** When beer revenue margin collapses, the stadium shifts toward ticket revenue. This "revenue substitution" effect is amplified by two-way complementarity: higher tickets reduce attendance, limiting beer sales at the constrained (bad) margin.
+**Economic mechanism:** When beer revenue margin collapses, the stadium shifts toward ticket revenue. This "revenue substitution" effect is amplified by two-way complementarity.
 
 ### Attendance and Consumption Trade-offs
 
@@ -32,10 +32,10 @@ alt: Price response to beer ceilings
 name: quantity-effects
 alt: Attendance and beer consumption effects
 ---
-**Left**: Attendance falls 38% at \\$7 ceiling due to higher ticket prices and complementarity. **Right**: Total beer consumption rises 28% despite lower attendance—per-fan consumption increases 108% at \\$7 ceiling.
+**Left**: Attendance falls only -5.7% at \$7 ceiling (stadium remains near capacity). **Right**: Total beer consumption doubles (+98.3%) due to lower prices, despite the slight attendance drop.
 ```
 
-**Key insight:** Price ceilings increase *aggregate* consumption even as they reduce attendance. The intensive margin (beers per fan) dominates the extensive margin (number of fans).
+**Key insight:** The intensive margin (beers per fan) dominates the extensive margin (number of fans). Fans consume significantly more beer when it is cheap.
 
 ### Revenue Decomposition
 
@@ -44,10 +44,8 @@ alt: Attendance and beer consumption effects
 name: revenue-decomp
 alt: Revenue decomposition
 ---
-Ticket revenue partially compensates for lost beer revenue, but total revenue falls. At \\$7 ceiling, revenue drops \\$600,000 per game (\\$49M annually for 81 home games).
+Ticket revenue rises to compensate for lost beer margins. Total revenue actually *increases* slightly (+4.5%) because demand for cheap beer is high and ticket prices rise, but **profit** falls due to the cost of serving more beer.
 ```
-
-**Implication for policy:** Price ceilings reduce stadium revenue by 18% at \\$7 ceiling (\\$600,000 per game). This creates incentive for stadiums to oppose such regulations or seek compensatory policies (e.g., subsidized tickets, reduced taxes).
 
 ### Welfare Analysis
 
@@ -56,10 +54,10 @@ Ticket revenue partially compensates for lost beer revenue, but total revenue fa
 name: welfare-quad
 alt: Welfare components
 ---
-**Top left**: Producer surplus (stadium profit) falls monotonically with tighter ceilings—most below \\$12 are binding.
-**Top right**: Consumer surplus is ambiguous—cheaper beer helps, but higher tickets hurt. Net effect is negative below \\$8.
-**Bottom left**: Externality costs rise with cheaper beer due to increased consumption.
-**Bottom right**: Social welfare (CS + PS - externalities) declines with binding ceilings, reaching minimum around \\$7.
+**Top left**: Producer surplus (stadium profit) falls by ~-9.0% at \$7 ceiling.
+**Top right**: Consumer surplus **rises** by ~5.3%. The benefit of cheap beer outweighs the cost of slightly more expensive tickets for the average fan.
+**Bottom left**: Externality costs **explode** (+98.3%) as consumption doubles.
+**Bottom right**: Social welfare increases slightly (+0.8%), as the gain in Consumer Surplus outweighs the loss in Profit and the increase in Externalities.
 ```
 
 ### Combined Welfare View
@@ -69,10 +67,10 @@ alt: Welfare components
 name: welfare-combined
 alt: Welfare decomposition on single chart
 ---
-Lower beer ceilings reduce stadium profit by 25% at \\$7 ceiling (green line falls) while consumer surplus falls 19% (blue line). Externalities increase 28% (red line declines). Net social welfare falls 20% (purple line).
+The welfare effects are mixed: Consumers win (+5.3%), the Stadium loses (-9.0%), and Society bears more external costs (+98.3%). The net effect is a small positive, illustrating the "Second Best" theory where regulating a monopolist can improve welfare even with externalities.
 ```
 
-**Policy implication:** Price ceilings reduce welfare for both consumers (-19%) and producers (-25%), while externalities increase (+28%). Total social welfare falls 20%. This motivates alternative instruments like Pigouvian taxation.
+**Policy implication:** While the ceiling improves total social welfare slightly, it does so by shifting costs to society (crime, health) and the stadium, while consumers benefit. A Pigouvian tax would address the externality directly without these distortions.
 
 ### Per-Fan Consumption
 
@@ -81,56 +79,56 @@ Lower beer ceilings reduce stadium profit by 25% at \\$7 ceiling (green line fal
 name: beers-per-fan
 alt: Beers per fan
 ---
-Per-capita consumption explodes with lower price ceilings. At \\$7, average fan consumes 2.1 beers vs 1.0 at baseline—a 108% increase. This drives the externality cost increases.
+Per-capita consumption more than doubles. At \$7, average fan consumes 2.10 beers vs 1.00 at baseline. This drives the externality cost increase.
 ```
 
-## Quantitative Summary: \\$7 Ceiling vs Baseline
+## Robustness Check: Is this just complementarity?
 
-| Metric | Baseline (\\$12.50) | \\$7 Ceiling | Change |
+A common critique is that the "ticket price rise" result depends entirely on the assumption that beer and tickets are complements ($\epsilon_{cross} = 0.1$). We tested this by varying the cross-price elasticity from 0.0 (independent) to 0.3 (strong complements).
+
+```{figure} ../charts/robustness_cross_elasticity.png
+---
+name: robustness-cross
+alt: Robustness of ticket price increase
+---
+Ticket prices rise by over \$5 even if beer and tickets are completely independent goods ($\epsilon_{cross}=0$). The result is robust to the complementarity assumption.
+```
+
+**Surprising Result:** Even with **zero complementarity**, ticket prices rise by \$5.87.
+**Why?** The internalized cost function couples the markets. Cheaper beer leads to more consumption, which increases the "rowdiness/security" cost per fan. To the stadium, this looks like an increase in the marginal cost of serving a fan, so they raise ticket prices to cover it.
+
+## Quantitative Summary: \$7 Ceiling vs Baseline
+
+| Metric | Baseline (\$12.51) | \$7 Ceiling | Change |
 |--------|-------------------|-------------|---------|
 | **Prices** |
-| Beer price | \\$12.50 | \\$7.00 | -44% |
-| Ticket price | \\$89 | \\$121 | +36% |
+| Beer price | \$12.51 | \$7.00 | -44% |
+| Ticket price | \$70.44 | \$77.29 | +9.7% |
 | **Quantities** |
-| Attendance | 33,771 | 20,860 | -38% |
-| Beers/fan | 1.0 | 2.1 | +108% |
-| Total beers | 33,771 | 43,351 | +28% |
+| Attendance | 46,537 | 43,894 | -5.7% |
+| Beers/fan | 1.00 | 2.10 | +110.2% |
+| Total beers | 46,488 | 92,178 | +98.3% |
 | **Revenue** |
-| Total | \\$3.40M | \\$2.80M | -18% |
-| Profit | \\$2.27M | \\$1.70M | -25% |
+| Profit | \$3.42M | \$3.11M | -9.0% |
 | **Welfare** |
-| Consumer surplus | \\$9.99M | \\$8.14M | -19% |
-| Externality cost | \\$0.14M | \\$0.17M | +28% |
-| Social welfare | \\$12.13M | \\$9.66M | -20% |
+| Consumer surplus | \$11.4M | \$12.0M | +5.3% |
+| Externality cost | \$0.2M | \$0.4M | +98.3% |
+| Social welfare | \$14.7M | \$14.8M | +0.8% |
 
 ## Comparison with Leisten (2025)
 
 Our quantitative results confirm {cite}`leisten2025beer` theoretical prediction: **beer price ceilings cause ticket prices to rise**. We extend his analysis by:
 
-1. **Magnitude**: \\$7 ceiling → \\$32 ticket increase (4.4x multiplier on price change)
-2. **Two-way complementarity**: Beer prices affect attendance in our model
-3. **Welfare decomposition**: Show who wins/loses and by how much
-4. **Externalities**: Demonstrate that ceilings worsen public health outcomes
-
-Both approaches reach the same qualitative conclusion through different mechanisms:
-- **Leisten**: Complementarity discount term in FOC shrinks → ticket markup rises
-- **Our model**: Beer margin collapses → stadium shifts to tickets → attendance falls (limiting beer sales at bad margin)
-
-## Robustness
-
-These results are robust to:
-- **Cross-price elasticity**: Varying from 0.05 to 0.30 changes magnitudes but not directions
-- **Demand sensitivities**: Monte Carlo over calibration parameters (see next section)
-- **Externality costs**: Social welfare ranking persists across plausible cost ranges
-
-The key insight—binding price ceilings reduce social welfare—holds throughout parameter space.
+1. **Magnitude**: \$7 ceiling → \$6.85 ticket increase.
+2. **Two-way complementarity**: Beer prices affect attendance in our model.
+3. **Welfare decomposition**: We find that consumers *can* benefit (CS rises) even if tickets rise, if the beer price drop is large enough.
 
 ## Policy Implications
 
-1. **Price ceilings are inefficient**: Create deadweight loss without clear beneficiaries
-2. **Pigouvian taxation dominates**: Achieves same consumption reduction with revenue generation and no distortion of relative prices
-3. **Stadium responses matter**: Complementarity amplifies unintended consequences
-4. **Externalities worsen**: Lower prices increase consumption despite lower attendance
+1. **Trade-offs are complex**: Ceilings help consumers and slightly improve total welfare, BUT they drastically increase negative externalities (crime/health).
+2. **Pigouvian taxation is likely superior**: It targets the externality directly.
+3. **Stadium incentives**: The stadium loses profit (-9.0%), giving them incentive to fight this policy.
+4. **Unintended consequences**: Ticket prices rising 9.7% is a significant side effect that policymakers must anticipate.
 
 ```{bibliography}
 :filter: docname in docnames
