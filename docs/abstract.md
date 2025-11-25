@@ -8,7 +8,7 @@ PolicyEngine
 
 ## Abstract
 
-We analyze the effects of a \$7 beer price ceiling at Yankee Stadium using a heterogeneous consumer model with drinkers (40%) and non-drinkers (60%). The model predicts that total beer consumption increases 77% despite attendance falling 6%, because the stadium raises ticket prices 10% to offset lost beer margin, and per-fan consumption doubles.
+We analyze the effects of a hypothetical \$7 beer price ceiling at Yankee Stadium using a heterogeneous consumer model with drinkers (40%) and non-drinkers (60%). The model predicts that total beer consumption increases 77% despite attendance falling 6%, because the stadium raises ticket prices 10% to offset lost beer margin, and per-fan consumption doubles.
 
 The key mechanism is **selection effects**. When ticket prices rise, non-drinkers (who only see the price increase) reduce attendance by 11.5%, while drinkers (who gain value from cheaper beer) reduce attendance by only 6.3%. This shifts crowd composition from 40% to 41.4% drinkers. Decomposing the consumption increase: the intensive margin (each fan drinks more) contributes 116%, while the extensive margin (fewer attendees) contributes -16%.
 

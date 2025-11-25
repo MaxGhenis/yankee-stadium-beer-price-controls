@@ -22,7 +22,7 @@ exports:
 
 # Abstract
 
-We analyze the effects of a \$7 beer price ceiling at Yankee Stadium using a heterogeneous consumer model with drinkers (40%) and non-drinkers (60%). The model predicts that total beer consumption increases 77% despite attendance falling 6%, because the stadium raises ticket prices 10% to offset lost beer margin, and per-fan consumption doubles.
+We analyze the effects of a hypothetical \$7 beer price ceiling at Yankee Stadium using a heterogeneous consumer model with drinkers (40%) and non-drinkers (60%). The model predicts that total beer consumption increases 77% despite attendance falling 6%, because the stadium raises ticket prices 10% to offset lost beer margin, and per-fan consumption doubles.
 
 The key mechanism is **selection effects**. When ticket prices rise, non-drinkers (who only see the price increase) reduce attendance by 11.5%, while drinkers (who gain value from cheaper beer) reduce attendance by only 6.3%. This shifts crowd composition from 40% to 41.4% drinkers. Decomposing the consumption increase: the intensive margin (each fan drinks more) contributes 116%, while the extensive margin (fewer attendees) contributes -16%.
 
@@ -36,7 +36,7 @@ This is a simulation study with calibrated parameters; we lack transaction data.
 
 # Introduction
 
-In November 2024, Alexandria Ocasio-Cortez proposed capping beer prices at Yankee Stadium at \$7-\$8, citing fan affordability concerns. This proposal raises fundamental questions in public economics: How do price controls on complementary goods affect market outcomes when a monopolist controls both products? What are the welfare implications when consumers are heterogeneous?
+In November 2024, New York City mayor-elect Zohran Mamdani's transition team, co-chaired by former FTC chair Lina Khan, began exploring the use of "unconscionable pricing" statutes to regulate stadium concession prices {cite}`semafor2024khan`. This proposal raises fundamental questions in public economics: How do price controls on complementary goods affect market outcomes when a monopolist controls both products? What are the welfare implications when consumers are heterogeneous?
 
 This paper develops a heterogeneous consumer model to analyze beer price controls at sports venues. We make two key contributions. First, we distinguish between costs that stadiums already internalize through their pricing decisions and true social externalities that justify policy intervention. Second, we model consumer heterogeneity explicitly, allowing us to capture selection effects that alter crowd composition under different policies.
 
@@ -227,4 +227,5 @@ The repository includes:
 - Leisten, M. (2025). Economic analysis of beer price controls at Yankee Stadium. Unpublished working paper. Available at: https://x.com/LeistenEcon/status/1990150035615494239
 - Lenk, K. M., Toomey, T. L., & Erickson, D. J. (2010). Alcohol control policies and practices at professional sports stadiums. *Public Health Reports*, 125(5), 665-673.
 - Luca, M., & Sood, N. (2018). Sobering up after the seventh inning: Alcohol and crime around the ballpark. *Journal of Policy Analysis and Management*, 37(4), 833-860.
+- Semafor Staff. (2024). Economists spar over Lina Khan's plan to cut stadium beer prices. *Semafor*. https://www.semafor.com/article/11/18/2024/economists-split-over-lina-khans-plan-to-cut-stadium-beer-prices
 - Telser, L. G. (1979). A theory of monopoly of complementary goods. *The Journal of Business*, 52(2), 211-230.

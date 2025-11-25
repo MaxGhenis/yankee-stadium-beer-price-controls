@@ -2,7 +2,7 @@
 
 ## Motivation
 
-In November 2024, Alexandria Ocasio-Cortez proposed capping beer prices at Yankee Stadium at $7-$8, citing fan affordability concerns. This proposal raises fundamental questions in public economics: How do price controls on complementary goods affect market outcomes when a monopolist controls both products? What are the welfare implications when consumers are heterogeneous?
+In November 2024, New York City mayor-elect Zohran Mamdani's transition team, co-chaired by former FTC chair Lina Khan, began exploring the use of "unconscionable pricing" statutes to regulate stadium concession prices {cite}`semafor2024khan`. This proposal raises fundamental questions in public economics: How do price controls on complementary goods affect market outcomes when a monopolist controls both products? What are the welfare implications when consumers are heterogeneous?
 
 This paper develops a heterogeneous consumer model to analyze beer price controls at sports venues. We make two key contributions:
 
