@@ -25,8 +25,8 @@ plt.rcParams["font.size"] = 11
 def simulate_price_ceilings(
     ceiling_range: np.ndarray,
     model: StadiumEconomicModel,
-    crime_cost: float = 2.5,
-    health_cost: float = 1.5,
+    crime_cost: float = 2.50,
+    health_cost: float = 1.50,
 ) -> pd.DataFrame:
     """
     Simulate outcomes across range of beer price ceilings.
@@ -34,8 +34,6 @@ def simulate_price_ceilings(
     Args:
         ceiling_range: Array of beer price ceiling values
         model: StadiumEconomicModel instance
-        crime_cost: External crime cost per beer
-        health_cost: External health cost per beer
 
     Returns:
         DataFrame with results for each ceiling level
@@ -471,7 +469,7 @@ if __name__ == "__main__":
     ceilings = np.linspace(0.5, equilibrium_price, 26)  # $0.50 to equilibrium
 
     print("Simulating beer price ceilings from $5 to $20...")
-    df = simulate_price_ceilings(ceilings, model)
+    df = simulate_price_ceilings(ceilings, model, crime_cost=2.50, health_cost=1.50)
 
     print("\nGenerating charts...")
     output_dir = Path("charts")

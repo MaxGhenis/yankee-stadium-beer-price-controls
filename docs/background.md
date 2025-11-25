@@ -77,6 +77,29 @@ Combining crime and health externalities:
 
 These are costs borne by **society**, not the stadium.
 
+#### Stadium-Specific Adjustments
+
+Our \$4.00/beer estimate may be conservative or generous depending on stadium-specific factors:
+
+**Factors suggesting HIGHER externalities:**
+- **Concentrated timing**: 40,000+ fans leaving at once creates peak-load problems for police, transit
+- **Geographic concentration**: Bronx neighborhood bears costs of 81 home games
+- **Driving risk**: Some fans drive home (vs. bar patrons who may cab/walk)
+- **Group dynamics**: Stadium crowds may amplify aggressive behavior
+
+**Factors suggesting LOWER externalities:**
+- **Controlled environment**: Security, sales cutoffs, ID checks reduce worst outcomes
+- **Public transit access**: Most fans use subway (4 train), reducing DUI
+- **7th inning cutoff**: Allows sobering before departure
+- **Premium pricing**: \$12.50/beer naturally limits consumption
+
+**Uncertainty range:**
+- **Conservative**: \$2.50/beer (stadium safety measures effective)
+- **Baseline**: \$4.00/beer (used in model)
+- **High**: \$6.00/beer (neighborhood bears concentrated costs)
+
+This uncertainty is incorporated in our Monte Carlo analysis, which samples crime costs from \$1.50-\$3.50 and health costs from \$1.00-\$2.00.
+
 ## Theoretical Foundation: Price Controls and Complementary Goods
 
 ### Leisten (2025): Rigorous Analysis of Beer Price Ceilings
