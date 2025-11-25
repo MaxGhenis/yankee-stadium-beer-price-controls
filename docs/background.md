@@ -54,6 +54,14 @@ This explains why teams price in the inelastic region of ticket demand - they're
 
 {cite}`rees2009football` documented that college football games increase assault, vandalism, and disorderly conduct, with effects concentrated on game days and in the immediate vicinity.
 
+**Stadium-specific evidence:**
+
+{cite}`luca2015seventh` provides the most directly relevant evidence using MLB data from Philadelphia (2006-2015). They exploit the natural experiment that baseball games vary in length while alcohol sales stop after the 7th inning. Key finding: **extra innings significantly reduce stadium-area crime**, especially assaults, by giving fans more time to sober up before departure.
+
+{cite}`montolio2019hooligans` studied FC Barcelona home games and found elevated thefts within a **700-meter radius** of the stadium on game days. Away matches showed no effect, confirming the stadium as the crime generator.
+
+{cite}`glassman2018alcohol` documented a natural experiment at a college football stadium: **330 crime incidents/year** without alcohol sales (2009-2011) vs **475 with alcohol** (2012-2013)—a 44% increase.
+
 Stadium alcohol cutoff policies (e.g., stopping sales after 7th inning) reduce post-game crime by allowing fans to sober up before leaving.
 
 ### Public Health Costs

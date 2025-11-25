@@ -2,7 +2,7 @@
 
 ## Two Approaches to Beer-Ticket Complementarity
 
-This analysis compares two modeling approaches for stadium pricing with complementary goods.
+This analysis compares two modeling approaches for stadium pricing with complementary goods. The foundational theory for multi-product monopoly pricing is developed in {cite}`telser1979complementary`.
 
 ### Leisten (2025): One-Way Complementarity
 
