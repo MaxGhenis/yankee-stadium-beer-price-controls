@@ -135,12 +135,31 @@ class BeerPriceControlSimulator:
             "health_cost_per_beer": health_cost_per_beer,
         }
 
+        # Add selection effects metrics if breakdown available
+        if "breakdown_by_type" in result:
+            breakdown = result["breakdown_by_type"]
+            total_attendance = result["attendance"]
+            if total_attendance > 0:
+                # Calculate drinker share of attendance
+                drinker_attendance = breakdown.get("Drinker", {}).get("attendance", 0)
+                nondrinker_attendance = breakdown.get("Non-Drinker", {}).get("attendance", 0)
+                output["drinker_share"] = drinker_attendance / total_attendance
+                output["nondrinker_share"] = nondrinker_attendance / total_attendance
+                output["drinker_attendance"] = drinker_attendance
+                output["nondrinker_attendance"] = nondrinker_attendance
+                # Beers per fan by type
+                output["drinker_beers_per_fan"] = breakdown.get("Drinker", {}).get(
+                    "beers_per_fan", 0
+                )
+                output["nondrinker_beers_per_fan"] = breakdown.get("Non-Drinker", {}).get(
+                    "beers_per_fan", 0
+                )
+
         return output
 
     def run_all_scenarios(
         self,
         price_ceiling: float = 8.0,
-        price_floor: float = 15.0,
         crime_cost_per_beer: float = 2.50,
         health_cost_per_beer: float = 1.50,
     ) -> pd.DataFrame:
@@ -185,16 +204,7 @@ class BeerPriceControlSimulator:
         )
         scenarios.append(ceiling)
 
-        # 4. Price floor
-        floor = self.run_scenario(
-            f"Price Floor (${price_floor})",
-            beer_price_min=price_floor,
-            crime_cost_per_beer=crime_cost_per_beer,
-            health_cost_per_beer=health_cost_per_beer,
-        )
-        scenarios.append(floor)
-
-        # 5. Beer ban
+        # 4. Beer ban
         ban = self.run_scenario(
             "Beer Ban",
             beer_banned=True,
@@ -203,55 +213,7 @@ class BeerPriceControlSimulator:
         )
         scenarios.append(ban)
 
-        # 6. Social optimum (maximize social welfare)
-        social_opt = self._find_social_optimum(crime_cost_per_beer, health_cost_per_beer)
-        scenarios.append(social_opt)
-
         return pd.DataFrame(scenarios)
-
-    def _find_social_optimum(self, crime_cost_per_beer: float, health_cost_per_beer: float) -> dict:
-        """
-        Find prices that maximize social welfare (not just profit).
-
-        SW = CS + PS - Externalities
-        """
-        from scipy.optimize import minimize
-
-        def objective(prices):
-            ticket_p, beer_p = prices
-            if beer_p < 0:
-                return 1e10  # penalty
-
-            # Temporarily override external costs for optimization
-            original_crime = self.model.external_costs.get("crime", 2.50)
-            original_health = self.model.external_costs.get("health", 1.50)
-            self.model.external_costs["crime"] = crime_cost_per_beer
-            self.model.external_costs["health"] = health_cost_per_beer
-
-            try:
-                welfare = self.model.social_welfare(ticket_p, beer_p)
-            finally:
-                self.model.external_costs["crime"] = original_crime
-                self.model.external_costs["health"] = original_health
-
-            return -welfare["social_welfare"]  # minimize negative SW
-
-        result = minimize(
-            objective,
-            x0=[self.model.base_ticket_price, self.model.base_beer_price],
-            bounds=[(10, 200), (0, 50)],
-            method="L-BFGS-B",
-        )
-
-        optimal_beer = result.x[1]
-
-        return self.run_scenario(
-            "Social Optimum",
-            beer_price_min=optimal_beer,
-            beer_price_max=optimal_beer,
-            crime_cost_per_beer=crime_cost_per_beer,
-            health_cost_per_beer=health_cost_per_beer,
-        )
 
     def sensitivity_analysis(
         self,

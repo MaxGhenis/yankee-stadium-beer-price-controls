@@ -29,7 +29,7 @@ parts:
       - file: policy
         title: Policy Analysis
       - file: taxes
-        title: Tax Analysis & Pigouvian Gap
+        title: Tax Structure Analysis
       - file: conclusion
         title: Conclusions
   - caption: References

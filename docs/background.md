@@ -54,6 +54,14 @@ This explains why teams price in the inelastic region of ticket demand - they're
 
 {cite}`rees2009football` documented that college football games increase assault, vandalism, and disorderly conduct, with effects concentrated on game days and in the immediate vicinity.
 
+**Stadium-specific evidence:**
+
+{cite}`luca2015seventh` provides the most directly relevant evidence using MLB data from Philadelphia (2006-2015). They exploit the natural experiment that baseball games vary in length while alcohol sales stop after the 7th inning. Key finding: **extra innings significantly reduce stadium-area crime**, especially assaults, by giving fans more time to sober up before departure.
+
+{cite}`montolio2019hooligans` studied FC Barcelona home games and found elevated thefts within a **700-meter radius** of the stadium on game days. Away matches showed no effect, confirming the stadium as the crime generator.
+
+{cite}`glassman2018alcohol` documented a natural experiment at a college football stadium: **330 crime incidents/year** without alcohol sales (2009-2011) vs **475 with alcohol** (2012-2013)—a 44% increase.
+
 Stadium alcohol cutoff policies (e.g., stopping sales after 7th inning) reduce post-game crime by allowing fans to sober up before leaving.
 
 ### Public Health Costs
@@ -76,6 +84,29 @@ Combining crime and health externalities:
 - **Total: \$4.00 per beer**
 
 These are costs borne by **society**, not the stadium.
+
+#### Stadium-Specific Adjustments
+
+Our \$4.00/beer estimate may be conservative or generous depending on stadium-specific factors:
+
+**Factors suggesting HIGHER externalities:**
+- **Concentrated timing**: 40,000+ fans leaving at once creates peak-load problems for police, transit
+- **Geographic concentration**: Bronx neighborhood bears costs of 81 home games
+- **Driving risk**: Some fans drive home (vs. bar patrons who may cab/walk)
+- **Group dynamics**: Stadium crowds may amplify aggressive behavior
+
+**Factors suggesting LOWER externalities:**
+- **Controlled environment**: Security, sales cutoffs, ID checks reduce worst outcomes
+- **Public transit access**: Most fans use subway (4 train), reducing DUI
+- **7th inning cutoff**: Allows sobering before departure
+- **Premium pricing**: \$12.50/beer naturally limits consumption
+
+**Uncertainty range:**
+- **Conservative**: \$2.50/beer (stadium safety measures effective)
+- **Baseline**: \$4.00/beer (used in model)
+- **High**: \$6.00/beer (neighborhood bears concentrated costs)
+
+This uncertainty is incorporated in our Monte Carlo analysis, which samples crime costs from \$1.50-\$3.50 and health costs from \$1.00-\$2.00.
 
 ## Theoretical Foundation: Price Controls and Complementary Goods
 

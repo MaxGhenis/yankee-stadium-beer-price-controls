@@ -5,6 +5,8 @@ project:
   authors:
     - name: Max Ghenis
       email: max@policyengine.org
+      affiliations:
+        - PolicyEngine
   github: https://github.com/maxghenis/yankee-stadium-beer-price-controls
   copyright: '2025'
   keywords:
@@ -13,7 +15,14 @@ project:
     - price controls
     - externalities
     - alcohol policy
-    - pigouvian tax
+    - selection effects
+  exports:
+    - format: pdf
+      template: plain_latex
+      output: exports/beer-price-controls.pdf
+    - format: tex
+      template: plain_latex
+      output: exports/beer-price-controls.tex
 
 site:
   template: book-theme

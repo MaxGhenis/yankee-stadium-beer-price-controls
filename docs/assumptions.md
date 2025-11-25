@@ -54,10 +54,18 @@ Both models predict beer ceilings cause ticket prices to rise, but through diffe
 - Conservative estimate (could be 0.2-0.3 if beer very important)
 
 **Sensitivity range:**
+- Leisten: 0.00 (one-way only)
 - Low: 0.05 (beer minor part of experience)
 - Base: 0.10 (current model)
 - High: 0.30 (beer central to fan experience)
-- Leisten: 0.00 (one-way only)
+
+**Monte Carlo analysis**: Our uncertainty quantification samples cross_price_elasticity uniformly from [0.0, 0.3], spanning the full range from Leisten's pure one-way model to strong two-way complementarity. This ensures our qualitative conclusions (tickets rise, consumption increases) are robust to this critical but unmeasured parameter.
+
+**Why 0.1 is reasonable for point estimates:**
+- {cite}`coates2007ticket` show teams sacrifice ticket revenue for concession profits, implying cross-effects matter
+- If cross-elasticity were very high (>0.3), we'd expect stadiums to heavily subsidize beer to drive attendance—they don't
+- If cross-elasticity were very low (<0.05), teams wouldn't care about beer prices' effect on attendance—but they do (7th inning cutoffs, etc.)
+- 0.1 represents a middle ground: beer matters, but isn't the primary attendance driver
 
 ### ⚙️  CALIBRATED (To Match Observed Prices)
 
