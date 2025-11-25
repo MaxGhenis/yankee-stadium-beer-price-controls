@@ -28,7 +28,7 @@ We simulate the effects of a \$7 beer price ceiling and document significant uni
 
 Our analysis introduces two methodological innovations. First, we distinguish between costs that stadiums internalize (crowd management, brand damage, experience degradation affecting other customers) and true social externalities (neighborhood crime, public health costs). Second, we model heterogeneous consumer preferences, which not only improves calibration but reveals that price policies induce selection effects altering crowd composition. The heterogeneous model predicts an optimal beer price of \$12.51 compared to the observed \$12.50, validating that stadiums approximately profit-maximize while accounting for fan heterogeneity.
 
-The consumption increase operates through two channels: an **intensive margin** (each drinker consumes more at lower prices) and an **extensive margin** (crowd composition shifts toward drinkers as ticket prices rise). We decompose these effects and show that selection effects account for a substantial portion of the total consumption change—a mechanism absent from representative agent models.
+The consumption increase operates through two channels: an **intensive margin** (each drinker consumes more at lower prices) and an **extensive margin** (crowd composition shifts as ticket prices rise). We decompose these effects quantitatively: the intensive margin accounts for approximately 111% of the consumption increase, while the extensive margin contributes -11% (attendance falls, partially offsetting intensive gains). This decomposition reveals that the dominant mechanism is individual behavioral response to lower beer prices, with selection effects playing a moderating rather than amplifying role—a finding that would be invisible in representative agent models.
 
 This is a simulation study using calibrated parameters rather than estimated ones; we lack Yankees-specific transaction data. However, the heterogeneous consumer framework provides more realistic predictions than representative consumer models and generates novel, testable insights about selection effects in stadium alcohol regulation. We provide extensive Monte Carlo robustness checks demonstrating that qualitative conclusions hold across wide parameter ranges.
 
@@ -99,9 +99,9 @@ where $\lambda_T$ captures ticket price sensitivity, $\epsilon_{cross}$ is the c
 
 The stadium maximizes profit:
 
-$$\pi = A(P_T, P_B) \cdot [(P_T - c_T) + Q(P_B) \cdot (P_B^{net} - c_B)] - C_{int}(Q_{total})$$
+$$\pi = A(P_T, P_B) \cdot [(P_T - c_T) + q(P_B) \cdot (P_B^{net} - c_B)] - C_{int}(q_{total})$$
 
-where $P_B^{net}$ is beer price net of taxes, $c_T$ and $c_B$ are marginal costs, and $C_{int}$ captures internalized costs (crowd management, brand damage).
+where $q(P_B)$ is per-fan beer demand, $P_B^{net}$ is beer price net of taxes, $c_T$ and $c_B$ are marginal costs, and $C_{int}(q_{total})$ captures internalized costs (crowd management, brand damage) as a function of total beer consumption.
 
 ## Externalities
 
@@ -136,23 +136,24 @@ This validates that stadiums approximately profit-maximize while accounting for 
 
 ## Baseline vs. \$7 Ceiling
 
-| Outcome | Baseline | \$7 Ceiling | Change |
-|---------|----------|-------------|--------|
-| Ticket price | \$70.44 | \$77.29 | +9.7% |
-| Beer price | \$12.50 | \$7.00 | -44.0% |
-| Attendance | 39,559 | 37,296 | -5.7% |
-| Beers/fan | 1.00 | 2.10 | +110% |
-| Total beers | 39,559 | 78,322 | +98% |
-| Stadium profit | \$1.82M | \$1.51M | -17.0% |
+| Outcome | Baseline | \$7 Ceiling | Change | 90% CI |
+|---------|----------|-------------|--------|--------|
+| Ticket price | \$70.44 | \$77.56 | +10.0% | [+2.8%, +18.5%] |
+| Beer price | \$12.50 | \$7.00 | -44.0% | — |
+| Attendance | 39,559 | 36,959 | -5.6% | [-15.9%, +0.0%] |
+| Beers/fan | 1.13 | 2.11 | +87% | — |
+| Total beers | 44,700 | 78,000 | +77% | [+35%, +106%] |
+
+*Note: Confidence intervals from Monte Carlo analysis over 500 parameter draws. "Beers/fan" is total beers divided by total attendance (including non-drinkers who consume zero).*
 
 ## Decomposition: Intensive vs. Extensive Margin
 
-The consumption increase decomposes into:
+Using Shapley decomposition, the consumption increase partitions into:
 
-- **Intensive margin**: Each attendee drinks more at lower prices
-- **Extensive margin**: Crowd composition shifts toward drinkers
+- **Intensive margin (111%)**: Each attendee drinks more at lower beer prices
+- **Extensive margin (-11%)**: Attendance falls due to higher ticket prices, partially offsetting gains
 
-Both margins contribute positively to consumption growth, but the intensive margin dominates.
+The intensive margin dominates because per-fan consumption nearly doubles (from 1.13 to 2.11 beers), while attendance falls only modestly (-5.6%). The negative extensive margin means that if attendance had remained constant, consumption would have increased even more.
 
 # Robustness
 
@@ -180,6 +181,18 @@ Leisten (2025) analyzes the same policy question with a different model structur
 
 This convergence across model specifications strengthens confidence in the qualitative conclusions.
 
+## External Validity
+
+Our analysis focuses on Yankee Stadium but uses parameters calibrated to MLB averages. Several factors affect generalizability:
+
+**Venue characteristics**: Yankee Stadium's 46,537 capacity and premium New York market may yield different price sensitivities than smaller-market teams. Fenway Park (37,755 seats) or teams in lower-income markets might show stronger attendance responses to ticket price increases.
+
+**Sport-specific factors**: The 40% drinker share from Lenk et al. (2010) is MLB-specific. NFL games (higher per-game stakes, tailgating culture) likely have different drinking patterns. Concert venues, where alcohol may be more central to the experience, could show stronger complementarity effects.
+
+**Policy environment**: New York's tax structure (8.875% sales tax) is higher than many states. Stadiums in Texas (no state income tax, lower sales taxes) would see different net-of-tax margins, potentially affecting optimal pricing responses.
+
+**Testable predictions**: Our model generates predictions that could be tested with transaction data: (1) drinker share of attendance should increase under price ceilings, (2) per-fan consumption should rise more than proportionally to the price decrease, (3) ticket prices should partially offset beer margin compression.
+
 # Conclusion
 
 This paper analyzes beer price controls at Yankee Stadium using a heterogeneous consumer model. Our main findings are:
@@ -194,10 +207,21 @@ This paper analyzes beer price controls at Yankee Stadium using a heterogeneous 
 
 The heterogeneous consumer framework represents an advance over representative agent models for analyzing policies with distributional consequences. Future work could extend this approach to other complementary goods settings.
 
+# Code Availability
+
+All simulation code, model implementation, and documentation are available at: https://github.com/MaxGhenis/yankee-stadium-beer-price-controls
+
+The repository includes:
+- Python implementation of the heterogeneous consumer model (`src/model.py`)
+- Monte Carlo simulation scripts (`docs/monte_carlo.ipynb`)
+- Interactive Streamlit dashboard (`src/app.py`)
+- Full documentation built with MyST/JupyterBook
+
 # References
 
 - Coates, D., & Humphreys, B. R. (2007). Ticket prices, concessions and attendance at professional sporting events. *International Journal of Sport Finance*, 2(3), 161-170.
 - Krautmann, A. C., & Berri, D. J. (2007). Can we find it at the concessions? Understanding price elasticity in professional sports. *Journal of Sports Economics*, 8(2), 183-191.
-- Leisten, M. (2025). Economic analysis of beer price controls at Yankee Stadium. Twitter/X thread.
+- Leisten, M. (2025). Economic analysis of beer price controls at Yankee Stadium. Unpublished working paper. Available at: https://x.com/LeistenEcon/status/1990150035615494239
 - Lenk, K. M., Toomey, T. L., & Erickson, D. J. (2010). Alcohol control policies and practices at professional sports stadiums. *Public Health Reports*, 125(5), 665-673.
-- Luca, M., & Sood, N. (2018). Sobering up after the seventh inning: Alcohol and crime around the ballpark. *Journal of Policy Analysis and Management*.
+- Luca, M., & Sood, N. (2018). Sobering up after the seventh inning: Alcohol and crime around the ballpark. *Journal of Policy Analysis and Management*, 37(4), 833-860.
+- Telser, L. G. (1979). A theory of monopoly of complementary goods. *The Journal of Business*, 52(2), 211-230.
