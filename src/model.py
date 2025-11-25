@@ -199,13 +199,20 @@ class StadiumEconomicModel:
         ticket_effect = np.exp(-ticket_sensitivity * (ticket_price - self.base_ticket_price))
 
         # Beer price cross-effect (drinkers more affected than non-drinkers)
-        # Use SAME cross-elasticity for all, but drinkers feel it more through utility
-        # Don't scale by alpha (causes explosion at low prices!)
+        # Scale cross-elasticity by normalized beer preference
+        # Non-drinkers (alpha=1): minimal response to beer prices
+        # Drinkers (alpha=43.75): strong response to beer prices
         if beer_price > 0:
             beer_ratio = beer_price / self.base_beer_price
-            cross_effect = beer_ratio ** (-self.cross_price_elasticity)
+            # Normalize alpha_beer so drinkers get full cross-elasticity, non-drinkers get ~0
+            # alpha_beer ranges from 1.0 (non-drinker) to 43.75 (drinker)
+            alpha_weight = (consumer_type.alpha_beer - 1.0) / (43.75 - 1.0)  # 0 to 1
+            effective_cross_elasticity = self.cross_price_elasticity * alpha_weight
+            cross_effect = beer_ratio ** (-effective_cross_elasticity)
         else:
-            cross_effect = 0.95  # Small reduction for beer ban
+            # Beer ban: drinkers lose more utility than non-drinkers
+            alpha_weight = (consumer_type.alpha_beer - 1.0) / (43.75 - 1.0)
+            cross_effect = 1.0 - 0.10 * alpha_weight  # Drinkers: 0.90, Non-drinkers: 1.0
 
         attendance = type_base_attendance * ticket_effect * cross_effect
         return min(

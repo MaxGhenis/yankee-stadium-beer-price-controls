@@ -28,7 +28,7 @@ We simulate the effects of a \$7 beer price ceiling and document significant uni
 
 Our analysis introduces two methodological innovations. First, we distinguish between costs that stadiums internalize (crowd management, brand damage, experience degradation affecting other customers) and true social externalities (neighborhood crime, public health costs). Second, we model heterogeneous consumer preferences, which not only improves calibration but reveals that price policies induce selection effects altering crowd composition. The heterogeneous model predicts an optimal beer price of \$12.51 compared to the observed \$12.50, validating that stadiums approximately profit-maximize while accounting for fan heterogeneity.
 
-The consumption increase operates through two channels: an **intensive margin** (each drinker consumes more at lower prices) and an **extensive margin** (crowd composition shifts as ticket prices rise). We decompose these effects quantitatively: the intensive margin accounts for approximately 111% of the consumption increase, while the extensive margin contributes -11% (attendance falls, partially offsetting intensive gains). This decomposition reveals that the dominant mechanism is individual behavioral response to lower beer prices, with selection effects playing a moderating rather than amplifying role—a finding that would be invisible in representative agent models.
+The consumption increase operates through two channels: an **intensive margin** (each drinker consumes more at lower prices) and an **extensive margin** (attendance changes and crowd composition shifts). We decompose these effects quantitatively: the intensive margin accounts for approximately 116% of the consumption increase, while the extensive margin contributes -16% (attendance falls, partially offsetting intensive gains). Crucially, the attendance decline is driven by non-drinkers (-11.5%) more than drinkers (-6.3%), because drinkers derive additional value from cheaper beer that partially offsets the ticket increase. This selection effect shifts crowd composition from 40% to 41.4% drinkers—a mechanism invisible in representative agent models.
 
 This is a simulation study using calibrated parameters rather than estimated ones; we lack Yankees-specific transaction data. However, the heterogeneous consumer framework provides more realistic predictions than representative consumer models and generates novel, testable insights about selection effects in stadium alcohol regulation. We provide extensive Monte Carlo robustness checks demonstrating that qualitative conclusions hold across wide parameter ranges.
 
@@ -150,10 +150,15 @@ This validates that stadiums approximately profit-maximize while accounting for 
 
 Using Shapley decomposition, the consumption increase partitions into:
 
-- **Intensive margin (111%)**: Each attendee drinks more at lower beer prices
-- **Extensive margin (-11%)**: Attendance falls due to higher ticket prices, partially offsetting gains
+- **Intensive margin (116%)**: Each attendee drinks more at lower beer prices
+- **Extensive margin (-16%)**: Attendance falls due to higher ticket prices, partially offsetting gains
 
-The intensive margin dominates because per-fan consumption nearly doubles (from 1.13 to 2.11 beers), while attendance falls only modestly (-5.6%). The negative extensive margin means that if attendance had remained constant, consumption would have increased even more.
+The intensive margin dominates because per-fan consumption more than doubles (from 1.0 to 2.17 beers), while attendance falls modestly (-9.4%). Crucially, the attendance decline is **not uniform across types**:
+
+- Non-drinkers: -11.5% (only see ticket increase)
+- Drinkers: -6.3% (ticket increase offset by value of cheaper beer)
+
+This differential response shifts crowd composition from 40% to 41.4% drinkers (+1.4pp). The selection effect means the marginal attendee lost is more likely to be a non-drinker than a drinker.
 
 # Robustness
 
