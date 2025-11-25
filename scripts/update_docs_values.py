@@ -53,10 +53,6 @@ def generate_values():
     welfare_base = model.social_welfare(baseline_ticket, baseline_beer)
     welfare_7 = model.social_welfare(ceiling_7_ticket, ceiling_7_beer)
 
-    # Pigouvian tax effects for table
-    pigouvian_total_beers_raw = 28500 # from original template value
-    pigouvian_gov_revenue = (pigouvian_gap_raw + current_taxes_per_beer_raw) * pigouvian_total_beers_raw
-
     return {
         # Baseline
         'baseline_ticket': f"{baseline_ticket:.2f}",
@@ -116,36 +112,23 @@ def generate_values():
         # Model Parameters (from config_loader)
         'experience_degradation_cost': f"{model.experience_degradation_cost:.1f}",
         'external_cost_per_beer': f"{external_cost_sum_raw:.2f}",
-            'current_taxes_per_beer': f"{current_taxes_per_beer_raw:.2f}",
-            'tax_coverage_pct': f"{current_taxes_per_beer_raw / external_cost_sum_raw * 100:.0f}",
-            'pigouvian_gap': f"{pigouvian_gap_raw:.2f}",
-            'pigouvian_revenue_annual': f"{pigouvian_gap_raw * baseline_total_beers_raw * games / 1e6:.1f}",
-            'beer_cost_raw': f"{model.beer_cost:.2f}",        
-            # Additional calculated values for policy.md.tpl
+        'current_taxes_per_beer': f"{current_taxes_per_beer_raw:.2f}",
+        'beer_cost_raw': f"{model.beer_cost:.2f}",        
+        # Additional calculated values for policy.md.tpl
         
-            'baseline_beer_minus_ceiling7': f"{baseline_beer - 7.0:.2f}",
+        'baseline_beer_minus_ceiling7': f"{baseline_beer - 7.0:.2f}",
         
-            'beer_price_pct_change_from_baseline': f"{100*(1-7.0/baseline_beer):.0f}",
+        'beer_price_pct_change_from_baseline': f"{100*(1-7.0/baseline_beer):.0f}",
         
-            'external_cost_sum_raw': f"{external_cost_sum_raw:.2f}",
+        'external_cost_sum_raw': f"{external_cost_sum_raw:.2f}",
         
-            'current_taxes_per_beer_raw': f"{current_taxes_per_beer_raw:.2f}",
+        'current_taxes_per_beer_raw': f"{current_taxes_per_beer_raw:.2f}",
         
-            'pigouvian_consumer_price': f"{baseline_beer + pigouvian_gap_raw:.2f}",
+        'baseline_profit_per_game_M': f"{baseline_profit_raw/1e6:.2f}",
         
-            'pigouvian_total_beers_raw': f"{pigouvian_total_beers_raw:,.0f}",
+        'ceiling7_profit_per_game_M': f"{ceiling7_profit_raw/1e6:.2f}",
         
-            'pigouvian_tax_revenue_k': f"{pigouvian_gov_revenue / 1e3:.0f}",
-        
-            'baseline_tax_revenue_k': f"{current_taxes_per_beer_raw * baseline_total_beers_raw / 1e3:.0f}",
-        
-            'ceiling7_tax_revenue_k': f"{current_taxes_per_beer_raw * ceiling7_total_beers_raw / 1e3:.0f}", # Assuming sales tax rate applies to the $7, not just the pre-tax part
-        
-            'baseline_profit_per_game_M': f"{baseline_profit_raw/1e6:.2f}",
-        
-            'ceiling7_profit_per_game_M': f"{ceiling7_profit_raw/1e6:.2f}",
-        
-            'ceiling7_profit_change_M': f"{(ceiling7_profit_raw - baseline_profit_raw)/1e6:.2f}",
+        'ceiling7_profit_change_M': f"{(ceiling7_profit_raw - baseline_profit_raw)/1e6:.2f}",
         
             'ceiling7_consumer_surplus_change_annual': f"{(welfare_7['consumer_surplus']-welfare_base['consumer_surplus'])*games/1e6:.1f}",
         

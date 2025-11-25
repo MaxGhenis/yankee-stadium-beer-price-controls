@@ -47,3 +47,10 @@ Thumbs.db
 docs/_build/
 .jupyter_cache/
 docs/exports/
+
+# Coverage
+.coverage
+htmlcov/
+
+# UV
+uv.lock
