@@ -46,3 +46,4 @@ Thumbs.db
 # JupyterBook
 docs/_build/
 .jupyter_cache/
+docs/exports/
