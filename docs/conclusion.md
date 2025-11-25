@@ -2,126 +2,98 @@
 
 ## Key Findings
 
-### 1. Observed Prices Are Profit-Maximizing
+### 1. Price Ceilings Increase Consumption
 
-Stadium beer at \$12.50 is approximately profit-maximizing (\$12.51 optimal) when accounting for:
-- Taxes (\$1.18/beer)
-- Production costs (\$2.00/beer)
-- **Internalized costs** (varies by volume, C = 62.3(Q/1000)^2)
+A $7 beer ceiling at Yankee Stadium increases total beer consumption by approximately 77%, despite reducing attendance by 6%. This occurs because:
 
-### 2. Stadiums Already Internalize Some Externalities
+- The stadium raises ticket prices ~10% to offset lost beer margin
+- Per-fan beer consumption more than doubles (from 1.0 to 2.1 beers)
+- The intensive margin effect dominates the attendance decline
 
-Crowd management, brand damage, and experience degradation are **already priced in**:
-- Convex cost function: $C_{intern}(Q) = 62.3 \cdot (Q/1000)^2$
-- At low prices (\$5-7): Internalized costs become prohibitively high
-- This explains why stadiums don't sell cheap beer despite apparent profit potential
+### 2. Selection Effects Alter Crowd Composition
 
-### 3. Significant External Costs Remain
+The heterogeneous consumer model reveals differential attendance responses:
 
-Society bears **\$4.00/beer** in external costs:
-- Crime & violence: \$2.50
-- Public health: \$1.50
+| Consumer Type | Attendance Change | Mechanism |
+|---------------|-------------------|-----------|
+| Non-drinkers | -11.5% | Only see ticket price increase |
+| Drinkers | -6.3% | Ticket increase offset by cheaper beer value |
 
-Current taxes (\$1.18) cover only **30%** of these costs.
+This shifts crowd composition from 40% to 41.4% drinkers (+1.4 percentage points).
 
-**Pigouvian tax gap: \$2.82/beer**
+### 3. Decomposition: Intensive vs Extensive Margin
 
-### 4. Price Ceiling (\$7) Has Mixed Effects
+Using Shapley decomposition:
+- **Intensive margin: +116%** (each fan drinks more)
+- **Extensive margin: -16%** (attendance falls)
 
-**Pros:**
-- Consumer surplus: significant gains (+\$5.3%)
-- More affordable access
+The intensive margin accounts for more than 100% of the consumption increase because the extensive margin partially offsets it—attendance falls, which would reduce consumption if per-fan consumption stayed constant.
 
-**Cons:**
-- Stadium profit: \$-24.9M/season
-- Externality costs: increase (+\$98.3%) due to higher consumption
-- May face legal/constitutional challenges
+### 4. Results Are Robust
 
-**Net:** Complex welfare trade-offs with distributional concerns.
+Monte Carlo analysis over 1,000 parameter combinations:
+- Tickets rise in >95% of scenarios
+- Consumption increases in >95% of scenarios
+- Stadium profit falls in >99% of scenarios
 
-### 5. Pigouvian Tax is More Efficient
+The qualitative conclusions hold across wide parameter ranges for cross-price elasticity (0.0-0.3) and drinker share (30%-50%).
 
-Adding \$2.82/beer tax:
-- ✓ Internalizes external costs
-- ✓ Raises \$10.6M/year for affected communities
-- ✓ Reduces consumption to optimal level
-- ✓ No deadweight loss (price = social MC)
-- ✓ Economically efficient
+### 5. Model Validates Against Observed Prices
 
-**Recommended policy**: Pigouvian tax over price controls.
-
-## Policy Recommendations
-
-### Recommended: Pigouvian Tax
-
-**Implement \$2.82/beer additional tax on stadium alcohol**
-
-- Consumer price: \$12.51 → \$15.33
-- Consumption: reduces to optimal level
-- Revenue: \$10.6M/year
-- Allocate to Bronx community, public health, police
-
-### Alternative: Moderate Hybrid
-
-**If political constraints:**
-- Moderate tax (+\$1.50/beer)
-- Earlier sale cutoff (6th inning instead of 7th)
-- Purchase limits (2 beers per transaction)
-
-### Not Recommended: Price Ceiling
-
-- Large stadium revenue loss
-- Increases externalities
-- Potential legal challenges
-- Less efficient than taxation
-
-## Broader Implications
-
-### For Other Stadiums
-
-This framework applies to all sports venues:
-- NFL, NBA, NHL stadiums face similar trade-offs
-- Internalized vs external costs distinction is general
-- Optimal taxation varies by local externality levels
-
-### For Alcohol Policy
-
-**General principle**: Distinguish internalized from external costs.
-
-Monopolists (stadiums, bars, restaurants) internalize negative effects on their own customers.
-
-Policy should target **true external costs** (non-customers, public goods).
-
-### For Price Control Theory
-
-**Important insight**: Observed prices may reflect internalized externalities, not just production costs.
-
-Standard models that ignore firm's internalization of customer experience effects will mis-predict optimal prices.
+The heterogeneous model predicts an optimal beer price of $12.51, compared to $12.50 observed. This 0.08% calibration error (vs 20-30% for homogeneous models) suggests:
+- Stadiums approximately profit-maximize
+- The two-type consumer structure captures key demand features
+- Observed prices reflect equilibrium behavior
 
 ## Limitations
 
-1. **Static model**: Doesn't capture long-run effects (season tickets, loyalty)
-2. **Single representative consumer**: Ignores heterogeneity
-3. **No substitution**: Doesn't model pre-game drinking or smuggling
-4. **Partial equilibrium**: No competition from other entertainment
-5. **Perfect enforcement**: Assumes price controls fully enforced
+1. **Simulation study**: Parameters are calibrated, not estimated from transaction data
+2. **Static model**: Doesn't capture dynamic adjustments (season tickets, reputation effects)
+3. **No substitution**: Doesn't model pre-game drinking or smuggling responses
+4. **Partial equilibrium**: No competition from other entertainment venues
+5. **Perfect enforcement**: Assumes price controls are fully enforced
+
+## Testable Predictions
+
+The model generates predictions that could be tested with stadium transaction data:
+
+1. Under price ceilings, **drinker share of attendance should increase**
+2. **Per-fan consumption should rise more than proportionally** to the price decrease
+3. **Ticket prices should partially offset** beer margin compression
+
+These predictions distinguish the heterogeneous model from representative agent approaches.
+
+## Broader Implications
+
+### For Stadium Pricing
+
+The heterogeneous consumer framework reveals that:
+- Price policies change *who* attends, not just *how many*
+- Selection effects can amplify or dampen policy impacts
+- Simple demand elasticity estimates miss composition effects
+
+### For Complementary Goods
+
+When a monopolist controls two complements:
+- Constraining one price shifts optimization to the other
+- Consumer heterogeneity creates differential responses
+- General equilibrium effects can dominate partial equilibrium intuitions
+
+### For Policy Analysis
+
+Representative agent models may underestimate policy effects when:
+- Consumers have heterogeneous preferences for the regulated good
+- Price changes induce selection on consumer composition
+- Multiple margins of adjustment exist
 
 ## Future Research
 
-- **Rowdiness Feedback Loop**: Explicitly model the negative utility of non-drinkers from high aggregate beer consumption.
-- **Convex Externalities**: Investigate how social externalities (crime, health) might increase non-linearly with consumption.
-- **Heterogeneous consumers**: Deeper dive into casual vs regular fans, potentially expanding consumer types.
-- **Dynamic model**: Repeated games, learning, habit formation.
-- **Substitution patterns**: Pre-game bars, tailgating.
-- **Spatial analysis**: Crime externalities by distance from stadium.
-- **Empirical validation**: Natural experiments with policy changes.
+- **Empirical validation**: Natural experiments from stadium policy changes
+- **Dynamic model**: Repeated games, season ticket holder behavior
+- **Substitution patterns**: Pre-game drinking, tailgating responses
+- **Spatial analysis**: Crime externalities by distance from stadium
+- **Welfare analysis**: Distributional effects across consumer types
 
-## Final Thought
-
-The key innovation is recognizing that **monopolists internalize negative effects on their own customers**.
-
-This is why simple supply-demand models fail to predict stadium pricing - they miss the convex experience degradation costs that stadiums face.
-
-For policy: Focus on **true external costs** (crime, public health) that remain uninternalized. Current taxes cover only 30% of these costs.
-
-**Optimal policy: \$2.82/beer Pigouvian tax, raising \$10.6M/year for NYC.**
+```{bibliography}
+:filter: docname in docnames
+```

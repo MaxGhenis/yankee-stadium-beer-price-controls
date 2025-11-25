@@ -99,7 +99,7 @@ This explains why stadiums don't sell cheap beer despite apparent profit potenti
 4. **Price Ceiling** ($7) - NOT RECOMMENDED ❌
    - Significant stadium revenue loss ($-24.9M/season)
    - Increases externalities (+98.3%)
-   - Tickets rise 9.7% (unintended consequence)
+   - Tickets rise 9.7% (general equilibrium response)
    - Constitutional concerns
 
 5. **Beer Ban** - EXTREME
@@ -178,7 +178,7 @@ Tickets and beer consumed together:
 $2.82/beer) is most efficient
 
 **If goal is protect consumers:**
-→ Beware unintended consequences (tickets rise 9.7%)
+→ Note general equilibrium response (tickets rise 9.7%)
 
 **If goal is raise revenue:**
 → Tax generates $10.6M/season for NYC

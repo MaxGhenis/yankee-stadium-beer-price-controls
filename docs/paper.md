@@ -1,6 +1,6 @@
 ---
 title: "Beer Price Controls at Yankee Stadium: An Economic Analysis"
-subtitle: "Selection Effects and Unintended Consequences in Stadium Alcohol Regulation"
+subtitle: "Selection Effects and General Equilibrium Responses in Stadium Alcohol Regulation"
 authors:
   - name: Max Ghenis
     email: max@policyengine.org
@@ -22,19 +22,17 @@ exports:
 
 # Abstract
 
-This paper analyzes the economic impacts of imposing price controls on beer sales at Yankee Stadium using a **heterogeneous consumer model** with two distinct fan types: non-drinkers (60%) and drinkers (40%). Our approach, calibrated to match empirical consumption patterns, achieves superior predictive accuracy compared to representative consumer specifications, reducing calibration error by 76%.
+We analyze the effects of a \$7 beer price ceiling at Yankee Stadium using a heterogeneous consumer model with drinkers (40%) and non-drinkers (60%). The model predicts that total beer consumption increases 77% despite attendance falling 6%, because the stadium raises ticket prices 10% to offset lost beer margin, and per-fan consumption doubles.
 
-We simulate the effects of a \$7 beer price ceiling and document significant unintended consequences operating through complementarity and **selection effects**. Monte Carlo analysis across 1,000 parameter combinations confirms these findings are robust: tickets rise in >95% of scenarios, stadium profit falls in >99%, and beer consumption increases in >95%. Point estimates suggest the ceiling induces the stadium to raise ticket prices by 5-15% (depending on cross-price elasticity assumptions), causing attendance to fall 3-8%. Total beer consumption increases substantially as per-fan consumption rises (from 1.00 to approximately 2.0 beers/fan), offsetting the attendance decline. Stadium profit falls \$15-30M per season. The heterogeneous model reveals that drinkers respond less elastically to ticket price increases than non-drinkers, leading to selection effects that alter crowd composition.
+The key mechanism is **selection effects**. When ticket prices rise, non-drinkers (who only see the price increase) reduce attendance by 11.5%, while drinkers (who gain value from cheaper beer) reduce attendance by only 6.3%. This shifts crowd composition from 40% to 41.4% drinkers. Decomposing the consumption increase: the intensive margin (each fan drinks more) contributes 116%, while the extensive margin (fewer attendees) contributes -16%.
 
-Our analysis introduces two methodological innovations. First, we distinguish between costs that stadiums internalize (crowd management, brand damage, experience degradation affecting other customers) and true social externalities (neighborhood crime, public health costs). Second, we model heterogeneous consumer preferences, which not only improves calibration but reveals that price policies induce selection effects altering crowd composition. The heterogeneous model predicts an optimal beer price of \$12.51 compared to the observed \$12.50, validating that stadiums approximately profit-maximize while accounting for fan heterogeneity.
+Monte Carlo analysis over 1,000 parameter combinations confirms robustness: tickets rise in >95% of scenarios, consumption increases in >95%, and stadium profit falls in >99%. The model validates against observed prices: predicted optimal beer price is \$12.51 versus \$12.50 observed.
 
-The consumption increase operates through two channels: an **intensive margin** (each drinker consumes more at lower prices) and an **extensive margin** (attendance changes and crowd composition shifts). We decompose these effects quantitatively: the intensive margin accounts for approximately 116% of the consumption increase, while the extensive margin contributes -16% (attendance falls, partially offsetting intensive gains). Crucially, the attendance decline is driven by non-drinkers (-11.5%) more than drinkers (-6.3%), because drinkers derive additional value from cheaper beer that partially offsets the ticket increase. This selection effect shifts crowd composition from 40% to 41.4% drinkers—a mechanism invisible in representative agent models.
+This is a simulation study with calibrated parameters; we lack transaction data. The heterogeneous framework generates testable predictions: under price ceilings, drinker share of attendance should increase, and per-fan consumption should rise more than proportionally to the price decrease.
 
-This is a simulation study using calibrated parameters rather than estimated ones; we lack Yankees-specific transaction data. However, the heterogeneous consumer framework provides more realistic predictions than representative consumer models and generates novel, testable insights about selection effects in stadium alcohol regulation. We provide extensive Monte Carlo robustness checks demonstrating that qualitative conclusions hold across wide parameter ranges.
+**JEL Codes**: H23 (Externalities), L83 (Sports), D42 (Monopoly)
 
-**JEL Codes**: H23 (Externalities), L83 (Sports), D62 (Externalities)
-
-**Keywords**: price controls, sports economics, alcohol externalities, complementary goods, stadium pricing, selection effects, heterogeneous consumers
+**Keywords**: price controls, sports economics, complementary goods, selection effects, heterogeneous consumers
 
 # Introduction
 
@@ -202,7 +200,7 @@ Our analysis focuses on Yankee Stadium but uses parameters calibrated to MLB ave
 
 This paper analyzes beer price controls at Yankee Stadium using a heterogeneous consumer model. Our main findings are:
 
-1. **Price ceilings backfire**: A \$7 beer ceiling causes ticket prices to rise and total consumption to nearly double.
+1. **Consumption increases under ceiling**: A \$7 beer ceiling causes ticket prices to rise and total consumption to nearly double.
 
 2. **Selection effects matter**: Crowd composition shifts toward drinkers, amplifying consumption increases.
 

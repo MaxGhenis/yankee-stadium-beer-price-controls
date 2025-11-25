@@ -128,7 +128,7 @@ Our quantitative results confirm {cite}`leisten2025beer` theoretical prediction:
 1. **Trade-offs are complex**: Ceilings help consumers and slightly improve total welfare, BUT they drastically increase negative externalities (crime/health).
 2. **Pigouvian taxation is likely superior**: It targets the externality directly.
 3. **Stadium incentives**: The stadium loses profit (-9.0%), giving them incentive to fight this policy.
-4. **Unintended consequences**: Ticket prices rising 9.7% is a significant side effect that policymakers must anticipate.
+4. **General equilibrium response**: Ticket prices rising 9.7% is a significant adjustment that policymakers must anticipate.
 
 ```{bibliography}
 :filter: docname in docnames

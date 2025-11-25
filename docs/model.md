@@ -49,7 +49,7 @@ $$A_{total} = \sum_i share_i \cdot A_i(P_T, P_B)$$
 - Aggregate: $0.6 \times 0 + 0.4 \times 2.5 = 1.0$ beers/fan average ✓
 
 **Why heterogeneity matters:**
-1. **Better calibration**: Predicts optimal = \$13.00 (vs \$12.50 observed, error: \$0.50)
+1. **Better calibration**: Predicts optimal = \$12.51 (vs \$12.50 observed, error: 0.08%)
 2. **Selection effects**: Price changes affect WHO attends, not just how many
 3. **Distributional analysis**: Shows which consumers win/lose from policies
 
@@ -111,6 +111,4 @@ Stadium maximizes $PS$ (profit) which already accounts for internalized costs.
 
 Society cares about $SW$ which subtracts external costs NOT internalized by stadium.
 
-**Gap:** $E_{external} - t_{current} = \text{\$}4.00 - \text{\$}1.09 = \text{\$}2.91$ per beer
-
-This is the Pigouvian tax gap.
+Only the uninternalized external costs (\$4.00/beer for crime and health) represent a potential market failure.
