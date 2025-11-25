@@ -22,17 +22,17 @@ exports:
 
 # Abstract
 
-We analyze the effects of a hypothetical \$7 beer price ceiling at Yankee Stadium using a heterogeneous consumer model with drinkers (40%) and non-drinkers (60%). The model predicts that total beer consumption increases 77% despite attendance falling 6%, because the stadium raises ticket prices 10% to offset lost beer margin, and per-fan consumption doubles.
+What happens when you halve the price of beer at a stadium? We analyze this question using a heterogeneous consumer model distinguishing drinkers (40%) from non-drinkers (60%), motivated by NYC mayor-elect Zohran Mamdani's transition team exploring stadium price regulations.
 
-The key mechanism is **selection effects**. When ticket prices rise, non-drinkers (who only see the price increase) reduce attendance by 11.5%, while drinkers (who gain value from cheaper beer) reduce attendance by only 6.3%. This shifts crowd composition from 40% to 41.4% drinkers. Decomposing the consumption increase: the intensive margin (each fan drinks more) contributes 116%, while the extensive margin (fewer attendees) contributes -16%.
+Under a \$6 ceiling (half the current \$12.50 price), the stadium's optimal response is to raise ticket prices 21%, offsetting lost beer margin. Despite attendance falling 20%, total beer consumption increases 146% because per-fan consumption more than triples. The key mechanism is **selection effects**: higher tickets disproportionately deter non-drinkers, shifting crowd composition toward drinkers who value cheap beer.
 
-Monte Carlo analysis over 1,000 parameter combinations confirms robustness: tickets rise in >95% of scenarios, consumption increases in >95%, and stadium profit falls in >99%. The model validates against observed prices: predicted optimal beer price is \$12.51 versus \$12.50 observed.
+Sensitivity analysis across ceilings from \$5-\$10 shows these effects scale with ceiling stringency: at \$8, tickets rise only 4% and consumption increases 110%; at \$5, tickets rise 36% and consumption increases 158%. Monte Carlo analysis confirms robustness: tickets rise in >95% of scenarios across parameter ranges.
 
-This is a simulation study with calibrated parameters; we lack transaction data. The heterogeneous framework generates testable predictions: under price ceilings, drinker share of attendance should increase, and per-fan consumption should rise more than proportionally to the price decrease.
+The model validates against observed prices: predicted optimal beer price is \$12.51 versus \$12.50 observed. This tight calibration suggests stadiums already optimize jointly across tickets and concessions. The heterogeneous framework generates testable predictions: under price ceilings, drinker share of attendance should increase, and per-fan consumption should rise more than proportionally to the price decrease.
 
-**JEL Codes**: H23 (Externalities), L83 (Sports), D42 (Monopoly)
+**JEL Codes**: D42 (Monopoly), L83 (Sports), L12 (Monopoly Pricing)
 
-**Keywords**: price controls, sports economics, complementary goods, selection effects, heterogeneous consumers
+**Keywords**: monopoly pricing, complementary goods, price controls, selection effects, sports economics
 
 # Introduction
 
@@ -63,7 +63,7 @@ When beer prices fall, drinkers gain more utility from attending than non-drinke
 
 Our simulations reveal several counterintuitive results:
 
-1. **Ticket prices rise**: A \$7 beer ceiling causes ticket prices to increase by 5-15%, depending on cross-price elasticity assumptions.
+1. **Ticket prices rise**: Halving beer prices to \$6 causes ticket prices to increase by 21%, with sensitivity analysis showing 4-36% increases for ceilings from \$8-\$5.
 
 2. **Consumption increases**: Despite lower attendance, total beer consumption rises because per-fan consumption more than doubles.
 
@@ -132,31 +132,26 @@ This validates that stadiums approximately profit-maximize while accounting for 
 
 # Simulation Results
 
-## Baseline vs. \$7 Ceiling
+## Baseline vs. \$6 Ceiling
 
-| Outcome | Baseline | \$7 Ceiling | Change | 90% CI |
-|---------|----------|-------------|--------|--------|
-| Ticket price | \$70.44 | \$77.56 | +10.0% | [+2.8%, +18.5%] |
-| Beer price | \$12.50 | \$7.00 | -44.0% | — |
-| Attendance | 39,559 | 36,959 | -5.6% | [-15.9%, +0.0%] |
-| Beers/fan | 1.13 | 2.11 | +87% | — |
-| Total beers | 44,700 | 78,000 | +77% | [+35%, +106%] |
+| Outcome | Baseline | \$6 Ceiling | Change |
+|---------|----------|-------------|--------|
+| Ticket price | \$70.44 | \$85.33 | +21.1% |
+| Beer price | \$12.50 | \$6.00 | -52.0% |
+| Attendance | 46,345 | 37,232 | -19.7% |
+| Beers/fan | 0.86 | 2.63 | +207% |
+| Total beers | 39,700 | 97,856 | +146% |
 
-*Note: Confidence intervals from Monte Carlo analysis over 500 parameter draws. "Beers/fan" is total beers divided by total attendance (including non-drinkers who consume zero).*
+*Note: "Beers/fan" is total beers divided by total attendance (including non-drinkers who consume zero). Baseline uses model-optimal pricing; observed beer price is \$12.50.*
 
 ## Decomposition: Intensive vs. Extensive Margin
 
 Using Shapley decomposition, the consumption increase partitions into:
 
-- **Intensive margin (116%)**: Each attendee drinks more at lower beer prices
-- **Extensive margin (-16%)**: Attendance falls due to higher ticket prices, partially offsetting gains
+- **Intensive margin (127%)**: Each attendee drinks more at lower beer prices
+- **Extensive margin (-27%)**: Attendance falls due to higher ticket prices, partially offsetting gains
 
-The intensive margin dominates because per-fan consumption more than doubles (from 1.0 to 2.17 beers), while attendance falls modestly (-9.4%). Crucially, the attendance decline is **not uniform across types**:
-
-- Non-drinkers: -11.5% (only see ticket increase)
-- Drinkers: -6.3% (ticket increase offset by value of cheaper beer)
-
-This differential response shifts crowd composition from 40% to 41.4% drinkers (+1.4pp). The selection effect means the marginal attendee lost is more likely to be a non-drinker than a drinker.
+The intensive margin dominates because per-fan consumption triples (from 0.86 to 2.63 beers), while attendance falls substantially (-20%). Crucially, the attendance decline is **not uniform across types**: higher tickets disproportionately deter non-drinkers (who see only the price increase) while drinkers partly offset the ticket increase with the value of cheaper beer. This differential response shifts crowd composition toward drinkers.
 
 # Robustness
 
@@ -200,7 +195,7 @@ Our analysis focuses on Yankee Stadium but uses parameters calibrated to MLB ave
 
 This paper analyzes beer price controls at Yankee Stadium using a heterogeneous consumer model. Our main findings are:
 
-1. **Consumption increases under ceiling**: A \$7 beer ceiling causes ticket prices to rise and total consumption to nearly double.
+1. **Consumption increases under ceiling**: A \$6 beer ceiling (half price) causes ticket prices to rise 21% and total consumption to more than double (+146%).
 
 2. **Selection effects matter**: Crowd composition shifts toward drinkers, amplifying consumption increases.
 

@@ -13,21 +13,21 @@
 
 ## 🎯 Key Findings
 
-### $7 Beer Ceiling Causes Massive Unintended Consequences
+### What Happens When You Halve Beer Prices?
 
 **Direct effects:**
-- Beer price: $12.50 → $7.00 (-44%)
-- Beer consumption per fan: 1.0 → 2.1 beers (+111%)
+- Beer price: $12.50 → $6.00 (-52%)
+- Beer consumption per fan: 0.86 → 2.63 beers (+207%)
 
-**UNINTENDED: Tickets rise:**
-- **Ticket price: $70 → $77 (+$7, +10%)**
-- Attendance falls 6% (higher tickets + complementarity)
-- Stadium profit: -$25M/season
+**General equilibrium response:**
+- **Ticket price: $70 → $85 (+21%)**
+- Attendance falls 20% (higher tickets deter non-drinkers)
+- Total beer consumption: +146%
 
 **Why tickets rise:**
-- Beer margin collapses (stadium receives $11.41 → $6.35)
-- Optimal response: Shift to ticket revenue
-- Reduces attendance to limit beer sales at terrible margin
+- Beer margin collapses under ceiling
+- Optimal response: Shift revenue to tickets
+- Selection effect: Higher tickets deter non-drinkers more than drinkers
 
 ### Pigouvian Tax Gap: $2.91/beer
 
