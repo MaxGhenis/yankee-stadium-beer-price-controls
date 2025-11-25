@@ -14,10 +14,12 @@ We simulate the effects of a \$7 beer price ceiling and document significant uni
 
 Our analysis introduces two methodological innovations. First, we distinguish between costs that stadiums internalize (crowd management, brand damage, experience degradation affecting other customers) and true social externalities (neighborhood crime, public health costs). Second, we model heterogeneous consumer preferences, which not only improves calibration but reveals that price policies induce selection effects altering crowd composition. The heterogeneous model predicts an optimal beer price of \$12.51 compared to the observed \$12.50, validating that stadiums approximately profit-maximize while accounting for fan heterogeneity.
 
-Current alcohol taxes (\$1.09 per beer) cover only 27% of estimated external costs (\$4.00 per beer), suggesting an optimal additional Pigouvian tax of \$2.91 per beer. This policy would raise approximately \$11.0 million annually for New York City while reducing consumption and improving allocative efficiency relative to quantity-based price controls. We provide extensive robustness checks and sensitivity analysis. While we lack Yankees-specific transaction data, our heterogeneous consumer framework provides more realistic predictions than representative consumer models and generates novel insights about selection effects in stadium alcohol regulation.
+The consumption increase operates through two channels: an **intensive margin** (each drinker consumes more at lower prices) and an **extensive margin** (crowd composition shifts toward drinkers as ticket prices rise). We decompose these effects and show that selection effects account for a substantial portion of the total consumption change—a mechanism absent from representative agent models.
 
-**JEL Codes**: H23 (Externalities), L83 (Sports), D62 (Externalities), H21 (Taxation)
+This is a simulation study using calibrated parameters rather than estimated ones; we lack Yankees-specific transaction data. However, the heterogeneous consumer framework provides more realistic predictions than representative consumer models and generates novel, testable insights about selection effects in stadium alcohol regulation. We provide extensive Monte Carlo robustness checks demonstrating that qualitative conclusions hold across wide parameter ranges.
 
-**Keywords**: price controls, Pigouvian taxation, sports economics, alcohol externalities, complementary goods, stadium pricing
+**JEL Codes**: H23 (Externalities), L83 (Sports), D62 (Externalities)
+
+**Keywords**: price controls, sports economics, alcohol externalities, complementary goods, stadium pricing, selection effects, heterogeneous consumers
 
 ---
