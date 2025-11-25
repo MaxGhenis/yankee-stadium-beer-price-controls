@@ -10,10 +10,10 @@
 **Purpose:** An economic research project and simulation engine analyzing the impact of beer price controls (ceilings, floors) at Yankee Stadium. It uses a rigorous economic model to simulate consumer behavior, stadium revenue maximization, and social welfare outcomes (including externalities like crime and health costs).
 
 **Key Findings:**
-*   **Unintended Consequences:** A $7 beer ceiling causes ticket prices to rise by ~${{ ceiling7_ticket_increase }} (+{{ ceiling7_ticket_pct }}%) as the stadium shifts revenue capture to tickets. Attendance falls ~{{ ceiling7_attendance_pct }}%.
-*   **Pigouvian Tax Gap:** Current taxes ($1.09) are significantly lower than external costs ($4.00), suggesting an optimal additional tax of ~$2.91.
+*   **General Equilibrium Response:** A $6 beer ceiling (half price) causes ticket prices to rise ~21% as the stadium shifts revenue capture to tickets. Attendance falls ~20%.
+*   **Selection Effects:** Higher tickets disproportionately deter non-drinkers, shifting crowd composition toward drinkers. Per-fan consumption triples (+207%).
+*   **Consumption Paradox:** Despite lower attendance, total beer consumption increases 146% because per-fan consumption more than offsets attendance decline.
 *   **Internalized Costs:** The model distinguishes between costs the stadium pays (security, brand damage) and costs society pays (crime, public health).
-*   **Welfare Paradox:** A $7 ceiling actually *increases* net social welfare slightly (+{{ ceiling7_welfare_pct }}%) because consumer surplus gains outweigh stadium profit losses and externality increases ("Second Best" theory), but it drastically increases negative externalities (+{{ ceiling7_externality_pct }}%).
 
 ## Technical Stack
 
@@ -124,7 +124,7 @@ The `BeerPriceControlSimulator` class runs policy scenarios:
 **Scenarios**:
 1. Baseline (current profit-maximizing prices)
 2. Current observed prices (for comparison)
-3. Price ceiling (e.g., $7-8 max beer price)
+3. Price ceiling (e.g., $6 = half price)
 4. Price floor (e.g., $15 min beer price)
 5. Beer ban (zero sales)
 6. Social optimum (maximize social welfare, not just profit)
