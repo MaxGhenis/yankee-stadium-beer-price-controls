@@ -65,7 +65,7 @@ As monopolist, stadium internalizes these because they affect future profits.
 
 Heterogeneous model achieves near-perfect match to all empirical targets:
 - ✓ **Optimal beer = \\$12.51** (observed: \\$12.50, error: \\$0.01)
-- ✓ **60% non-drinkers, 40% drinkers** (Lenk et al. 2010)
+- ✓ **60% non-drinkers, 40% drinkers** (Wolfe et al. 1998)
 - ✓ **Drinkers consume 2.50 beers** at \\$12.50
 - ✓ **Aggregate: 1.00 beers/fan** average
 - ✓ **Attendance ~85%** of capacity at baseline

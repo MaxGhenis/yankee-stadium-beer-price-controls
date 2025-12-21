@@ -16,7 +16,7 @@ Key papers cited in this analysis:
 - Manning et al. (1991): External costs $0.48-$1.19/drink (1986 dollars)
 - Carpenter & Dobkin (2015): Crime elasticities (assault, rape)
 - Rees & Schnepel (2009): Football games and crime
-- Lenk et al. (2010): Stadium alcohol policies
+- Lenk et al. (2010): Stadium alcohol policies (not consumption rates)
 
 ### Tax Policy
 - Parry et al. (2009): Fiscal and externality rationales
@@ -28,7 +28,7 @@ Key papers cited in this analysis:
 - **Prices**: Team Marketing Report, StubHub, industry sources (2025)
 - **Taxes**: TTB, NY Dept of Taxation, NYC Finance
 - **Attendance**: MLB official statistics
-- **Consumption**: Lenk et al. (2010) survey data
+- **Consumption**: Wolfe et al. (1998) - 41% tested positive for alcohol
 
 ## Complete Bibliography
 

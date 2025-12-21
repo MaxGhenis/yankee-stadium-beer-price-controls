@@ -206,7 +206,7 @@ $2.70/beer) is most efficient
 **Literature**:
 - 30+ academic papers
 - Noll (1974), Scully (1989): Ticket elasticities
-- Lenk et al. (2010): Consumption data
+- Wolfe et al. (1998): Consumption data (41% tested positive)
 - Carpenter & Dobkin (2015): Crime externalities
 - Deaton & Muellbauer (1980): Demand system framework
 
