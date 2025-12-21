@@ -119,6 +119,8 @@ $$CS = \sum_i share_i \cdot A_i(P_T, P_B) \cdot \left[ CS_{ticket,i} + CS_{beer,
 
 The model computes surplus at observed prices and compares across policy scenarios. Since we use ordinal utility, only *changes* in consumer surplus are meaningful for welfare comparisons.
 
+**Implementation note:** The code implementation (`src/model.py`) uses a constant-elasticity approximation for computational efficiency, with adjustments for consumer heterogeneity. For policy comparisons, the qualitative conclusions (consumption increases, welfare trade-offs) are robust to the choice of surplus formula, though exact magnitudes should be interpreted with caution.
+
 ### External Costs
 
 $$E_{external} = (\text{\$}2.50 + \text{\$}1.50) \cdot Q = \text{\$}4.00 \cdot Q$$

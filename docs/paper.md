@@ -52,7 +52,7 @@ Our model captures this through a cross-price elasticity parameter: beer prices 
 
 A key limitation of representative agent models is that they cannot capture selection effects. When prices change, not only does each consumer adjust quantity, but the composition of consumers changes as well.
 
-We model two consumer types based on Lenk et al. (2010):
+We model two consumer types based on Wolfe et al. (1998):
 
 - **Non-drinkers (60%)**: Low beer preference, attend primarily for baseball
 - **Drinkers (40%)**: High beer preference, value cheap stadium beer
@@ -118,7 +118,7 @@ We calibrate to match:
 
 1. **Observed beer price**: \$12.50
 2. **Observed ticket price**: \$80 (average)
-3. **Drinker share**: 40% (Lenk et al. 2010)
+3. **Drinker share**: 40% (Wolfe et al. 1998)
 4. **Beers per fan**: 1.0 average (0 for non-drinkers, 2.5 for drinkers)
 
 ## Calibration Results
@@ -185,7 +185,7 @@ Our analysis focuses on Yankee Stadium but uses parameters calibrated to MLB ave
 
 **Venue characteristics**: Yankee Stadium's 46,537 capacity and premium New York market may yield different price sensitivities than smaller-market teams. Fenway Park (37,755 seats) or teams in lower-income markets might show stronger attendance responses to ticket price increases.
 
-**Sport-specific factors**: The 40% drinker share from Lenk et al. (2010) is MLB-specific. NFL games (higher per-game stakes, tailgating culture) likely have different drinking patterns. Concert venues, where alcohol may be more central to the experience, could show stronger complementarity effects.
+**Sport-specific factors**: The 40% drinker share from Wolfe et al. (1998) is MLB-specific. NFL games (higher per-game stakes, tailgating culture) likely have different drinking patterns. Concert venues, where alcohol may be more central to the experience, could show stronger complementarity effects.
 
 **Policy environment**: New York's tax structure (8.875% sales tax) is higher than many states. Stadiums in Texas (no state income tax, lower sales taxes) would see different net-of-tax margins, potentially affecting optimal pricing responses.
 
@@ -222,6 +222,6 @@ The repository includes:
 - Leisten, M. (2025). Economic analysis of beer price controls at Yankee Stadium. Unpublished working paper. Available at: https://x.com/LeistenEcon/status/1990150035615494239
 - Lenk, K. M., Toomey, T. L., & Erickson, D. J. (2010). Alcohol control policies and practices at professional sports stadiums. *Public Health Reports*, 125(5), 665-673.
 - Klick, J., & MacDonald, J. (2021). Sobering up after the seventh inning: Alcohol and crime around the ballpark. *Journal of Quantitative Criminology*, 37, 891-912.
-- Semafor Staff. (2024). Economists spar over Lina Khan's plan to cut stadium beer prices. *Semafor*. https://www.semafor.com/article/11/18/2024/economists-split-over-lina-khans-plan-to-cut-stadium-beer-prices
+- Semafor Staff. (2025). Economists spar over Lina Khan's plan to cut stadium beer prices. *Semafor*. https://www.semafor.com/article/11/18/2025/economists-split-over-lina-khans-plan-to-cut-stadium-beer-prices
 - Telser, L. G. (1979). A theory of monopoly of complementary goods. *The Journal of Business*, 52(2), 211-230.
 - Wolfe, J., Martinez, R., & Scott, W. A. (1998). Baseball and beer: An analysis of alcohol consumption patterns among male spectators at major-league sporting events. *Annals of Emergency Medicine*, 31(5), 629-632.
