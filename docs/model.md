@@ -13,7 +13,7 @@ This analysis uses a **partial equilibrium model with heterogeneous consumers**:
 
 ### Heterogeneous Preferences
 
-Following {cite}`lenk2010alcohol`, who document that approximately 40% of stadium attendees consume alcohol, we model two distinct consumer types. Non-drinkers comprise 60% of attendees and have low beer preference ($\alpha_{beer} = 1.0$) but high value for the stadium experience ($\alpha_{experience} = 3.0$). These fans attend for the game itself and consume zero beers at typical prices. Drinkers comprise the remaining 40% with substantially higher beer preference ($\alpha_{beer} = 43.75$) calibrated to match observed consumption of 2.5 beers at \$12.50. Their stadium experience value is moderate ($\alpha_{experience} = 2.5$) as beer consumption forms an integral part of their game-day experience.
+Following {cite}`wolfe1998baseball`, who found that 41% of male stadium attendees tested positive for alcohol at MLB games, we model two distinct consumer types. Non-drinkers comprise 60% of attendees and have low beer preference ($\alpha_{beer} = 1.0$) but high value for the stadium experience ($\alpha_{experience} = 3.0$). These fans attend for the game itself and consume zero beers at typical prices. Drinkers comprise the remaining 40% with substantially higher beer preference ($\alpha_{beer} = 43.75$) calibrated to match observed consumption of 2.5 beers at \$12.50. Their stadium experience value is moderate ($\alpha_{experience} = 2.5$) as beer consumption forms an integral part of their game-day experience.
 
 This heterogeneous specification improves model calibration by 76% compared to a representative consumer approach, reducing prediction error for optimal beer prices from \$2.09 to \$0.50. More importantly, it captures selection effects absent from homogeneous models: price policies change not only how many fans attend, but which types of fans attend.
 
@@ -101,9 +101,29 @@ Where:
 - $PS$ = producer surplus (stadium profit)
 - $E_{external}$ = external costs (crime + health)
 
-External costs:
+### Consumer Surplus Derivation
+
+For each consumer type $i$, consumer surplus is the integral of willingness-to-pay above market price. With semi-log demand, the Marshallian consumer surplus is:
+
+$$CS_i = \int_{P}^{\infty} Q_i(p) dp$$
+
+For our semi-log specification where $Q_i(P) = Q_0 \cdot e^{-\lambda_P (P - P_0)}$, this integrates to:
+
+$$CS_i = \frac{Q_i(P)}{\lambda_P}$$
+
+The intuition: $1/\lambda_P$ measures price sensitivity, so surplus is current quantity divided by that sensitivity. More inelastic demand (smaller $\lambda_P$) implies higher surplus per unit.
+
+**Aggregate consumer surplus:**
+
+$$CS = \sum_i share_i \cdot A_i(P_T, P_B) \cdot \left[ CS_{ticket,i} + CS_{beer,i} \right]$$
+
+The model computes surplus at observed prices and compares across policy scenarios. Since we use ordinal utility, only *changes* in consumer surplus are meaningful for welfare comparisons.
+
+### External Costs
 
 $$E_{external} = (\text{\$}2.50 + \text{\$}1.50) \cdot Q = \text{\$}4.00 \cdot Q$$
+
+See Background section for detailed derivation of the \\$2.50 crime and \\$1.50 health externality estimates.
 
 ### Key Insight
 
@@ -111,4 +131,4 @@ Stadium maximizes $PS$ (profit) which already accounts for internalized costs.
 
 Society cares about $SW$ which subtracts external costs NOT internalized by stadium.
 
-Only the uninternalized external costs (\$4.00/beer for crime and health) represent a potential market failure.
+Only the uninternalized external costs (\$4.00/beer for crime and health) represent a potential market failure. For standard textbook treatment of sports economics pricing, see {cite}`leeds2022economics`.

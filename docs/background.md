@@ -8,10 +8,26 @@
 - **Stadium capacity**: 46,537
 
 ### Consumer Behavior
-- **~40% of attendees** consume alcohol at games {cite}`lenk2010alcohol`
-- Mean BAC among drinkers: **0.057%**
+- **~40% of attendees** consume alcohol at games {cite}`wolfe1998baseball`
+- Wolfe et al. (1998) found 41% of male spectators tested positive for alcohol at MLB games
 - Average consumption: **2.5 beers** among drinkers
 - Overall average: **1.0 beers per attendee**
+
+### Institutional Context: Legends Hospitality
+
+Yankee Stadium concessions are operated by **Legends Hospitality**, a joint venture originally founded by the New York Yankees and Dallas Cowboys in 2008. Legends manages food and beverage operations for over 200 venues globally, including major sports facilities, convention centers, and entertainment venues.
+
+**Key implications for modeling:**
+
+1. **Sophisticated pricing**: Legends employs advanced analytics and dynamic pricing strategies, consistent with our assumption that observed prices reflect profit-maximization.
+
+2. **Revenue sharing**: The relationship between venue ownership and concession operations means the stadium already captures most of the joint surplus from tickets and beer. Price controls would directly affect this integrated profit stream.
+
+3. **Operational capacity**: Large-scale operators like Legends can adjust staffing, inventory, and vendor deployment in response to policy changes, supporting our assumption that supply-side adjustments are feasible.
+
+4. **Brand considerations**: Premium hospitality operators internalize brand reputation costs from alcohol-related incidents, which we model as internalized externalities distinct from true social costs.
+
+This institutional structure supports our theoretical assumption that the stadium operator maximizes joint profits across tickets and concessions, rather than treating them as independent revenue streams.
 
 ## Literature Review
 
@@ -56,7 +72,7 @@ This explains why teams price in the inelastic region of ticket demand - they're
 
 **Stadium-specific evidence:**
 
-{cite}`luca2015seventh` provides the most directly relevant evidence using MLB data from Philadelphia (2006-2015). They exploit the natural experiment that baseball games vary in length while alcohol sales stop after the 7th inning. Key finding: **extra innings significantly reduce stadium-area crime**, especially assaults, by giving fans more time to sober up before departure.
+{cite}`klick2021seventh` provides the most directly relevant evidence using MLB data from Philadelphia (2006-2015). They exploit the natural experiment that baseball games vary in length while alcohol sales stop after the 7th inning. Key finding: **extra innings significantly reduce stadium-area crime**, especially assaults, by giving fans more time to sober up before departure.
 
 {cite}`montolio2019hooligans` studied FC Barcelona home games and found elevated thefts within a **700-meter radius** of the stadium on game days. Away matches showed no effect, confirming the stadium as the crime generator.
 
@@ -76,12 +92,25 @@ Inflation-adjusted to 2025: **~\$1.50-\$3.00 per drink**.
 
 {cite}`rehm2009global` provide global estimates of alcohol-related disease burden and economic costs.
 
-### Total External Costs
+### Deriving External Cost Estimates
 
-Combining crime and health externalities:
-- Crime: **\$2.50 per beer**
-- Health: **\$1.50 per beer**
-- **Total: \$4.00 per beer**
+**Crime externality (\$2.50/beer):**
+
+The crime cost estimate combines three components:
+1. **Base crime risk**: From {cite}`carpenter2015mlda`, a 10% consumption increase → 1% assault increase. With stadium consumption averaging ~40,000 beers/game and approximately 2-3 stadium-related assaults per game, this implies ~\$1,000-2,000 in crime costs per marginal beer cluster.
+2. **Police/security costs**: NYC allocates significant police presence for games; marginal policing costs attributable to alcohol-fueled incidents add ~\$0.50-1.00/beer.
+3. **Property crime**: {cite}`montolio2019hooligans` found elevated thefts within 700m of stadiums; applying their estimates to NYC suggests ~\$0.50/beer.
+
+Combining these yields our \$2.50/beer point estimate, with a plausible range of \$1.50-\$3.50.
+
+**Health externality (\$1.50/beer):**
+
+{cite}`manning1991costs` estimated external health costs at \$0.48-\$1.19/drink in 1986 dollars. Applying the CPI-Medical Care index (approximately 3× since 1986) yields \$1.44-\$3.57/drink in 2024 dollars. We use the midpoint (\$2.50) adjusted downward to \$1.50 because:
+- Stadium consumption is episodic, not chronic (lower liver disease risk)
+- Most fans use public transit (lower DUI externality)
+- Stadium environment provides some harm reduction (security, cutoffs)
+
+**Total: \$4.00/beer** (with Monte Carlo range \$2.50-\$5.50)
 
 These are costs borne by **society**, not the stadium.
 

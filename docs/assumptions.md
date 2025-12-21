@@ -9,8 +9,8 @@
 - General alcohol: -0.79 to -1.14 (not stadium-specific)
 
 **Consumption Rates:**
-- 40% of fans drink alcohol {cite}`lenk2010alcohol`
-- Mean BAC: 0.057% among drinkers {cite}`lenk2010alcohol`
+- 41% of male fans tested positive for alcohol {cite}`wolfe1998baseball`
+- We use 40% as a round estimate for both genders
 
 **Externalities:**
 - Crime: 10% alcohol ↑ → 1% assault ↑, 2.9% rape ↑ {cite}`carpenter2015mlda`

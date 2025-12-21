@@ -26,7 +26,7 @@ What happens when you halve the price of beer at a stadium? We analyze this ques
 
 Under a \$6 ceiling (half the current \$12.50 price), the stadium's optimal response is to raise ticket prices 21%, offsetting lost beer margin. Despite attendance falling 20%, total beer consumption increases 146% because per-fan consumption more than triples. The key mechanism is **selection effects**: higher tickets disproportionately deter non-drinkers, shifting crowd composition toward drinkers who value cheap beer.
 
-Sensitivity analysis across ceilings from \$5-\$10 shows these effects scale with ceiling stringency: at \$8, tickets rise only 4% and consumption increases 110%; at \$5, tickets rise 36% and consumption increases 158%. Monte Carlo analysis confirms robustness: tickets rise in >95% of scenarios across parameter ranges.
+Sensitivity analysis across ceilings from \$5-\$10 shows these effects scale with ceiling stringency: at \$8, tickets rise only 4% and consumption increases 110%; at \$5, tickets rise 36% and consumption increases 158%. Monte Carlo analysis confirms robustness across key uncertain parameters (cross-price elasticity 0.0-0.3, drinker share 0.30-0.50, externality costs \$2.50-\$5.50/beer): tickets rise in >95% of scenarios.
 
 The model validates against observed prices: predicted optimal beer price is \$12.51 versus \$12.50 observed. This tight calibration suggests stadiums already optimize jointly across tickets and concessions. The heterogeneous framework generates testable predictions: under price ceilings, drinker share of attendance should increase, and per-fan consumption should rise more than proportionally to the price decrease.
 
@@ -36,7 +36,7 @@ The model validates against observed prices: predicted optimal beer price is \$1
 
 # Introduction
 
-In November 2024, New York City mayor-elect Zohran Mamdani's transition team, co-chaired by former FTC chair Lina Khan, began exploring the use of "unconscionable pricing" statutes to regulate stadium concession prices {cite}`semafor2024khan`. This proposal raises fundamental questions in public economics: How do price controls on complementary goods affect market outcomes when a monopolist controls both products? What are the welfare implications when consumers are heterogeneous?
+In November 2025, New York City mayor-elect Zohran Mamdani's transition team, co-chaired by former FTC chair Lina Khan, began exploring the use of "unconscionable pricing" statutes to regulate stadium concession prices {cite}`semafor2025khan`. This proposal raises fundamental questions in public economics: How do price controls on complementary goods affect market outcomes when a monopolist controls both products? What are the welfare implications when consumers are heterogeneous?
 
 This paper develops a heterogeneous consumer model to analyze beer price controls at sports venues. We make two key contributions. First, we distinguish between costs that stadiums already internalize through their pricing decisions and true social externalities that justify policy intervention. Second, we model consumer heterogeneity explicitly, allowing us to capture selection effects that alter crowd composition under different policies.
 
@@ -221,6 +221,7 @@ The repository includes:
 - Krautmann, A. C., & Berri, D. J. (2007). Can we find it at the concessions? Understanding price elasticity in professional sports. *Journal of Sports Economics*, 8(2), 183-191.
 - Leisten, M. (2025). Economic analysis of beer price controls at Yankee Stadium. Unpublished working paper. Available at: https://x.com/LeistenEcon/status/1990150035615494239
 - Lenk, K. M., Toomey, T. L., & Erickson, D. J. (2010). Alcohol control policies and practices at professional sports stadiums. *Public Health Reports*, 125(5), 665-673.
-- Luca, M., & Sood, N. (2018). Sobering up after the seventh inning: Alcohol and crime around the ballpark. *Journal of Policy Analysis and Management*, 37(4), 833-860.
+- Klick, J., & MacDonald, J. (2021). Sobering up after the seventh inning: Alcohol and crime around the ballpark. *Journal of Quantitative Criminology*, 37, 891-912.
 - Semafor Staff. (2024). Economists spar over Lina Khan's plan to cut stadium beer prices. *Semafor*. https://www.semafor.com/article/11/18/2024/economists-split-over-lina-khans-plan-to-cut-stadium-beer-prices
 - Telser, L. G. (1979). A theory of monopoly of complementary goods. *The Journal of Business*, 52(2), 211-230.
+- Wolfe, J., Martinez, R., & Scott, W. A. (1998). Baseball and beer: An analysis of alcohol consumption patterns among male spectators at major-league sporting events. *Annals of Emergency Medicine*, 31(5), 629-632.

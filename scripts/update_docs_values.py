@@ -137,63 +137,11 @@ def generate_values():
             'ceiling7_social_welfare_change_annual': f"{(welfare_7['social_welfare']-welfare_base['social_welfare'])*games/1e6:.1f}",
         
             'ceiling7_profit_loss_annual_M': f"{(ceiling7_profit_raw-baseline_profit_raw)*games/1e6 * -1:.0f}", # Absolute positive value for loss
-        
-        
-    }
 
-    return {
-        # Baseline
-        'baseline_ticket': f"{baseline_ticket:.2f}",
-        'baseline_beer': f"{baseline_beer:.2f}",
-        'baseline_attendance': f"{baseline['attendance']:,.0f}",
-        'baseline_beers_per_fan': f"{baseline['beers_per_fan']:.2f}",
-        'baseline_profit_season': f"{baseline_profit_raw*games/1e6:.1f}",
-        'baseline_total_beers': f"{baseline_total_beers_raw:,.0f}",
-        'baseline_profit_season_raw': f"{baseline_profit_raw}", # Raw for calculations in template
-
-        # $7 ceiling
-        'ceiling7_ticket': f"{ceiling_7_ticket:.2f}",
-        'ceiling7_ticket_increase': f"{(ceiling_7_ticket - baseline_ticket):.2f}", # Absolute increase
-        'ceiling7_ticket_pct': f"{100*(ceiling_7_ticket/baseline_ticket-1):.1f}",
-        'ceiling7_attendance': f"{ceiling_7['attendance']:,.0f}",
-        'ceiling7_attendance_change': f"{(ceiling_7['attendance'] - baseline['attendance']):,.0f}",
-        'ceiling7_attendance_pct': f"{100*(ceiling_7['attendance']/baseline['attendance']-1):.1f}",
-        'ceiling7_beers_per_fan': f"{ceiling_7['beers_per_fan']:.2f}",
-        'ceiling7_beers_per_fan_pct': f"{100*(ceiling_7['beers_per_fan']/baseline['beers_per_fan']-1):.1f}",
-        'ceiling7_total_beers': f"{ceiling7_total_beers_raw:,.0f}",
-        'ceiling7_total_beers_change': f"{(ceiling7_total_beers_raw - baseline_total_beers_raw):,.0f}",
-        'ceiling7_total_beers_pct': f"{100*(ceiling7_total_beers_raw/baseline_total_beers_raw-1):.1f}",
-        'ceiling7_profit': f"{ceiling7_profit_raw:,.0f}",
-        'ceiling7_profit_change': f"{(ceiling7_profit_raw-baseline_profit_raw):,.0f}",
-        'ceiling7_profit_change_season': f"{(ceiling7_profit_raw-baseline_profit_raw)*games/1e6:.1f}",
-        'ceiling7_profit_season_raw': f"{ceiling7_profit_raw}", # Raw for calculations in template
-        
-        # Welfare
-        'baseline_consumer_surplus': f"{welfare_base['consumer_surplus']/1e6:.1f}",
-        'baseline_producer_surplus': f"{welfare_base['producer_surplus']/1e6:.1f}",
-        'baseline_externality_cost': f"{welfare_base['externality_cost']/1e6:.1f}",
-        'baseline_social_welfare': f"{welfare_base['social_welfare']/1e6:.1f}",
-
-        'ceiling7_consumer_surplus': f"{welfare_7['consumer_surplus']/1e6:.1f}",
-        'ceiling7_consumer_surplus_change': f"{(welfare_7['consumer_surplus']-welfare_base['consumer_surplus'])/1e6:.1f}",
-        'ceiling7_consumer_surplus_pct': f"{100*(welfare_7['consumer_surplus']/welfare_base['consumer_surplus']-1):.1f}",
-        'ceiling7_producer_surplus': f"{welfare_7['producer_surplus']/1e6:.1f}",
-        'ceiling7_producer_surplus_change': f"{(welfare_7['producer_surplus']-welfare_base['producer_surplus'])/1e6:.1f}",
-        'ceiling7_producer_surplus_pct': f"{100*(welfare_7['producer_surplus']/welfare_base['producer_surplus']-1):.1f}",
-        'ceiling7_externality_cost': f"{welfare_7['externality_cost']/1e6:.1f}",
-        'ceiling7_externality_cost_change': f"{(welfare_7['externality_cost']-welfare_base['externality_cost'])/1e6:.1f}",
-        'ceiling7_externality_cost_pct': f"{100*(welfare_7['externality_cost']/welfare_base['externality_cost']-1):.1f}",
-        'ceiling7_social_welfare': f"{welfare_7['social_welfare']/1e6:.1f}",
-        'ceiling7_social_welfare_change': f"{(welfare_7['social_welfare']-welfare_base['social_welfare'])/1e6:.1f}",
-        'ceiling7_social_welfare_pct': f"{100*(welfare_7['social_welfare']/welfare_base['social_welfare']-1):.1f}",
-
-        # Model Parameters (from config_loader)
-        'experience_degradation_cost': f"{model.experience_degradation_cost:.1f}",
-        'external_cost_per_beer': f"{full_config['external_costs']['crime'] + full_config['external_costs']['health']:.2f}",
-        'current_taxes_per_beer': f"{current_taxes_per_beer_raw:.2f}",
-        'tax_coverage_pct': f"{current_taxes_per_beer_raw / (full_config['external_costs']['crime'] + full_config['external_costs']['health']) * 100:.0f}",
-        'pigouvian_gap': f"{pigouvian_gap_raw:.2f}",
-        'pigouvian_revenue_annual': f"{pigouvian_gap_raw * baseline_total_beers_raw * games / 1e6:.1f}",
+            # Policy parameters
+            'tax_coverage_pct': f"{current_taxes_per_beer_raw / external_cost_sum_raw * 100:.0f}",
+            'pigouvian_gap': f"{pigouvian_gap_raw:.2f}",
+            'pigouvian_revenue_annual': f"{pigouvian_gap_raw * baseline_total_beers_raw * games / 1e6:.1f}",
     }
 
 def update_file(filepath, values):
