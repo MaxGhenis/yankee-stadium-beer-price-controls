@@ -1,19 +1,18 @@
 calibration:
-  experience_degradation_cost: 62.282001678556746
+  experience_degradation_cost: 126.72630723430049
   alpha_beer_drinker: 43.75
   alpha_beer_nondrinker: 1.0
+  ticket_price_sensitivity: 0.01317848237515684
   target_optimal_beer: 12.5
-  achieved_optimal_beer: 12.50940358179122
-  optimal_error: 0.009403581791220361
+  achieved_optimal_beer: 12.499992428733872
+  optimal_error: 7.571266127825993e-06
   drinker_consumption_at_baseline: 2.5
   aggregate_consumption_at_baseline: 1.0
-  notes: "Heterogeneous model calibration (\u03B1_beer + experience_degradation_cost\
-    \ + rowdiness_sensitivity)"
-  method: Numerical optimization to match optimal price and consumption data
-  timestamp: '2025-11-18 19:25:27.485439'
+  notes: Utility-consistent model (endogenous cross-price effects)
+  method: "Joint calibration of k and \u03BB to match optimal prices"
+  timestamp: '2026-02-20 22:05:47.094803'
   beer_cost: 2.0
   ticket_cost: 3.5
-  rowdiness_sensitivity: 0.005
 taxes:
   excise_federal: 0.058
   excise_state: 0.014

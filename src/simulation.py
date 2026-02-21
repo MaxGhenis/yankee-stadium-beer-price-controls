@@ -6,7 +6,6 @@ Compares different policy interventions:
 - Price ceiling (maximum beer price)
 - Price floor (minimum beer price)
 - Beer ban (zero sales)
-- Alternative pricing strategies
 """
 
 
@@ -16,17 +15,9 @@ from .model import StadiumEconomicModel
 
 
 class BeerPriceControlSimulator:
-    """
-    Simulates impacts of different beer pricing policies.
-    """
+    """Simulates impacts of different beer pricing policies."""
 
     def __init__(self, model: StadiumEconomicModel):
-        """
-        Initialize simulator with economic model.
-
-        Args:
-            model: StadiumEconomicModel instance
-        """
         self.model = model
 
     def run_scenario(
@@ -38,28 +29,12 @@ class BeerPriceControlSimulator:
         crime_cost_per_beer: float = 2.50,
         health_cost_per_beer: float = 1.50,
     ) -> dict:
-        """
-        Run a single policy scenario.
-
-        Args:
-            scenario_name: Name of scenario
-            beer_price_min: Minimum beer price (floor)
-            beer_price_max: Maximum beer price (ceiling)
-            beer_banned: Whether beer sales are banned
-            crime_cost_per_beer: External crime cost per beer
-            health_cost_per_beer: External health cost per beer
-
-        Returns:
-            Dict with all key metrics
-        """
+        """Run a single policy scenario."""
         if beer_banned:
-            # No beer allowed
             ticket_price = self.model.base_ticket_price
-            # For welfare calculations, use a high price but not infinity
-            beer_price = self.model.base_beer_price  # Will be 0 quantity anyway
-
-            # Calculate attendance with beer unavailable (cross-effect applies)
-            attendance = self.model._attendance_demand(ticket_price, 0)
+            beer_price = self.model.base_beer_price  # For welfare calculation reference
+            # Use a very high beer price to model beer being unavailable
+            attendance = self.model.total_attendance(ticket_price, 1e6)
 
             result = {
                 "attendance": attendance,
@@ -70,38 +45,33 @@ class BeerPriceControlSimulator:
                 "total_revenue": ticket_price * attendance,
                 "ticket_costs": self.model.ticket_cost * attendance,
                 "beer_costs": 0,
+                "internalized_costs": 0,
                 "total_costs": self.model.ticket_cost * attendance,
                 "profit": ticket_price * attendance - self.model.ticket_cost * attendance,
+                "breakdown_by_type": {},
             }
 
         elif beer_price_min is not None and beer_price_max is not None:
-            # Both constraints - use the one that binds
             beer_price = (beer_price_min + beer_price_max) / 2
             ticket_price, beer_price, result = self.model.optimal_pricing(
                 beer_price_control=beer_price
             )
         elif beer_price_min is not None:
-            # Price floor
             ticket_price, beer_price, result = self.model.optimal_pricing()
             if beer_price < beer_price_min:
-                # Floor binds, re-optimize with fixed price
                 ticket_price, beer_price, result = self.model.optimal_pricing(
                     beer_price_control=beer_price_min, ceiling_mode=False
                 )
         elif beer_price_max is not None:
-            # Price ceiling
             ticket_price, beer_price, result = self.model.optimal_pricing()
             if beer_price > beer_price_max:
-                # Ceiling binds, re-optimize
                 ticket_price, beer_price, result = self.model.optimal_pricing(
                     beer_price_control=beer_price_max
                 )
         else:
-            # No constraints - optimal pricing
             ticket_price, beer_price, result = self.model.optimal_pricing()
 
         # Calculate welfare metrics
-        # Temporarily override model's external costs for this simulation run
         original_crime_cost = self.model.external_costs.get("crime", 2.50)
         original_health_cost = self.model.external_costs.get("health", 1.50)
 
@@ -111,11 +81,9 @@ class BeerPriceControlSimulator:
         try:
             welfare = self.model.social_welfare(ticket_price, beer_price)
         finally:
-            # Restore original costs
             self.model.external_costs["crime"] = original_crime_cost
             self.model.external_costs["health"] = original_health_cost
 
-        # Combine results
         output = {
             "scenario": scenario_name,
             "ticket_price": ticket_price,
@@ -135,19 +103,16 @@ class BeerPriceControlSimulator:
             "health_cost_per_beer": health_cost_per_beer,
         }
 
-        # Add selection effects metrics if breakdown available
         if "breakdown_by_type" in result:
             breakdown = result["breakdown_by_type"]
             total_attendance = result["attendance"]
             if total_attendance > 0:
-                # Calculate drinker share of attendance
                 drinker_attendance = breakdown.get("Drinker", {}).get("attendance", 0)
                 nondrinker_attendance = breakdown.get("Non-Drinker", {}).get("attendance", 0)
                 output["drinker_share"] = drinker_attendance / total_attendance
                 output["nondrinker_share"] = nondrinker_attendance / total_attendance
                 output["drinker_attendance"] = drinker_attendance
                 output["nondrinker_attendance"] = nondrinker_attendance
-                # Beers per fan by type
                 output["drinker_beers_per_fan"] = breakdown.get("Drinker", {}).get(
                     "beers_per_fan", 0
                 )
@@ -163,21 +128,9 @@ class BeerPriceControlSimulator:
         crime_cost_per_beer: float = 2.50,
         health_cost_per_beer: float = 1.50,
     ) -> pd.DataFrame:
-        """
-        Run all standard scenarios.
-
-        Args:
-            price_ceiling: Maximum beer price for ceiling scenario
-            price_floor: Minimum beer price for floor scenario
-            crime_cost_per_beer: External crime cost per beer
-            health_cost_per_beer: External health cost per beer
-
-        Returns:
-            DataFrame with results from all scenarios
-        """
+        """Run all standard scenarios."""
         scenarios = []
 
-        # 1. Baseline (unrestricted profit maximization)
         baseline = self.run_scenario(
             "Baseline (Profit Max)",
             crime_cost_per_beer=crime_cost_per_beer,
@@ -185,7 +138,6 @@ class BeerPriceControlSimulator:
         )
         scenarios.append(baseline)
 
-        # 2. Current observed prices (for comparison)
         current = self.run_scenario(
             "Current Observed Prices",
             beer_price_min=self.model.base_beer_price,
@@ -195,7 +147,6 @@ class BeerPriceControlSimulator:
         )
         scenarios.append(current)
 
-        # 3. Price ceiling
         ceiling = self.run_scenario(
             f"Price Ceiling (${price_ceiling})",
             beer_price_max=price_ceiling,
@@ -204,7 +155,6 @@ class BeerPriceControlSimulator:
         )
         scenarios.append(ceiling)
 
-        # 4. Beer ban
         ban = self.run_scenario(
             "Beer Ban",
             beer_banned=True,
@@ -222,29 +172,13 @@ class BeerPriceControlSimulator:
         crime_cost_per_beer: float = 2.50,
         health_cost_per_beer: float = 1.50,
     ) -> pd.DataFrame:
-        """
-        Run sensitivity analysis over a parameter.
-
-        Args:
-            parameter_name: Name of parameter to vary
-                ('ticket_elasticity', 'beer_elasticity', 'crime_cost', 'health_cost')
-            values: List of values to try
-            crime_cost_per_beer: External crime cost per beer
-            health_cost_per_beer: External health cost per beer
-
-        Returns:
-            DataFrame with results across parameter values
-        """
+        """Run sensitivity analysis over a parameter."""
         results = []
 
         for value in values:
-            # Update model parameter
-            if parameter_name == "ticket_elasticity":
-                original = self.model.ticket_elasticity
-                self.model.ticket_elasticity = value
-            elif parameter_name == "beer_elasticity":
-                original = self.model.beer_elasticity
-                self.model.beer_elasticity = value
+            if parameter_name == "ticket_price_sensitivity":
+                original = self.model.ticket_price_sensitivity
+                self.model.ticket_price_sensitivity = value
             elif parameter_name == "crime_cost":
                 crime_cost_per_beer = value
             elif parameter_name == "health_cost":
@@ -252,7 +186,6 @@ class BeerPriceControlSimulator:
             else:
                 raise ValueError(f"Unknown parameter: {parameter_name}")
 
-            # Run baseline scenario
             scenario = self.run_scenario(
                 f"{parameter_name}={value}",
                 crime_cost_per_beer=crime_cost_per_beer,
@@ -261,27 +194,15 @@ class BeerPriceControlSimulator:
             scenario[parameter_name] = value
             results.append(scenario)
 
-            # Restore original value
-            if parameter_name == "ticket_elasticity":
-                self.model.ticket_elasticity = original
-            elif parameter_name == "beer_elasticity":
-                self.model.beer_elasticity = original
+            if parameter_name == "ticket_price_sensitivity":
+                self.model.ticket_price_sensitivity = original
 
         return pd.DataFrame(results)
 
     def calculate_comparative_statics(
         self, df: pd.DataFrame, baseline_scenario: str = "Current Observed Prices"
     ) -> pd.DataFrame:
-        """
-        Calculate changes relative to baseline scenario.
-
-        Args:
-            df: DataFrame with scenario results
-            baseline_scenario: Name of baseline scenario
-
-        Returns:
-            DataFrame with absolute and percentage changes
-        """
+        """Calculate changes relative to baseline scenario."""
         baseline = df[df["scenario"] == baseline_scenario].iloc[0]
 
         changes = df.copy()
@@ -295,15 +216,7 @@ class BeerPriceControlSimulator:
         return changes
 
     def summary_statistics(self, df: pd.DataFrame) -> dict:
-        """
-        Calculate summary statistics across scenarios.
-
-        Args:
-            df: DataFrame with scenario results
-
-        Returns:
-            Dict with key summary stats
-        """
+        """Calculate summary statistics across scenarios."""
         return {
             "mean_attendance": df["attendance"].mean(),
             "std_attendance": df["attendance"].std(),

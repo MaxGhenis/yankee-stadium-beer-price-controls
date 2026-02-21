@@ -14,9 +14,9 @@ DEFAULTS = {
     "experience_degradation_cost": 62.28,
     "alpha_beer_drinker": 43.75,
     "alpha_beer_nondrinker": 1.0,
+    "ticket_price_sensitivity": 0.01317848,
     "beer_cost": 2.0,
     "ticket_cost": 3.5,
-    "rowdiness_sensitivity": 0.005,
 }
 
 

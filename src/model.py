@@ -1,19 +1,24 @@
 """
 Heterogeneous consumer model for stadium beer pricing.
 
-Key difference from base model: Fans have different beer preferences.
-- Type 1 (60%): Non-drinkers/light drinkers (low α_beer)
-- Type 2 (40%): Regular drinkers (high α_beer)
-
-This captures the empirical fact that ~40% of fans consume alcohol.
+Key features:
+- 2 consumer types: Non-drinkers (60%, α_beer=1.0) and Drinkers (40%, α_beer=43.75)
+- Quasilinear utility: U = α·ln(B+1) + Y
+- Beer demand from FOC: B = α/P - 1
+- Beer consumer surplus: exact integral from utility function
+- Endogenous cross-price effects: cheaper beer raises drinker CS, lowering
+  their net cost of attendance, so more drinkers attend
+- Attendance: semi-log in net cost (P_T - CS_beer)
+- Total consumer surplus: A / λ (integral under semi-log demand)
 """
 
+import math
 from dataclasses import dataclass
 
 import numpy as np
 from scipy.optimize import minimize
 
-from src.config_loader import load_full_config  # Import load_full_config to be available here
+from src.config_loader import load_full_config
 
 
 @dataclass
@@ -23,17 +28,12 @@ class ConsumerType:
     name: str
     share: float  # Population share (must sum to 1 across types)
     alpha_beer: float  # Utility weight on beer
-    alpha_experience: float  # Utility weight on stadium experience
-    income: float  # Income/budget
 
 
 class StadiumEconomicModel:
     """
-    Stadium model with heterogeneous consumer preferences.
-
-    Extends base model by allowing different consumer types with varying
-    beer preferences. This can help calibrate to observed prices by capturing
-    the extensive margin (who drinks) vs intensive margin (how much).
+    Stadium model with heterogeneous consumer preferences and
+    utility-consistent consumer surplus and attendance.
     """
 
     # Optimization bounds
@@ -49,37 +49,17 @@ class StadiumEconomicModel:
         base_beer_price: float = 12.5,
         ticket_cost: float = 3.5,
         beer_cost: float = 2.0,
-        experience_degradation_cost: float = None,  # Auto-load from config.yaml if None
-        cross_price_elasticity: float = 0.1,
-        beer_demand_sensitivity: float = 0.30,
-        # Compatibility parameters (ignored in heterogeneous model)
-        ticket_elasticity: float = -0.625,
-        beer_elasticity: float = -0.965,
-        alpha: float = 1.5,
-        beta: float = 3.0,
-        consumer_income: float = 200.0,
-        captive_demand_share: float = 0.5,
+        experience_degradation_cost: float = None,
+        ticket_price_sensitivity: float = None,
+        beer_max_per_person: float = 10.0,
         capacity_constraint: float = 50000,
     ):
-        """
-        Initialize heterogeneous consumer model.
-
-        Args:
-            capacity: Stadium seating capacity
-            consumer_types: List of ConsumerType objects (if None, creates default 2 types)
-            base_ticket_price: Baseline ticket price
-            base_beer_price: Baseline beer price
-            ticket_cost: Marginal cost per ticket
-            beer_cost: Marginal cost per beer
-            experience_degradation_cost: Internalized cost parameter
-            cross_price_elasticity: Beer price effect on attendance
-            beer_demand_sensitivity: Price sensitivity parameter
-        """
         self.capacity = capacity
         self.base_ticket_price = base_ticket_price
         self.base_beer_price = base_beer_price
         self.ticket_cost = ticket_cost
         self.beer_cost = beer_cost
+        self.beer_max_per_person = beer_max_per_person
 
         # Load full config to get taxes and external costs
         full_config = load_full_config()
@@ -95,11 +75,18 @@ class StadiumEconomicModel:
 
         # Load experience_degradation_cost from config if not specified
         if experience_degradation_cost is None:
-            experience_degradation_cost = self._load_calibrated_internalized_cost()
+            experience_degradation_cost = self._load_calibrated_param(
+                "experience_degradation_cost", 62.28
+            )
         self.experience_degradation_cost = experience_degradation_cost
 
-        self.cross_price_elasticity = cross_price_elasticity
-        self.beer_demand_sensitivity = beer_demand_sensitivity
+        # Load ticket_price_sensitivity (λ) from config if not specified
+        # λ = 0.625/80 = 0.0078125 from literature: ε = -0.625 at P_T = $80
+        if ticket_price_sensitivity is None:
+            ticket_price_sensitivity = self._load_calibrated_param(
+                "ticket_price_sensitivity", 0.0078125
+            )
+        self.ticket_price_sensitivity = ticket_price_sensitivity
 
         # Default to 2-type model if not specified
         if consumer_types is None:
@@ -114,132 +101,134 @@ class StadiumEconomicModel:
         # Baseline attendance (85% capacity)
         self.base_attendance = self.capacity * 0.85
 
-        # Compatibility attributes for old tests
-        self.ticket_elasticity = -0.625  # Average elasticity (for compatibility)
-        self.beer_elasticity = -0.965  # Average elasticity (for compatibility)
-        self.consumer_income = 200.0  # Average income (for compatibility)
+        # Precompute baseline CS_beer and net_cost per type
+        self._baseline_cs_beer = {}
+        self._baseline_net_cost = {}
+        for ct in self.consumer_types:
+            cs = self._beer_consumer_surplus(self.base_beer_price, ct)
+            self._baseline_cs_beer[ct.name] = cs
+            self._baseline_net_cost[ct.name] = self.base_ticket_price - cs
 
     def _create_default_types(self) -> list[ConsumerType]:
-        """
-        Create default 2-type model with calibrated parameters from config.yaml.
-
-        From Lenk et al. (2010):
-        - 60% don't drink (or drink very little)
-        - 40% drink, averaging 2.5 beers
-        """
+        """Create default 2-type model with calibrated parameters from config.yaml."""
         try:
             from .config_loader import get_parameter
         except ImportError:
             from config_loader import get_parameter
 
-        types = [
+        return [
             ConsumerType(
                 name="Non-Drinker",
                 share=0.60,
                 alpha_beer=get_parameter("alpha_beer_nondrinker", 1.0),
-                alpha_experience=3.0,
-                income=200.0,
             ),
             ConsumerType(
                 name="Drinker",
                 share=0.40,
                 alpha_beer=get_parameter("alpha_beer_drinker", 43.75),
-                alpha_experience=2.5,
-                income=200.0,
             ),
         ]
-        return types
+
+    def _load_calibrated_param(self, name: str, default: float) -> float:
+        """Load a calibrated parameter from config.yaml."""
+        try:
+            from .config_loader import get_parameter
+        except ImportError:
+            from config_loader import get_parameter
+        return get_parameter(name, default)
 
     def _beers_consumed_by_type(self, beer_price: float, consumer_type: ConsumerType) -> float:
         """
-        Calculate beer consumption for a specific consumer type.
+        Beer consumption for a specific consumer type.
 
-        Uses utility-based demand with satiation:
-        FOC: α_beer/(B+1) = P_beer → B = α_beer/P_beer - 1
-
-        But capped at reasonable maximum (no one drinks 50+ beers).
+        FOC: α/(B+1) = P → B = α/P - 1, capped at [0, beer_max_per_person].
         """
-        # Special case: Free beer (P ≈ 0)
         if beer_price <= 0.01:
-            # At P=0, utility-based formula gives infinity
-            # Use empirical open-bar consumption instead
-            # Data: Open bars average 5-6 drinks (wedding/tailgate data)
-            # For heavy drinkers at baseball game: 6-7 beers reasonable
-            FREE_BEER_CONSUMPTION = 6.5  # Based on open bar empirical data
-            # Only drinkers (high alpha) consume at free price
+            FREE_BEER_CONSUMPTION = 6.5
             if consumer_type.alpha_beer > 10:
                 return FREE_BEER_CONSUMPTION
             else:
                 return 0
 
-        # Normal case: Utility-based demand
-        # FOC: α/(B+1) = P → B = α/P - 1
         optimal_beers = consumer_type.alpha_beer / beer_price - 1
+        return max(0, min(optimal_beers, self.beer_max_per_person))
 
-        # Cap at physiological maximum
-        MAX_BEERS_PHYSIOLOGICAL = 10.0
+    def _beer_consumer_surplus(self, beer_price: float, consumer_type: ConsumerType) -> float:
+        """
+        Exact beer consumer surplus from quasilinear utility U = α·ln(B+1) + Y.
 
-        # Return max of 0 and min of optimal/physiological limit
-        return max(0, min(optimal_beers, MAX_BEERS_PHYSIOLOGICAL))
+        Three cases:
+        - Non-buyer (α ≤ P): CS = 0
+        - Unconstrained (B < B_max): CS = α·ln(α/P) - (α - P)
+        - Constrained at B_max: CS = α·ln(B_max+1) - P·B_max
+        """
+        alpha = consumer_type.alpha_beer
+        P = float(beer_price) if not isinstance(beer_price, (int, float)) else beer_price
 
-    def _attendance_by_type(
+        if P <= 0.01:
+            P = 0.01
+
+        # Non-buyer: α ≤ P means B = α/P - 1 ≤ 0
+        if alpha <= P:
+            return 0.0
+
+        # Unconstrained optimal: B = α/P - 1
+        optimal_beers = alpha / P - 1
+
+        if optimal_beers <= self.beer_max_per_person:
+            # Unconstrained: CS = α·ln(α/P) - (α - P)
+            return float(alpha * np.log(alpha / P) - (alpha - P))
+        else:
+            # Constrained at B_max: CS = α·ln(B_max+1) - P·B_max
+            return float(alpha * np.log(self.beer_max_per_person + 1) - P * self.beer_max_per_person)
+
+    def _raw_attendance_by_type(
         self, ticket_price: float, beer_price: float, consumer_type: ConsumerType
     ) -> float:
         """
-        Attendance for a specific consumer type.
+        Raw (pre-capacity-scaling) attendance for a consumer type.
 
-        Each type decides whether to attend based on utility comparison.
-        Types with higher beer preference affected more by beer prices.
+        Uses net cost: net_cost = P_T - CS_beer(P_B)
+        A_i = A_base_i · exp(-λ · (net_cost - baseline_net_cost))
+
+        Cross-price effects emerge endogenously: cheaper beer → higher CS_beer
+        → lower net cost → more attendance (for drinkers).
         """
-        # Baseline attendance for this type
         type_base_attendance = self.base_attendance * consumer_type.share
+        # Convert numpy arrays from scipy optimizer to Python floats
+        tp = np.asarray(ticket_price).item()
+        bp = np.asarray(beer_price).item()
+        cs_beer = self._beer_consumer_surplus(bp, consumer_type)
+        net_cost = tp - cs_beer
+        baseline_net_cost = self._baseline_net_cost[consumer_type.name]
 
-        # Ticket price effect (semi-log)
-        ticket_sensitivity = 0.017  # Standard sensitivity
-        ticket_effect = np.exp(-ticket_sensitivity * (ticket_price - self.base_ticket_price))
-
-        # Beer price cross-effect (drinkers more affected than non-drinkers)
-        # Scale cross-elasticity by normalized beer preference
-        # Non-drinkers (alpha=1): minimal response to beer prices
-        # Drinkers (alpha=43.75): strong response to beer prices
-        if beer_price > 0:
-            beer_ratio = beer_price / self.base_beer_price
-            # Normalize alpha_beer so drinkers get full cross-elasticity, non-drinkers get ~0
-            # alpha_beer ranges from 1.0 (non-drinker) to 43.75 (drinker)
-            alpha_weight = (consumer_type.alpha_beer - 1.0) / (43.75 - 1.0)  # 0 to 1
-            effective_cross_elasticity = self.cross_price_elasticity * alpha_weight
-            cross_effect = beer_ratio ** (-effective_cross_elasticity)
-        else:
-            # Beer ban: drinkers lose more utility than non-drinkers
-            alpha_weight = (consumer_type.alpha_beer - 1.0) / (43.75 - 1.0)
-            cross_effect = 1.0 - 0.10 * alpha_weight  # Drinkers: 0.90, Non-drinkers: 1.0
-
-        attendance = type_base_attendance * ticket_effect * cross_effect
-        return min(
-            attendance, self.capacity * consumer_type.share
-        )  # Cap at type's share of capacity
+        exponent = -self.ticket_price_sensitivity * (net_cost - baseline_net_cost)
+        attendance = type_base_attendance * np.exp(exponent)
+        return attendance
 
     def total_attendance(self, ticket_price: float, beer_price: float) -> float:
-        """Sum attendance across all consumer types."""
-        total = sum(
-            self._attendance_by_type(ticket_price, beer_price, ct) for ct in self.consumer_types
+        """Sum attendance across all types, with proportional capacity scaling."""
+        raw_total = sum(
+            self._raw_attendance_by_type(ticket_price, beer_price, ct)
+            for ct in self.consumer_types
         )
-        return min(total, self.capacity)
+        return min(raw_total, self.capacity)
 
     def total_beer_consumption(
         self, ticket_price: float, beer_price: float
     ) -> tuple[float, dict[str, float]]:
-        """
-        Calculate total beer consumption across all types.
-
-        Returns:
-            (total_beers, breakdown_by_type)
-        """
+        """Calculate total beer consumption across all types."""
         breakdown = {}
         total = 0
+        raw_total_attendance = sum(
+            self._raw_attendance_by_type(ticket_price, beer_price, ct)
+            for ct in self.consumer_types
+        )
+        scale = min(1.0, self.capacity / raw_total_attendance) if raw_total_attendance > 0 else 1.0
 
         for ct in self.consumer_types:
-            attendance = self._attendance_by_type(ticket_price, beer_price, ct)
+            raw_att = self._raw_attendance_by_type(ticket_price, beer_price, ct)
+            attendance = raw_att * scale
             beers_per_fan = self._beers_consumed_by_type(beer_price, ct)
             type_total = attendance * beers_per_fan
 
@@ -257,10 +246,9 @@ class StadiumEconomicModel:
         attendance = self.total_attendance(ticket_price, beer_price)
         total_beers, breakdown = self.total_beer_consumption(ticket_price, beer_price)
 
-        # Calculate beers per fan (aggregate)
         beers_per_fan = total_beers / attendance if attendance > 0 else 0
 
-        # Tax calculations (same as base model)
+        # Tax calculations
         pre_tax_beer_price = beer_price / (1 + self.beer_sales_tax_rate)
         stadium_beer_price = pre_tax_beer_price - self.beer_excise_tax
 
@@ -273,9 +261,9 @@ class StadiumEconomicModel:
         ticket_costs = self.ticket_cost * attendance
         beer_costs = self.beer_cost * total_beers
 
-        # Internalized costs
+        # Internalized costs: C = k · (Q/1000)²
         beers_per_1000 = total_beers / 1000
-        internalized_costs = self.experience_degradation_cost * (beers_per_1000**2)
+        internalized_costs = self.experience_degradation_cost * (beers_per_1000 ** 2)
 
         total_costs = ticket_costs + beer_costs + internalized_costs
         profit = total_revenue - total_costs
@@ -308,12 +296,9 @@ class StadiumEconomicModel:
         beer_min = self.beer_cost + self.BEER_PRICE_MIN_MARGIN
         ticket_bounds = (self.ticket_cost, self.TICKET_PRICE_MAX)
 
-        # Step 1: Determine beer price (before optimization)
         if beer_price_control is not None:
             if ceiling_mode:
-                # Get unconstrained beer optimum (cache to avoid recomputing)
                 if not hasattr(self, "_unconstrained_beer_optimum"):
-
                     def objective_both(prices):
                         ticket_p, beer_p = prices
                         if beer_p < 0 or ticket_p < 0:
@@ -329,13 +314,10 @@ class StadiumEconomicModel:
                     )
                     self._unconstrained_beer_optimum = unconstrained.x[1]
 
-                # Beer price = min(ceiling, unconstrained_optimum)
                 optimal_beer = min(beer_price_control, self._unconstrained_beer_optimum)
             else:
-                # Fixed price mode
                 optimal_beer = beer_price_control
         else:
-            # No constraints - optimize both prices together
             def objective_both(prices):
                 ticket_p, beer_p = prices
                 if beer_p < 0 or ticket_p < 0:
@@ -354,7 +336,7 @@ class StadiumEconomicModel:
             metrics = self.stadium_revenue(optimal_ticket, optimal_beer)
             return optimal_ticket, optimal_beer, metrics
 
-        # Step 2: Optimize ticket price given fixed beer price
+        # Optimize ticket price given fixed beer price
         def objective_ticket(ticket_p):
             if ticket_p < 0:
                 return 1e10
@@ -372,21 +354,13 @@ class StadiumEconomicModel:
 
     def consumer_surplus(self, ticket_price: float, beer_price: float) -> float:
         """
-        Calculate aggregate consumer surplus across heterogeneous types.
+        Aggregate consumer surplus: A / λ.
 
-        CS = sum over types of (share × type_CS)
-        Simplified approximation using elasticity formula.
+        This is the standard integral under semi-log demand.
+        Beer surplus is already embedded in the demand curve through net cost.
         """
         attendance = self.total_attendance(ticket_price, beer_price)
-        total_beers, _ = self.total_beer_consumption(ticket_price, beer_price)
-
-        # Ticket CS (using average elasticity approximation)
-        ticket_cs = (attendance * ticket_price) / (1 + (-0.625))
-
-        # Beer CS (adjusted for heterogeneity - drinkers get more surplus)
-        beer_cs = (total_beers * beer_price) / (1 + (-0.965) * 0.7) * 1.5
-
-        return ticket_cs + beer_cs
+        return attendance / self.ticket_price_sensitivity
 
     def producer_surplus(self, ticket_price: float, beer_price: float) -> float:
         """Calculate producer surplus (profit)."""
@@ -417,85 +391,3 @@ class StadiumEconomicModel:
             "total_beers": result["total_beers"],
             "attendance": result["attendance"],
         }
-
-    # Compatibility methods for old tests/code
-    def _attendance_demand(self, ticket_price: float, beer_price: float) -> float:
-        """Compatibility wrapper - use total_attendance()."""
-        return self.total_attendance(ticket_price, beer_price)
-
-    def _beers_per_fan_demand(self, beer_price: float, income: float) -> float:
-        """
-        Compatibility wrapper - returns average beers per fan across all types.
-        """
-        total_beers, _ = self.total_beer_consumption(self.base_ticket_price, beer_price)
-        attendance = self.total_attendance(self.base_ticket_price, beer_price)
-        return total_beers / attendance if attendance > 0 else 0
-
-    def _load_calibrated_internalized_cost(self) -> float:
-        """Load experience_degradation_cost from config.yaml."""
-        try:
-            from .config_loader import load_full_config
-        except ImportError:
-            from config_loader import load_full_config
-        full_config = load_full_config()
-        return full_config.get("calibration", {}).get("experience_degradation_cost", 62.28)
-
-
-# Quick test
-if __name__ == "__main__":
-    print("=" * 70)
-    print("HETEROGENEOUS CONSUMER MODEL TEST")
-    print("=" * 70)
-    print()
-
-    model = StadiumEconomicModel()
-
-    print("Consumer Types:")
-    for ct in model.consumer_types:
-        print(
-            f"  {ct.name} ({ct.share*100:.0f}%): α_beer={ct.alpha_beer}, α_exp={ct.alpha_experience}"
-        )
-    print()
-
-    # Test at observed prices
-    result_obs = model.stadium_revenue(80, 12.50)
-    print("At observed prices ($80 tickets, $12.50 beer):")
-    print(f"  Attendance: {result_obs['attendance']:,.0f}")
-    print(f"  Total beers: {result_obs['total_beers']:,.0f}")
-    print(f"  Beers/fan: {result_obs['beers_per_fan']:.2f}")
-    print(f"  Profit: ${result_obs['profit']:,.0f}")
-    print()
-
-    # Breakdown by type
-    print("Consumption by type:")
-    for type_name, data in result_obs["breakdown_by_type"].items():
-        print(f"  {type_name}: {data['beers_per_fan']:.2f} beers/fan")
-    print()
-
-    # Find optimal
-    opt_ticket, opt_beer, opt_result = model.optimal_pricing()
-    print("Model-predicted optimal:")
-    print(f"  Beer: ${opt_beer:.2f} (observed: $12.50, gap: ${opt_beer - 12.50:+.2f})")
-    print(f"  Ticket: ${opt_ticket:.2f} (observed: $80, gap: ${opt_ticket - 80:+.2f})")
-    print(f"  Profit: ${opt_result['profit']:,.0f}")
-    print()
-
-    # Compare to homogeneous model
-    from model import StadiumEconomicModel
-
-    homo_model = StadiumEconomicModel()
-    homo_opt_t, homo_opt_b, _ = homo_model.optimal_pricing()
-
-    print("=" * 70)
-    print("COMPARISON: Heterogeneous vs Homogeneous")
-    print("=" * 70)
-    print(f"Homogeneous model optimal beer: ${homo_opt_b:.2f}")
-    print(f"Heterogeneous model optimal beer: ${opt_beer:.2f}")
-    print("Observed: $12.50")
-    print()
-
-    if abs(opt_beer - 12.50) < abs(homo_opt_b - 12.50):
-        improvement = abs(homo_opt_b - 12.50) - abs(opt_beer - 12.50)
-        print(f"✓ Heterogeneous model is ${improvement:.2f} closer to observed price!")
-    else:
-        print("✗ Heterogeneous model didn't improve calibration")
