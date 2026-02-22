@@ -68,7 +68,7 @@ jobs:
           source .venv/bin/activate
           cd docs
           myst build --pdf
-          cp _build/exports/*.pdf _build/html/ 2>/dev/null || true
+          cp exports/*.pdf _build/html/ 2>/dev/null || true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
