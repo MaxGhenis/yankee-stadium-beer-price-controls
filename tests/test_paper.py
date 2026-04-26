@@ -87,5 +87,5 @@ def test_render_quarto_project_scaffolds_packaged_project(monkeypatch, tmp_path:
 def test_render_quarto_project_requires_quarto(monkeypatch, tmp_path: Path):
     monkeypatch.setattr("yankee_stadium_beer_controls.paper.shutil.which", lambda _: None)
 
-    with pytest.raises(RuntimeError, match="Quarto CLI is required"):
+    with pytest.raises(RuntimeError, match="Install Quarto CLI"):
         render_quarto_project(project_dir=tmp_path, draws=10)

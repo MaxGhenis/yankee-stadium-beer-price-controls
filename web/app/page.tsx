@@ -298,7 +298,7 @@ export default async function Home() {
             </h1>
 
             <p className="mt-6 max-w-3xl text-base leading-8 text-[color:var(--muted)] md:text-lg">
-              The stadium is modeled as a joint seller of tickets and concessions. Once beer margins are capped,
+              The model treats the stadium as a joint seller of tickets and concessions. Once policy caps beer margins,
               the venue re-optimizes through the remaining instrument. In the calibrated benchmark, that means
               higher ticket prices, lower attendance, and a more drinker-heavy crowd.
             </p>
@@ -351,12 +351,12 @@ export default async function Home() {
           <StatCard
             label="Attendance shift"
             value={formatPercent(context.ceiling_summary["6"].attendance_pct_change)}
-            detail="A smaller crowd remains once the ticket increase is allowed to clear the market."
+            detail="The model leaves a smaller crowd once the ticket increase clears the market."
           />
           <StatCard
             label="Beer sales shift"
             value={formatPercent(context.ceiling_summary["6"].beers_pct_change)}
-            detail="Lower attendance is more than offset by heavier drinking among the remaining attendees."
+            detail="Heavier drinking among the remaining attendees more than offsets lower attendance."
           />
         </section>
 

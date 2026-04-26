@@ -9,7 +9,7 @@ The project is intentionally paper-first:
 - model code lives in `src/yankee_stadium_beer_controls`
 - `pyproject.toml` and `uv.lock` are the Python dependency source of truth
 - Quarto reads generated fragments from package code
-- generated paper, submission, coverage, and dashboard outputs are ignored
+- git ignores generated paper, submission, coverage, and dashboard outputs
 - there are no notebooks, legacy Python dashboard, or ad hoc analysis scripts in the active workflow
 - the optional web UI is a Next/Tailwind view over generated package JSON
 - Vercel builds the public paper site directly from the package and Quarto sources
@@ -48,13 +48,13 @@ Build the Python package:
 uv run python -m build
 ```
 
-Quarto must be installed separately for `yankee-beer-paper render`; the package
-can generate markdown fragments and submission files without the Quarto CLI.
+Install Quarto separately for `yankee-beer-paper render`; the package can
+generate markdown fragments and submission files without the Quarto CLI.
 
 ## Deployment
 
-The repository is configured for Vercel. The build installs `uv`, regenerates
-the paper fragments from package code, renders the Quarto HTML site, and serves
+Vercel builds the public paper site. The build installs `uv`, regenerates the
+paper fragments from package code, renders the Quarto HTML site, and serves
 `paper/_build` as a static site.
 
 ```bash
@@ -92,8 +92,8 @@ The paper command regenerates all manuscript artifacts from package code:
 - baseline and policy scenario tables
 - ceiling stringency comparisons
 - robustness diagnostics
-- figures consumed by the Quarto manuscript
+- figures the Quarto manuscript uses
 - SSRN metadata and journal cover-letter drafts
 
-The model is not a causal estimate. The repository is structured to make that
-limited claim reproducible and hard to accidentally desynchronize.
+The model does not estimate causal effects. The repository makes that limited
+claim reproducible and hard to accidentally desynchronize.

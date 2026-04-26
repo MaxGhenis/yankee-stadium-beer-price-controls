@@ -303,7 +303,7 @@ def run_monte_carlo(draws: int = 1000, seed: int = 42) -> dict[str, float]:
 def compute_report_context(
     model: StadiumEconomicModel | None = None, draws: int = 1000
 ) -> dict[str, Any]:
-    """Compute all dynamic outputs used by the Quarto paper."""
+    """Compute all dynamic outputs the Quarto paper uses."""
     model = model or StadiumEconomicModel()
     full_config = load_full_config()
     calibration_config = full_config.get("calibration", {})
@@ -425,7 +425,7 @@ def _ensure_paper_project(project_dir: str | Path) -> Path:
 
 
 def write_markdown_artifacts(context: dict[str, Any], output_dir: Path) -> None:
-    """Emit markdown fragments consumed by Quarto includes."""
+    """Emit markdown fragments for Quarto includes."""
     baseline = context["baseline"]
     ceiling_6 = context["ceiling_6"]
     ceiling_8 = context["ceiling_8"]
@@ -577,7 +577,7 @@ def write_markdown_artifacts(context: dict[str, Any], output_dir: Path) -> None:
         ],
     ]
     (output_dir / "baseline_vs_6.md").write_text(
-        "Social welfare is computed as consumer surplus plus stadium profit plus tax revenue minus external alcohol costs.\n\n"
+        "The model computes social welfare as consumer surplus plus stadium profit plus tax revenue minus external alcohol costs.\n\n"
         + _markdown_table(["Outcome", "Baseline", "$6 Ceiling", "Change"], results_rows)
         + "\n"
     )
@@ -631,7 +631,7 @@ def write_markdown_artifacts(context: dict[str, Any], output_dir: Path) -> None:
                 one_way_rows,
             ),
             "",
-            "The next check constrains ticket repricing under the $6 ceiling. Beer consumption still rises when ticket repricing is limited, but the profit effect becomes much larger because the venue cannot fully move to the unconstrained ticket margin.",
+            "The next check constrains ticket repricing under the $6 ceiling. Beer consumption still rises when the check limits ticket repricing, but the profit effect becomes much larger because the venue cannot fully move to the unconstrained ticket margin.",
             "",
             _markdown_table(
                 ["Ticket case", "Ticket", "Attendance", "Beers", "Profit"],
@@ -663,7 +663,7 @@ def write_markdown_artifacts(context: dict[str, Any], output_dir: Path) -> None:
 
     calibration_sources = "\n".join(
         [
-            "The calibration uses public or literature-based moments rather than transaction-level Yankees data. The moments are deliberately rounded because the point of the exercise is the joint-pricing mechanism, not a claim to estimate exact Yankees demand.",
+            "The calibration uses public or literature-based moments rather than transaction-level Yankees data. I deliberately round the moments because the exercise focuses on the joint-pricing mechanism, not exact Yankees demand.",
             "",
             _markdown_table(
                 ["Input", "Benchmark value", "Rationale"],
@@ -676,7 +676,7 @@ def write_markdown_artifacts(context: dict[str, Any], output_dir: Path) -> None:
                     [
                         "Ticket price",
                         _format_currency(calibration["target_ticket_price"]),
-                        "Round benchmark for the effective ticket price faced by a marginal attendee; treated as a calibration target rather than a microdata estimate.",
+                        "Round benchmark for the effective ticket price a marginal attendee faces; the calibration treats it as a target rather than a microdata estimate.",
                     ],
                     [
                         "Capacity utilization",
@@ -711,7 +711,7 @@ def write_markdown_artifacts(context: dict[str, Any], output_dir: Path) -> None:
                 ],
             ),
             "",
-            "The two calibrated structural parameters are the semi-log ticket sensitivity and the internalized experience-degradation cost. They are chosen jointly so that the unconstrained venue optimum reproduces the benchmark ticket and beer prices.",
+            "The calibration chooses two structural parameters jointly: the semi-log ticket sensitivity and the internalized experience-degradation cost. Together, they make the unconstrained venue optimum reproduce the benchmark ticket and beer prices.",
         ]
     )
     (output_dir / "calibration_sources.md").write_text(calibration_sources + "\n")
@@ -722,10 +722,10 @@ def write_markdown_artifacts(context: dict[str, Any], output_dir: Path) -> None:
             "- The demand side uses two consumer types, which captures composition effects but not the full distribution of fan preferences or outside options.",
             "- The model is static and partial-equilibrium, so it abstracts from pregame drinking, nearby bars, repeat attendance, and long-run reputation effects.",
             "- The policy experiments assume perfect enforcement and do not model evasive responses such as flask-smuggling, bootlegging, or accelerated pregame drinking in response to the ceiling.",
-            "- The benchmark ticket increase depends materially on calibrated private crowd-management and experience-degradation costs; low-cost variants are reported as stress tests rather than ruled out by direct Yankees data.",
-            "- The ticket price is assumed to be freely re-optimized for the representative game; the model abstracts from season tickets, resale markets, dynamic pricing frictions, and fan backlash from sudden repricing.",
-            "- Attendance is capped at stadium capacity, but the main ceiling counterfactuals only move attendance downward, so the paper is not informative about policies that would push demand back against the capacity constraint.",
-            "- External costs are imported from the alcohol-policy literature rather than estimated around Yankee Stadium itself.",
+            "- The benchmark ticket increase depends materially on calibrated private crowd-management and experience-degradation costs; the paper reports low-cost variants as stress tests, and direct Yankees data do not rule them out.",
+            "- The model lets the venue freely re-optimize the representative-game ticket price; it abstracts from season tickets, resale markets, dynamic pricing frictions, and fan backlash from sudden repricing.",
+            "- The model caps attendance at stadium capacity, but the main ceiling counterfactuals only move attendance downward, so the paper does not speak to policies that would push demand back against the capacity constraint.",
+            "- The welfare accounting imports external costs from the alcohol-policy literature rather than estimating them around Yankee Stadium itself.",
         ]
     )
     (output_dir / "limitations.md").write_text(limitations + "\n")
@@ -765,7 +765,7 @@ def write_markdown_artifacts(context: dict[str, Any], output_dir: Path) -> None:
             "Ticket elasticity at $80",
             "n/a",
             f"{calibration['ticket_elasticity_at_80']:.2f}",
-            "Implied by calibrated attendance sensitivity",
+            "Calibration-implied attendance sensitivity",
         ],
     ]
     (output_dir / "calibration_table.md").write_text(
@@ -970,7 +970,7 @@ def render_quarto_project(project_dir: str | Path = "paper", draws: int = 1000) 
     quarto_binary = shutil.which("quarto")
     if quarto_binary is None:
         raise RuntimeError(
-            "Quarto CLI is required to render the paper. Install Quarto and ensure "
+            "Install Quarto CLI to render the paper, and ensure "
             "`quarto` is on PATH, or run `yankee-beer-paper build` to generate "
             "the markdown artifacts without rendering."
         )
