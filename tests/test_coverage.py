@@ -4,8 +4,8 @@ Tests for code coverage of edge cases and rarely-used functions.
 
 import pytest
 
-from src.model import StadiumEconomicModel
-from src.simulation import BeerPriceControlSimulator
+from yankee_stadium_beer_controls.model import StadiumEconomicModel
+from yankee_stadium_beer_controls.simulation import BeerPriceControlSimulator
 
 
 class TestModelCoverage:
@@ -49,10 +49,16 @@ class TestSimulationCoverage:
         results = simulator.run_all_scenarios()
         summary = simulator.summary_statistics(results)
         required_keys = [
-            "mean_attendance", "std_attendance", "mean_total_beers",
-            "std_total_beers", "mean_profit", "std_profit",
-            "mean_social_welfare", "std_social_welfare",
-            "profit_maximizing_scenario", "welfare_maximizing_scenario",
+            "mean_attendance",
+            "std_attendance",
+            "mean_total_beers",
+            "std_total_beers",
+            "mean_profit",
+            "std_profit",
+            "mean_social_welfare",
+            "std_social_welfare",
+            "profit_maximizing_scenario",
+            "welfare_maximizing_scenario",
             "lowest_externality_scenario",
         ]
         for key in required_keys:
@@ -68,8 +74,8 @@ class TestSimulationCoverage:
         results = simulator.run_all_scenarios()
         changes = simulator.calculate_comparative_statics(results, baseline_scenario="Beer Ban")
         ban_row = changes[changes["scenario"] == "Beer Ban"]
-        if len(ban_row) > 0:
-            assert abs(ban_row["profit_change"].values[0]) < 0.01
+        assert len(ban_row) > 0
+        assert abs(ban_row["profit_change"].values[0]) < 0.01
 
 
 class TestEdgeCases:

@@ -8,7 +8,7 @@ the ceiling should not affect outcomes.
 import numpy as np
 import pytest
 
-from src.model import StadiumEconomicModel
+from yankee_stadium_beer_controls.model import StadiumEconomicModel
 
 
 class TestNonBindingCeilings:
@@ -19,16 +19,12 @@ class TestNonBindingCeilings:
         return StadiumEconomicModel()
 
     def test_unconstrained_optimal_price(self, model):
-        """Find the unconstrained optimal beer price for reference."""
+        """Unconstrained optimal beer price should be positive and reasonable."""
         ticket_price, beer_price, result = model.optimal_pricing()
 
-        # Optimal should be positive and reasonable
         assert beer_price > 0
         assert beer_price < 30
         assert ticket_price > 0
-
-        # Store for other tests
-        return beer_price
 
     def test_ceiling_above_optimal_has_no_effect(self, model):
         """Price ceiling above optimal should not change equilibrium."""
@@ -46,8 +42,6 @@ class TestNonBindingCeilings:
 
         # If ceiling is non-binding, should match unconstrained
         if high_ceiling > unc_beer:
-            # This test will FAIL with current implementation!
-            # Current code forces beer price to equal ceiling even when non-binding
             assert ceil_beer == pytest.approx(
                 unc_beer, rel=1e-3
             ), f"Non-binding ceiling should not affect beer price: {ceil_beer} != {unc_beer}"
@@ -81,7 +75,6 @@ class TestNonBindingCeilings:
         assert bind_ticket > unc_ticket, "Binding ceiling should raise ticket prices"
 
         # Non-binding ceiling should have no effect
-        # THIS WILL FAIL with current implementation
         assert nonbind_beer == pytest.approx(
             unc_beer, rel=1e-3
         ), "Non-binding ceiling should not affect beer price"
@@ -120,14 +113,11 @@ class TestNonBindingCeilings:
         for ceiling in high_ceilings:
             t, b, r = model.optimal_pricing(beer_price_control=ceiling)
 
-            # With current bug: these will all be different
-            # After fix: these should all be the same (plateau)
             profits.append(r["profit"])
             tickets.append(t)
             beers.append(b)
 
-        # All should be approximately equal (flat line)
-        # THIS WILL FAIL with current implementation
+        # All should be approximately equal (flat line above optimal)
         profit_std = np.std(profits)
         ticket_std = np.std(tickets)
 

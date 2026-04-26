@@ -5,7 +5,7 @@ TDD tests for realistic demand behavior.
 import numpy as np
 import pytest
 
-from src.model import StadiumEconomicModel
+from yankee_stadium_beer_controls.model import StadiumEconomicModel
 
 
 class TestRealisticConsumption:

@@ -11,7 +11,7 @@ Tests cover:
 import numpy as np
 import pytest
 
-from src.model import StadiumEconomicModel
+from yankee_stadium_beer_controls.model import StadiumEconomicModel
 
 
 class TestModelInitialization:
@@ -58,8 +58,6 @@ class TestDemandFunctions:
 
     def test_beer_demand_at_baseline(self, model):
         """Beer consumption at baseline should match literature (~40% drink)."""
-        result = model.stadium_revenue(model.base_beer_price, model.base_beer_price)
-        # Use stadium_revenue to get aggregate beers_per_fan
         result = model.stadium_revenue(80, 12.5)
         assert 0.8 <= result["beers_per_fan"] <= 1.5
 
@@ -98,9 +96,16 @@ class TestRevenueCalculations:
         """Revenue calculation returns correct structure."""
         result = model.stadium_revenue(80, 12.5)
         required_keys = [
-            "attendance", "beers_per_fan", "total_beers",
-            "ticket_revenue", "beer_revenue", "total_revenue",
-            "ticket_costs", "beer_costs", "total_costs", "profit",
+            "attendance",
+            "beers_per_fan",
+            "total_beers",
+            "ticket_revenue",
+            "beer_revenue",
+            "total_revenue",
+            "ticket_costs",
+            "beer_costs",
+            "total_costs",
+            "profit",
         ]
         for key in required_keys:
             assert key in result
@@ -176,13 +181,24 @@ class TestWelfareCalculations:
     def test_social_welfare_structure(self, model):
         """Social welfare should include all components."""
         sw = model.social_welfare(80, 12.5)
-        for key in ["consumer_surplus", "producer_surplus", "externality_cost", "social_welfare"]:
+        for key in [
+            "consumer_surplus",
+            "producer_surplus",
+            "tax_revenue",
+            "externality_cost",
+            "social_welfare",
+        ]:
             assert key in sw
 
     def test_social_welfare_calculation(self, model):
-        """Social welfare should equal CS + PS - externalities."""
+        """Social welfare should equal CS + PS + taxes - externalities."""
         sw = model.social_welfare(80, 12.5)
-        expected_sw = sw["consumer_surplus"] + sw["producer_surplus"] - sw["externality_cost"]
+        expected_sw = (
+            sw["consumer_surplus"]
+            + sw["producer_surplus"]
+            + sw["tax_revenue"]
+            - sw["externality_cost"]
+        )
         assert abs(sw["social_welfare"] - expected_sw) < 0.01
 
 

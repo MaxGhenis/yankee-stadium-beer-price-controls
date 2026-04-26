@@ -1,22 +1,22 @@
 repos:
   - repo: local
     hooks:
-      - id: update-doc-values
-        name: Update documentation values from model
-        entry: python scripts/update_docs_values.py
+      - id: refresh-paper-artifacts
+        name: Refresh package-native paper artifacts
+        entry: uv run yankee-beer-paper build --output-dir paper/_generated
         language: system
-        files: '^(src/model\.py|src/simulation\.py|docs/.*\.md)$'
+        files: '^(src/yankee_stadium_beer_controls/.*\.py|config\.yaml|paper/index\.qmd|paper/references\.bib)$'
         pass_filenames: false
-        always_run: false  # Only run if relevant files changed
+        always_run: false
 
       - id: ruff-check
         name: Lint with ruff
-        entry: ruff check
+        entry: uv run ruff check
         language: system
         types: [python]
 
       - id: black-check
         name: Format with black
-        entry: black
+        entry: uv run black
         language: system
         types: [python]

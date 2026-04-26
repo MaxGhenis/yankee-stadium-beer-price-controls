@@ -14,7 +14,11 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Scientific/Engineering",
 ]
 
@@ -23,8 +27,7 @@ dependencies = [
     "pandas>=2.1.0",
     "scipy>=1.11.0",
     "matplotlib>=3.8.0",
-    "plotly>=5.18.0",
-    "streamlit>=1.31.0",
+    "PyYAML>=6.0.2",
 ]
 
 [project.optional-dependencies]
@@ -33,14 +36,10 @@ dev = [
     "pytest-cov>=4.1.0",
     "pytest-mock>=3.12.0",
     "black>=23.0.0",
+    "build>=1.2.2",
     "ruff>=0.1.0",
     "mypy>=1.7.0",
-]
-docs = [
-    "jupyter-book>=0.15.0",
-    "sphinx-togglebutton>=0.3.0",
-    "sphinx-copybutton>=0.5.0",
-    "sphinxcontrib-bibtex>=2.5.0",
+    "types-pyyaml>=6.0.12",
 ]
 
 [project.urls]
@@ -50,13 +49,31 @@ Documentation = "https://github.com/maxghenis/yankee-stadium-beer-price-controls
 
 [project.scripts]
 yankee-beer-sim = "yankee_stadium_beer_controls.example:main"
+yankee-beer-paper = "yankee_stadium_beer_controls.paper:main"
+yankee-beer-calibrate = "yankee_stadium_beer_controls.calibrate:main"
+yankee-beer-web-data = "yankee_stadium_beer_controls.web:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src"]
+packages = ["src/yankee_stadium_beer_controls"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"config.yaml" = "yankee_stadium_beer_controls/default_config.yaml"
+"paper/_quarto.yml" = "yankee_stadium_beer_controls/paper_project/_quarto.yml"
+"paper/index.qmd" = "yankee_stadium_beer_controls/paper_project/index.qmd"
+"paper/references.bib" = "yankee_stadium_beer_controls/paper_project/references.bib"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/yankee_stadium_beer_controls",
+    "config.yaml",
+    "paper/_quarto.yml",
+    "paper/index.qmd",
+    "paper/references.bib",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -65,9 +82,8 @@ python_classes = "Test*"
 python_functions = "test_*"
 addopts = [
     "--verbose",
-    "--cov=src",
+    "--cov=yankee_stadium_beer_controls",
     "--cov-report=term-missing",
-    "--cov-report=html",
 ]
 
 [tool.black]
@@ -78,6 +94,8 @@ include = '\.pyi?$'
 [tool.ruff]
 line-length = 100
 target-version = "py310"
+
+[tool.ruff.lint]
 select = [
     "E",   # pycodestyle errors
     "W",   # pycodestyle warnings
@@ -93,18 +111,19 @@ ignore = [
     "C901",  # too complex
 ]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]  # unused imports in __init__.py
 
 [tool.mypy]
 python_version = "3.10"
-warn_return_any = true
+warn_return_any = false
 warn_unused_configs = true
-disallow_untyped_defs = true
+disallow_untyped_defs = false
+no_implicit_optional = false
 ignore_missing_imports = true
 
 [tool.coverage.run]
-source = ["src"]
+source = ["yankee_stadium_beer_controls"]
 omit = ["*/tests/*", "*/test_*.py"]
 
 [tool.coverage.report]

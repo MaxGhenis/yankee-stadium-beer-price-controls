@@ -4,11 +4,12 @@ Integration tests for the simulation engine.
 Tests policy scenarios and comparative statics.
 """
 
+import numpy as np
 import pandas as pd
 import pytest
 
-from src.model import StadiumEconomicModel
-from src.simulation import BeerPriceControlSimulator
+from yankee_stadium_beer_controls.model import StadiumEconomicModel
+from yankee_stadium_beer_controls.simulation import BeerPriceControlSimulator
 
 
 class TestSimulatorInitialization:
@@ -38,6 +39,8 @@ class TestPolicyScenarios:
         result = simulator.run_scenario("Ban", beer_banned=True)
         assert result["total_beers"] == 0
         assert result["beer_revenue"] == 0
+        assert result["externality_cost"] == 0
+        assert result["beer_price"] == 0
 
     def test_beer_ban_reduces_attendance(self, simulator):
         ban = simulator.run_scenario("Ban", beer_banned=True)
@@ -67,15 +70,23 @@ class TestFullSimulation:
     def test_all_scenarios_have_required_columns(self, simulator):
         results = simulator.run_all_scenarios()
         required_cols = [
-            "scenario", "ticket_price", "beer_price", "attendance",
-            "total_beers", "profit", "social_welfare", "externality_cost",
+            "scenario",
+            "ticket_price",
+            "beer_price",
+            "attendance",
+            "total_beers",
+            "profit",
+            "social_welfare",
+            "externality_cost",
         ]
         for col in required_cols:
             assert col in results.columns
 
     def test_profit_maximization(self, simulator):
         results = simulator.run_all_scenarios()
-        baseline_profit = results[results["scenario"] == "Baseline (Profit Max)"]["profit"].values[0]
+        baseline_profit = results[results["scenario"] == "Baseline (Profit Max)"]["profit"].values[
+            0
+        ]
         assert baseline_profit > 0
         ceiling_profit = results[results["scenario"].str.contains("Ceiling")]["profit"].values[0]
         assert baseline_profit >= ceiling_profit
@@ -94,11 +105,24 @@ class TestComparativeStatics:
         baseline_changes = changes[changes["scenario"] == "Current Observed Prices"]
         assert abs(baseline_changes["profit_change"].values[0]) < 0.01
 
+    def test_comparative_statics_skips_undefined_zero_baseline_percent_changes(self, simulator):
+        results = simulator.run_all_scenarios()
+        changes = simulator.calculate_comparative_statics(results, baseline_scenario="Beer Ban")
+
+        assert "ticket_price_pct_change" in changes.columns
+        assert "beer_price_pct_change" not in changes.columns
+        assert "total_beers_pct_change" not in changes.columns
+
+        pct_change_cols = [col for col in changes.columns if col.endswith("_pct_change")]
+        for col in pct_change_cols:
+            assert np.isfinite(changes[col].to_numpy()).all(), f"{col} contains non-finite values"
+
     def test_summary_statistics(self, simulator):
         results = simulator.run_all_scenarios()
         summary = simulator.summary_statistics(results)
         assert "profit_maximizing_scenario" in summary
         assert "welfare_maximizing_scenario" in summary
+        assert summary["lowest_externality_scenario"] == "Beer Ban"
 
 
 class TestSensitivityAnalysis:

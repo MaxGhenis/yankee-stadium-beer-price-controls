@@ -4,16 +4,14 @@ TDD test for price_ceiling_analysis.py
 Tests the analysis script output, not just the model.
 """
 
-import sys
-from pathlib import Path
-
 import numpy as np
 import pytest
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
-from src.model import StadiumEconomicModel
-from src.price_ceiling_analysis import simulate_price_ceilings
+from yankee_stadium_beer_controls.model import StadiumEconomicModel
+from yankee_stadium_beer_controls.price_ceiling_analysis import (
+    _resolve_equilibrium_beer,
+    simulate_price_ceilings,
+)
 
 
 class TestPriceCeilingAnalysisScript:
@@ -136,3 +134,35 @@ class TestPriceCeilingAnalysisScript:
 
             # Should match unconstrained optimal (within tolerance)
             assert nonbinding["ticket_price"].mean() == pytest.approx(unc_ticket, abs=0.05)
+
+    def test_chart_equilibrium_uses_supplied_model(self):
+        custom_model = StadiumEconomicModel(
+            ticket_price_sensitivity=0.05, experience_degradation_cost=500
+        )
+        ceilings = np.linspace(5, 13, 17)
+        df = simulate_price_ceilings(ceilings, custom_model)
+
+        resolved = _resolve_equilibrium_beer(df, model=custom_model)
+        _, equilibrium_beer, _ = custom_model.optimal_pricing()
+
+        assert resolved == pytest.approx(equilibrium_beer)
+
+    def test_chart_equilibrium_falls_back_to_dataframe_plateau(self):
+        model = StadiumEconomicModel()
+        _, equilibrium_beer, _ = model.optimal_pricing()
+        ceilings = np.linspace(equilibrium_beer - 1, equilibrium_beer + 1, 5)
+        df = simulate_price_ceilings(ceilings, model)
+
+        resolved = _resolve_equilibrium_beer(df)
+
+        assert resolved == pytest.approx(equilibrium_beer)
+
+    def test_chart_equilibrium_requires_model_for_truncated_binding_sweep(self):
+        custom_model = StadiumEconomicModel(
+            ticket_price_sensitivity=0.05, experience_degradation_cost=500
+        )
+        ceilings = np.linspace(5, 13, 17)
+        df = simulate_price_ceilings(ceilings, custom_model)
+
+        with pytest.raises(ValueError, match="Cannot infer equilibrium beer price"):
+            _resolve_equilibrium_beer(df)

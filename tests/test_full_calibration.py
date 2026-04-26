@@ -2,7 +2,7 @@
 Comprehensive TDD calibration tests.
 """
 
-from src.model import StadiumEconomicModel
+from yankee_stadium_beer_controls.model import StadiumEconomicModel
 
 
 def test_triple_calibration_success():

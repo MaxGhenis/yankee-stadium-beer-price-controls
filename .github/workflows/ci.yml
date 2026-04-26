@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
 
     steps:
     - uses: actions/checkout@v4
@@ -23,13 +23,13 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - name: Install uv
-      uses: astral-sh/setup-uv@v3
+      uses: astral-sh/setup-uv@v5
       with:
         enable-cache: true
 
     - name: Install dependencies
       run: |
-        uv pip install --system -e ".[dev]"
+        uv sync --locked --extra dev
 
     - name: Lint with ruff
       run: |
@@ -41,12 +41,11 @@ jobs:
 
     - name: Type check with mypy
       run: |
-        uv run mypy src
-      continue-on-error: true  # Don't fail on mypy errors initially
+        uv run mypy src/yankee_stadium_beer_controls
 
     - name: Run tests with pytest
       run: |
-        uv run pytest tests/ -v --cov=src --cov-report=xml --cov-report=term-missing
+        uv run pytest tests/ -v --cov=yankee_stadium_beer_controls --cov-report=xml --cov-report=term-missing
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
@@ -55,31 +54,7 @@ jobs:
         fail_ci_if_error: false
         token: ${{ secrets.CODECOV_TOKEN }}
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.10"
-
-    - name: Install uv
-      uses: astral-sh/setup-uv@v3
-
-    - name: Build package
-      run: |
-        uv pip install --system build
-        python -m build
-
-    - name: Check package
-      run: |
-        uv pip install --system twine
-        twine check dist/*
-
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: dist
-        path: dist/
-
-  docs:
+  package:
     runs-on: ubuntu-latest
 
     steps:
@@ -88,38 +63,104 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: "3.10"
+        python-version: "3.13"
 
     - name: Install uv
-      uses: astral-sh/setup-uv@v3
+      uses: astral-sh/setup-uv@v5
+      with:
+        enable-cache: true
 
     - name: Install dependencies
       run: |
-        uv pip install --system -e ".[dev,docs]"
-        npm install -g mystmd
+        uv sync --locked --extra dev
 
-    - name: Update documentation values
+    - name: Build package
       run: |
-        python scripts/update_docs_values.py
+        uv run python -m build
 
-    - name: Check for uncommitted changes
+    - name: Check package
       run: |
-        if ! git diff --quiet docs/; then
-          echo "⚠️  Documentation values were updated. Committing changes..."
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/
-          git commit -m "Update documentation values [skip ci]"
-          git push
-        fi
+        uvx twine check dist/*
 
-    - name: Build documentation
-      run: |
-        cd docs
-        myst build --html
-
-    - name: Upload docs artifact
+    - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: docs
-        path: docs/_build/
+        name: dist
+        path: dist/
+
+  paper:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.13"
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        enable-cache: true
+
+    - name: Install dependencies
+      run: |
+        uv sync --locked --extra dev
+
+    - name: Setup Quarto
+      uses: quarto-dev/quarto-actions/setup@v2
+      with:
+        tinytex: true
+
+    - name: Build paper
+      run: |
+        uv run yankee-beer-paper render --project-dir paper
+        uv run yankee-beer-paper submission --output-dir submissions
+
+    - name: Upload paper artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: paper
+        path: |
+          paper/_build/
+          submissions/
+
+  web:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.13"
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        enable-cache: true
+
+    - name: Install Python dependencies
+      run: |
+        uv sync --locked --extra dev
+
+    - name: Generate web payload
+      run: |
+        uv run yankee-beer-web-data --output-dir web/public/data
+
+    - name: Set up Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 24
+        cache: npm
+        cache-dependency-path: web/package-lock.json
+
+    - name: Build web app
+      working-directory: web
+      run: |
+        npm ci
+        npm run lint
+        npm audit
+        npm run build

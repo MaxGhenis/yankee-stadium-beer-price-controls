@@ -8,8 +8,8 @@ and data quality constraints that should ALWAYS hold.
 import numpy as np
 import pytest
 
-from src.model import StadiumEconomicModel
-from src.simulation import BeerPriceControlSimulator
+from yankee_stadium_beer_controls.model import StadiumEconomicModel
+from yankee_stadium_beer_controls.simulation import BeerPriceControlSimulator
 
 
 class TestMonotonicity:
@@ -82,10 +82,13 @@ class TestAccountingIdentities:
         assert result["profit"] == pytest.approx(expected_profit, rel=1e-6)
 
     def test_welfare_accounting_identity(self, model):
-        """SW must equal CS + PS - externalities."""
+        """SW must equal CS + PS + taxes - externalities."""
         welfare = model.social_welfare(80, 12.5)
         expected_sw = (
-            welfare["consumer_surplus"] + welfare["producer_surplus"] - welfare["externality_cost"]
+            welfare["consumer_surplus"]
+            + welfare["producer_surplus"]
+            + welfare["tax_revenue"]
+            - welfare["externality_cost"]
         )
         assert welfare["social_welfare"] == pytest.approx(expected_sw, rel=1e-6)
 
@@ -139,9 +142,15 @@ class TestDataQuality:
         """No negative quantities."""
         result = model.stadium_revenue(80, 12.5)
         nonnegative_fields = [
-            "attendance", "beers_per_fan", "total_beers",
-            "ticket_revenue", "beer_revenue", "total_revenue",
-            "ticket_costs", "beer_costs", "total_costs",
+            "attendance",
+            "beers_per_fan",
+            "total_beers",
+            "ticket_revenue",
+            "beer_revenue",
+            "total_revenue",
+            "ticket_costs",
+            "beer_costs",
+            "total_costs",
         ]
         for field in nonnegative_fields:
             assert result[field] >= 0
@@ -157,8 +166,7 @@ class TestDataQuality:
         result = model.stadium_revenue(80, 12.5)
         for key, value in result.items():
             if isinstance(value, int | float):
-                assert not np.isnan(value)
-                assert not np.isinf(value)
+                assert np.isfinite(value), f"{key} is not finite: {value}"
 
     def test_attendance_not_exceeds_capacity(self, model):
         """Attendance should never exceed stadium capacity."""
@@ -245,9 +253,15 @@ class TestSimulationOutputQuality:
         """All scenarios should return complete data."""
         results = simulator.run_all_scenarios()
         required_cols = [
-            "scenario", "ticket_price", "beer_price", "attendance",
-            "total_beers", "profit", "consumer_surplus",
-            "externality_cost", "social_welfare",
+            "scenario",
+            "ticket_price",
+            "beer_price",
+            "attendance",
+            "total_beers",
+            "profit",
+            "consumer_surplus",
+            "externality_cost",
+            "social_welfare",
         ]
         for col in required_cols:
             assert col in results.columns
@@ -309,7 +323,7 @@ class TestEdgeCasesRobustness:
         model.external_costs["health"] = 0
         welfare = model.social_welfare(80, 12.5)
         assert welfare["social_welfare"] == pytest.approx(
-            welfare["consumer_surplus"] + welfare["producer_surplus"]
+            welfare["consumer_surplus"] + welfare["producer_surplus"] + welfare["tax_revenue"]
         )
         assert welfare["externality_cost"] == 0
 

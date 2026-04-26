@@ -4,7 +4,7 @@ TDD tests for model calibration.
 
 import pytest
 
-from src.model import StadiumEconomicModel
+from yankee_stadium_beer_controls.model import StadiumEconomicModel
 
 
 class TestCalibrationRequirements:

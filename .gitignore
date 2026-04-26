@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 *.so
 .Python
+.venv/
 env/
 venv/
 ENV/
@@ -13,8 +14,8 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
+/lib/
+/lib64/
 parts/
 sdist/
 var/
@@ -25,6 +26,11 @@ wheels/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+
+# Tool caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
 
 # pyenv
 .python-version
@@ -40,17 +46,27 @@ wheels/
 .DS_Store
 Thumbs.db
 
-# Streamlit
-.streamlit/
-
-# JupyterBook
+# Legacy generated artifacts
+_build/
+charts/
+docs/
 docs/_build/
 .jupyter_cache/
 docs/exports/
 
+# Quarto paper artifacts
+paper/_generated/
+paper/_build/
+submissions/
+
+# Next.js web app
+web/.next/
+web/node_modules/
+web/public/data/*.json
+!web/public/data/.gitkeep
+web/.vercel/
+
 # Coverage
 .coverage
+coverage.xml
 htmlcov/
-
-# UV
-uv.lock

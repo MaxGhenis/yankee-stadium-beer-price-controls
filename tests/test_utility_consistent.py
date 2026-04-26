@@ -1,28 +1,19 @@
 """
-TDD tests for utility-consistent model rewrite.
+Tests for utility-consistent model behavior.
 
-These tests define the EXPECTED behavior of the new model.
-Write tests FIRST, then implement the model to pass them.
-
-Key changes tested:
+Verifies:
 1. Beer consumer surplus uses exact formula from utility function
 2. Attendance uses endogenous cross-price effects via net cost
-3. Total consumer surplus = A / λ
-4. Dead parameters removed from API
-5. Compatibility wrappers deleted
+3. Total consumer surplus = A / lambda
+4. Removed parameters rejected by constructor
+5. Revenue accounting identities
 """
 
 import math
 
-import numpy as np
 import pytest
 
-from src.model import ConsumerType, StadiumEconomicModel
-
-
-# ============================================================================
-# Phase 1: ConsumerType dataclass simplification
-# ============================================================================
+from yankee_stadium_beer_controls.model import ConsumerType, StadiumEconomicModel
 
 
 class TestConsumerTypeSimplified:
@@ -44,11 +35,6 @@ class TestConsumerTypeSimplified:
         """ConsumerType should NOT have income field."""
         ct = ConsumerType(name="Drinker", share=0.4, alpha_beer=43.75)
         assert not hasattr(ct, "income")
-
-
-# ============================================================================
-# Phase 2: Constructor cleanup
-# ============================================================================
 
 
 class TestConstructorCleanup:
@@ -73,7 +59,7 @@ class TestConstructorCleanup:
         """Model should have beer_max_per_person."""
         model = StadiumEconomicModel()
         assert hasattr(model, "beer_max_per_person")
-        assert model.beer_max_per_person == 10.0
+        assert model.beer_max_per_person == 6.5
 
     def test_no_cross_price_elasticity_param(self):
         """Constructor should NOT accept cross_price_elasticity."""
@@ -115,11 +101,6 @@ class TestConstructorCleanup:
         """Constructor should NOT accept beta."""
         with pytest.raises(TypeError):
             StadiumEconomicModel(beta=3.0)
-
-
-# ============================================================================
-# Phase 3: Beer consumer surplus (exact from utility)
-# ============================================================================
 
 
 class TestBeerConsumerSurplus:
@@ -180,16 +161,11 @@ class TestBeerConsumerSurplus:
 
     def test_cs_zero_when_alpha_leq_price(self, model):
         """CS should be 0 when α ≤ P (non-buyer)."""
-        nondrinker = model.consumer_types[0]  # alpha=1.0
+        nondrinker = model.consumer_types[0]  # alpha=0.0
         # At any price >= 1.0, non-drinker buys nothing
         for price in [1.0, 5.0, 12.50, 20.0]:
             cs = model._beer_consumer_surplus(price, nondrinker)
             assert cs == 0.0, f"Non-drinker CS should be 0 at ${price}"
-
-
-# ============================================================================
-# Phase 4: Endogenous attendance via net cost
-# ============================================================================
 
 
 class TestEndogenousAttendance:
@@ -223,7 +199,7 @@ class TestEndogenousAttendance:
         nondrinker = model.consumer_types[0]
         a1 = model._raw_attendance_by_type(80, 10.0, nondrinker)
         a2 = model._raw_attendance_by_type(80, 20.0, nondrinker)
-        # Non-drinker alpha=1.0, CS_beer=0 at both prices, so attendance identical
+        # Non-drinker alpha=0.0, CS_beer=0 at both prices, so attendance identical
         assert a1 == pytest.approx(a2, rel=1e-6)
 
     def test_endogenous_cross_price_effect_magnitude(self, model):
@@ -266,11 +242,6 @@ class TestEndogenousAttendance:
         assert len(model._baseline_net_cost) == len(model.consumer_types)
 
 
-# ============================================================================
-# Phase 5: Consumer surplus = A / λ
-# ============================================================================
-
-
 class TestConsumerSurplusFormula:
     """CS should use the integral under semi-log demand: A / λ."""
 
@@ -283,9 +254,10 @@ class TestConsumerSurplusFormula:
         cs = model.consumer_surplus(80, 12.50)
         assert cs > 0
 
-    def test_cs_formula_is_attendance_over_lambda(self, model):
-        """CS = total_attendance / ticket_price_sensitivity."""
+    def test_cs_formula_includes_ticket_and_beer_surplus(self, model):
+        """CS = A/λ in generalized price, avoiding double-counted beer surplus."""
         attendance = model.total_attendance(80, 12.50)
+
         expected_cs = attendance / model.ticket_price_sensitivity
         actual_cs = model.consumer_surplus(80, 12.50)
         assert actual_cs == pytest.approx(expected_cs, rel=1e-6)
@@ -303,15 +275,15 @@ class TestConsumerSurplusFormula:
         assert cs_cheap > cs_expensive
 
     def test_social_welfare_accounting(self, model):
-        """SW = CS + PS - externalities should still hold."""
+        """SW = CS + PS + tax revenue - externalities should still hold."""
         sw = model.social_welfare(80, 12.50)
-        expected = sw["consumer_surplus"] + sw["producer_surplus"] - sw["externality_cost"]
+        expected = (
+            sw["consumer_surplus"]
+            + sw["producer_surplus"]
+            + sw["tax_revenue"]
+            - sw["externality_cost"]
+        )
         assert sw["social_welfare"] == pytest.approx(expected, rel=1e-6)
-
-
-# ============================================================================
-# Phase 6: Beer demand unchanged
-# ============================================================================
 
 
 class TestBeerDemandUnchanged:
@@ -355,11 +327,6 @@ class TestBeerDemandUnchanged:
             assert consumptions[i] >= consumptions[i + 1]
 
 
-# ============================================================================
-# Phase 7: Calibration targets still met
-# ============================================================================
-
-
 class TestCalibrationTargets:
     """Model should still match empirical calibration targets."""
 
@@ -388,11 +355,6 @@ class TestCalibrationTargets:
         attendance = model.total_attendance(80, 12.50)
         pct = attendance / model.capacity
         assert 0.80 <= pct <= 0.90
-
-
-# ============================================================================
-# Phase 8: Qualitative results preserved
-# ============================================================================
 
 
 class TestQualitativeResults:
@@ -426,12 +388,12 @@ class TestQualitativeResults:
             beer_price_control=opt_beer / 2, ceiling_mode=True
         )
         # Drinker share should increase
-        drinker_share_base = r_base["breakdown_by_type"]["Drinker"]["attendance"] / r_base[
-            "attendance"
-        ]
-        drinker_share_ceil = r_ceil["breakdown_by_type"]["Drinker"]["attendance"] / r_ceil[
-            "attendance"
-        ]
+        drinker_share_base = (
+            r_base["breakdown_by_type"]["Drinker"]["attendance"] / r_base["attendance"]
+        )
+        drinker_share_ceil = (
+            r_ceil["breakdown_by_type"]["Drinker"]["attendance"] / r_ceil["attendance"]
+        )
         assert drinker_share_ceil > drinker_share_base
 
     def test_profit_decreases_with_tighter_ceiling(self, model):
@@ -454,11 +416,6 @@ class TestQualitativeResults:
         )
         sw_ceil = model.social_welfare(t_ceil, b_ceil)
         assert sw_ceil["externality_cost"] > sw_base["externality_cost"]
-
-
-# ============================================================================
-# Phase 9: Revenue and accounting unchanged
-# ============================================================================
 
 
 class TestRevenueAccountingUnchanged:

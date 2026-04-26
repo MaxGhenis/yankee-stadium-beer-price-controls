@@ -1,0 +1,138 @@
+---
+title: "Beer Price Ceilings and Joint Pricing in Sports Venues: A Yankee Stadium Application"
+author:
+  - name: Max Ghenis
+    affiliation: PolicyEngine
+date: 2026-04-26
+bibliography: references.bib
+keywords:
+  - price controls
+  - sports economics
+  - alcohol policy
+  - monopoly pricing
+  - complementary goods
+  - selection effects
+format:
+  html:
+    toc: true
+    number-sections: true
+  pdf:
+    toc: true
+    number-sections: true
+---
+
+# Abstract
+
+{{< include _generated/abstract.md >}}
+
+**JEL Codes:** D42, L12, L83
+
+**Keywords:** price controls; sports economics; alcohol policy; monopoly pricing; complementary goods; selection effects
+
+# Introduction
+
+Recent reporting suggested that New York policymakers were considering whether "unconscionable pricing" statutes could reach stadium concessions [@semafor2025khan]. That raises a narrower economic question: what happens when a monopolist that jointly prices tickets and beer faces a cap on beer prices?
+
+Beer and tickets are complementary goods. A cheaper beer increases the value of attending for some fans, while a more expensive ticket changes the pool of fans who attend. If the venue controls both prices, a beer ceiling is not just a concession policy; it is a joint-pricing intervention. A useful counterfactual therefore allows the stadium to re-optimize ticket prices rather than holding them fixed.
+
+This paper studies that re-optimization problem with a calibrated partial-equilibrium model of Yankee Stadium. The sports-economics literature has long noted that tickets and concessions need to be analyzed jointly [@coates2007ticket; @krautmann2007concessions]. The two main modeling choices are deliberate: the model separates drinkers from non-drinkers, and it lets beer prices affect attendance through beer consumer surplus rather than through an ad hoc cross-price elasticity. That makes the selection mechanism explicit.
+
+# Related Literature
+
+The paper connects three literatures. First, sports-economics work on venue pricing emphasizes that teams sell bundles of game attendance, concessions, parking, media exposure, and local amenities rather than tickets alone [@noll1974attendance; @scully1989business; @fort2004inelastic; @leeds2022economics]. Coates and Humphreys [-@coates2007ticket] and Krautmann and Berri [-@krautmann2007concessions] are especially close because they treat concessions as part of the same pricing problem as attendance.
+
+Second, the model uses multiproduct-monopoly and two-part-tariff logic. A firm that controls a fixed admission price and a marginal-use price generally sets those prices jointly, not one at a time [@oi1971disneyland; @telser1979complementary; @varian1992microeconomic]. A concession price ceiling therefore changes the optimal ticket markup through the value or cost of a marginal attendee. That is the mechanism the paper makes explicit.
+
+Third, the welfare motivation comes from work on alcohol-related harms and stadium-adjacent public safety [@manning1991costs; @carpenter2015mlda; @lenk2010policies; @rees2009football; @klick2021seventh]. This paper does not estimate those harms around Yankee Stadium. It uses the alcohol-policy literature to motivate why beer consumption, not just consumer expenditure, is a relevant outcome. The contribution here is a transparent calibrated mechanism linking concession regulation to ticket repricing, attendance selection, and beer consumption.
+
+The policy problem is also an incidence problem. Standard tax and regulatory-incidence analysis asks how the burden of a policy is shared once firms and consumers adjust prices and quantities [@fullerton2002tax; @weyl2013passthrough]. The twist here is partial price regulation: the regulator caps one margin of a multiproduct seller while leaving another margin unconstrained. The model therefore treats a concession ceiling as a restriction on the beer-price instrument whose incidence can be shifted through the ticket instrument.
+
+# Model
+
+Consumers choose beer from quasilinear utility,
+
+$$U_i(B) = \alpha_i \ln(B + 1) + Y,$$
+
+which yields beer demand
+
+$$B_i(P_B) = \max \left(0, \min \left(\frac{\alpha_i}{P_B} - 1,\; B_{\max}\right)\right).$$
+
+Attendance is modeled in net cost, where beer consumer surplus lowers the effective price of attending for drinkers:
+
+$$A_i(P_T, P_B) = A_{i,0} \cdot \exp\left[-\lambda \left(\text{net cost}_i(P_T, P_B) - \text{net cost}_{i,0}\right)\right].$$
+
+The venue then maximizes
+
+$$\pi = P_T A + P_B^{\text{stadium}} Q - c_T A - c_B Q - k \left(\frac{Q}{1000}\right)^2,$$
+
+where the quadratic term captures internalized crowd-management and experience-degradation costs. External crime and health costs are tracked separately using values informed by the broader alcohol literature [@carpenter2015mlda; @manning1991costs].
+
+## Ticket Markup Condition
+
+{{< include _generated/mechanism.md >}}
+
+# Calibration and Public Data
+
+The calibrated benchmark targets the reported beer price, a benchmark ticket price, average beer consumption, and baseline attendance. The inputs are intentionally public and low-dimensional:
+
+{{< include _generated/calibration_sources.md >}}
+
+The current parameterization implies the following calibration checks:
+
+{{< include _generated/credibility.md >}}
+
+# Results
+
+## Baseline vs. $6 Ceiling
+
+{{< include _generated/baseline_vs_6.md >}}
+
+The basic mechanism is straightforward within the calibrated benchmark. A beer ceiling lowers the direct beer margin and increases beer intensity among attendees. In the calibrated ticket-markup condition, that makes the concession and crowd-cost adjustment to ticket pricing much larger, so the venue shifts toward the unconstrained instrument, ticket price. Attendance falls, but the remaining crowd becomes more drinker-heavy and more beer-intensive. The result should be read as conditional on the model's private crowd-cost and repricing assumptions, which are stressed below.
+
+## Ceiling Stringency
+
+{{< include _generated/ceiling_stringency.md >}}
+
+## Comparative Statics
+
+![Ticket and beer price responses](_generated/charts/prices.png)
+
+![Attendance and total beer responses](_generated/charts/quantities.png)
+
+![Revenue decomposition under ceilings](_generated/charts/revenue.png)
+
+![Welfare effects under ceilings](_generated/charts/welfare.png)
+
+# Robustness
+
+The robustness checks ask whether the sign pattern survives parameter perturbations rather than treating any single calibration as definitive. The ticket-markup condition above is the formal mechanism used in the paper. The most important stress tests vary the private crowd-cost calibration and ticket repricing flexibility, because those assumptions govern how strongly the venue moves from the beer margin to the ticket margin.
+
+{{< include _generated/robustness.md >}}
+
+# Limitations
+
+{{< include _generated/limitations.md >}}
+
+# Data and Code Availability
+
+All code needed to regenerate the paper tables, figures, submission metadata, and web-app data lives in the accompanying Python package at <https://github.com/maxghenis/yankee-stadium-beer-price-controls>. The model uses public concession-price reporting and literature-based calibration moments rather than proprietary Yankees transactions. Generated artifacts are rebuilt from package commands so the manuscript and outputs can be reproduced without notebooks or ad hoc scripts. A tagged release or archival DOI should be added to this statement before journal submission.
+
+# Declarations
+
+Funding: none. Competing interests: none. Human subjects: the paper uses a calibrated model and public or literature-based inputs; it does not analyze individual-level human-subjects data.
+
+# Conclusion
+
+Beer price ceilings look appealing as a consumer-protection intervention because they target a conspicuous markup. But once the stadium is modeled as an integrated seller of tickets and concessions, that intuition weakens sharply. Within this calibrated model, a binding ceiling lowers beer prices and raises ticket prices enough to shrink attendance, change crowd composition, and increase total beer consumption rather than reduce it.
+
+That does not mean current pricing is socially optimal. It suggests that, within this model, a beer ceiling may be poorly targeted if the objective is to reduce external harms. If the policy objective is to reduce crime, crowding, or public-health spillovers, those margins should be targeted directly.
+
+# Appendix
+
+## Calibration Targets and Fitted Values
+
+{{< include _generated/calibration_table.md >}}
+
+## Main Policy Cases
+
+{{< include _generated/policy_cases_table.md >}}
