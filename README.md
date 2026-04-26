@@ -12,6 +12,7 @@ The project is intentionally paper-first:
 - generated paper, submission, coverage, and dashboard outputs are ignored
 - there are no notebooks, legacy Python dashboard, or ad hoc analysis scripts in the active workflow
 - the optional web UI is a Next/Tailwind view over generated package JSON
+- Vercel builds the public paper site directly from the package and Quarto sources
 
 ## Quick Start
 
@@ -49,6 +50,16 @@ uv run python -m build
 
 Quarto must be installed separately for `yankee-beer-paper render`; the package
 can generate markdown fragments and submission files without the Quarto CLI.
+
+## Deployment
+
+The repository is configured for Vercel. The build installs `uv`, regenerates
+the paper fragments from package code, renders the Quarto HTML site, and serves
+`paper/_build` as a static site.
+
+```bash
+vercel deploy
+```
 
 ## Optional Web App
 

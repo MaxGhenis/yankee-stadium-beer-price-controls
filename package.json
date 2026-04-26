@@ -1,0 +1,6 @@
+{
+  "private": true,
+  "scripts": {
+    "vercel-build": "curl -LsSf https://astral.sh/uv/install.sh | sh && export PATH=\"$HOME/.local/bin:$PATH\" && if ! command -v quarto >/dev/null; then curl -fsSL --retry 5 -A \"Mozilla/5.0\" -H \"Accept: application/octet-stream\" -o /tmp/quarto.tar.gz https://github.com/quarto-dev/quarto-cli/releases/download/v1.9.36/quarto-1.9.36-linux-amd64.tar.gz && tar -tzf /tmp/quarto.tar.gz >/dev/null && tar -xzf /tmp/quarto.tar.gz -C /tmp && export PATH=\"/tmp/quarto-1.9.36/bin:$PATH\"; fi && env -u UV_FROZEN uv sync --locked --extra dev && env -u UV_FROZEN uv run yankee-beer-paper build --output-dir paper/_generated && quarto render paper --to html"
+  }
+}

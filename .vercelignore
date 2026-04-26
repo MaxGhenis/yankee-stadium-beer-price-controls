@@ -1,0 +1,15 @@
+.coverage
+.git
+.mypy_cache
+.pytest_cache
+.ruff_cache
+.venv
+coverage.xml
+dist
+htmlcov
+paper/_build
+paper/_generated
+submissions
+web/.next
+web/.vercel
+web/node_modules
